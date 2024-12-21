@@ -219,7 +219,7 @@ class AFFmpeg:
             return self.filename
         return self.filename.path.__str__()
 
-    async def cv_to_webp(self, animated: bool = True) -> bytes:
+    async def cv_to_webp(self, animated: bool = True, bitrate: str = "100k", enforce_not_broken: bool = False) -> bytes:
         """
         This function converts a given file to webp format using ffmpeg.
         If the animated flag is set to True, it will only convert the first 6 seconds of the file.
@@ -229,6 +229,7 @@ class AFFmpeg:
         :return: The converted file in bytes
         :rtype: bytes
         """
+        MAX_STICKER_FILESIZE = 512000
         temp = tempfile.gettempdir() + "/" + time.time().__str__() + ".webp"
         ffmpeg_command = [
             "ffmpeg",
@@ -244,6 +245,19 @@ class AFFmpeg:
             ),
             temp,
         ]
+        if enforce_not_broken:
+            ffmpeg_command.extend(
+                [
+                    "-loop",
+                    "0",
+                    "-preset",
+                    "picture",
+                    "-fs",
+                    MAX_STICKER_FILESIZE,
+                    "-q:v",
+                    bitrate,
+                ]
+            )
         if animated:
             ffmpeg_command.extend(
                 [
