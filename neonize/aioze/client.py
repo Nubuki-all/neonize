@@ -797,6 +797,7 @@ class NewAClient:
         quoted: Optional[neonize_proto.Message] = None,
         name: str = "",
         packname: str = "",
+        enforce_not_broken: bool = False,
     ) -> Message:
         """
         This function builds a sticker message from a given image or video file.
@@ -831,7 +832,7 @@ class NewAClient:
         else:
             async with AFFmpeg(sticker) as ffmpeg:
                 animated = True
-                sticker = await ffmpeg.cv_to_webp()
+                sticker = await ffmpeg.cv_to_webp(enforce_not_broken=enforce_not_broken)
                 io_save = BytesIO(sticker)
                 img = Image.open(io_save)
                 io_save.seek(0)
@@ -864,6 +865,7 @@ class NewAClient:
         quoted: Optional[neonize_proto.Message] = None,
         name: str = "",
         packname: str = "",
+        enforce_not_broken: bool = False,
     ) -> SendResponse:
         """
         Send a sticker to a specific JID.
@@ -883,7 +885,7 @@ class NewAClient:
         """
         return await self.send_message(
             to,
-            await self.build_sticker_message(file, quoted, name, packname),
+            await self.build_sticker_message(file, quoted, name, packname, enforce_not_broken),
         )
 
     async def build_video_message(
