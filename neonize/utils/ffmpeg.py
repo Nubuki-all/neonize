@@ -243,7 +243,6 @@ class AFFmpeg:
                 f"pad=512:512:-1:-1:color=white@0.0, split [a][b]; [a] "
                 f"palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse"
             ),
-            temp,
         ]
         if enforce_not_broken:
             ffmpeg_command.extend(
@@ -267,6 +266,7 @@ class AFFmpeg:
                     "00:00:06.0",
                 ]
             )
+        ffmpeg_command.append(temp)
         await self.call(ffmpeg_command)
         with open(temp, "rb") as file:
             buf = file.read()
