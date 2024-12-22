@@ -229,7 +229,7 @@ class AFFmpeg:
         :return: The converted file in bytes
         :rtype: bytes
         """
-        MAX_STICKER_FILESIZE = 512000
+        MAX_STICKER_FILESIZE = "512000"
         temp = tempfile.gettempdir() + "/" + time.time().__str__() + ".webp"
         ffmpeg_command = [
             "ffmpeg",
