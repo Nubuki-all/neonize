@@ -304,7 +304,7 @@ class AFFmpeg:
                 "-pix_fmt",
                 "yuv420p",
                 "-vf",
-                "'scale=trunc(iw/2)*2:trunc(ih/2)*2'",
+                "scale=trunc(iw/2)*2:trunc(ih/2)*2",
                 "-crf",
                 "17",
                 temp,
