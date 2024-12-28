@@ -2,6 +2,7 @@ from __future__ import annotations
 import time
 import struct
 import re
+import requests
 from asyncio import get_event_loop
 import asyncio
 import ctypes
@@ -473,7 +474,11 @@ class NewAClient:
         if valid_links:
             preview = await link_preview(valid_links[0])
             if not preview:
-                preview = fallback_link_preview(valid_links[0])
+                try:
+                    preview = fallback_link_preview(valid_links[0])
+                except requests.exceptions.HTTPError:
+                    log.debug(f"Getting link preview failed for link: {valid_links[0]}")
+                    return None
             preview_type = (
                 ExtendedTextMessage.PreviewType.VIDEO
                 if re.match(youtube_url_pattern, valid_links[0])
