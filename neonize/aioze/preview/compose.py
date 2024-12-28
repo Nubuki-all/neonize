@@ -1,9 +1,29 @@
 from typing import Literal, Optional, TypeVar, overload
 from httpx import URL, HTTPStatusError
 from linkpreview import Link, LinkPreview
+from linkpreview import LinkGrabber as fallback_LinkGrabber
 from linkpreview.exceptions import InvalidMimeTypeError
 from .grabber import LinkGrabber
 
+
+
+def fallback_grab_link(url: str):
+    try:
+        grabber = fallback_LinkGrabber(
+            initial_timeout=20,
+            maxsize=1048576,
+            receive_timeout=10,
+            chunk_size=1024,
+        )
+        return grabber.get_content(
+            url,
+            headers={
+                'user-agent': 'imessagebot',
+                'accept': '*/*'
+            }
+        )
+    except Exception:
+        return None, url
 
 async def link_preview(
     url: str = None,
@@ -20,6 +40,9 @@ async def link_preview(
         except InvalidMimeTypeError:
             content = ""
         except HTTPStatusError:
-            return
+            content, url = fallback_grab_link(url)
+            if not content:
+                return
+            
     link = Link(url, content)
     return LinkPreview(link, parser=parser)
