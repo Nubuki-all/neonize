@@ -432,6 +432,7 @@ class NewAClient:
         self.qr = self.event.qr
         self.contact = ContactStore(self.uuid)
         self.chat_settings = ChatSettingsStore(self.uuid)
+        self.loop = asyncio.new_event_loop()
         log.debug("🔨 Creating a NewClient instance")
 
     def __onLoginStatus(self, s: str):
