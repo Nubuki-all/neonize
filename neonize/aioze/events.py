@@ -2,6 +2,7 @@ from __future__ import annotations
 import ctypes
 import asyncio
 import segno
+import time
 from ..events import EVENT_TO_INT, INT_TO_EVENT, UnsupportedEvent, log
 from ..proto.Neonize_pb2 import (
     QR as QREv,
@@ -86,7 +87,8 @@ class Event:
         #loop = asyncio.get_event_loop()
         #self.client.loop.run_until_complete(self.list_func[code](self.client, message))
         task = self.client.loop.create_task(self.list_func[code](self.client, message))
-        await task
+        while not task.done():
+            time.sleep(1)
         #loop.close()
 
     async def __onqr(self, _: NewAClient, data_qr: bytes):
