@@ -86,7 +86,8 @@ class Event:
         message = INT_TO_EVENT[code].FromString(ctypes.string_at(binary, size))
         #loop = asyncio.get_event_loop()
         #self.client.loop.run_until_complete(self.list_func[code](self.client, message))
-        asyncio.run_coroutine_threadsafe(self.list_func[code](self.client, message), self.client.loop)
+        future = asyncio.run_coroutine_threadsafe(self.list_func[code](self.client, message), self.client.loop)
+        future.result()
         #loop.close()
 
     async def __onqr(self, _: NewAClient, data_qr: bytes):
