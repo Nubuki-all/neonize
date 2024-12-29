@@ -2,11 +2,12 @@ from __future__ import annotations
 import time
 import struct
 import re
-import requests
+
 from asyncio import get_event_loop
 import asyncio
 import ctypes
 from datetime import timedelta
+from requests.exceptions import HTTPError
 from typing import (
     Any,
     Awaitable,
@@ -176,6 +177,7 @@ from .events import Event
 from ..utils.log import log
 from concurrent.futures import ThreadPoolExecutor
 from linkpreview import link_preview as fallback_link_preview
+from linkpreview.exceptions import MaximumContentSizeError
 
 loop = get_event_loop()
 
@@ -476,7 +478,7 @@ class NewAClient:
             if not preview:
                 try:
                     preview = fallback_link_preview(valid_links[0])
-                except requests.exceptions.HTTPError:
+                except (HTTPError, MaximumContentSizeError):
                     log.debug(f"Getting link preview failed for link: {valid_links[0]}")
                     return None
             preview_type = (
