@@ -83,9 +83,9 @@ class Event:
             raise UnsupportedEvent()
 
         message = INT_TO_EVENT[code].FromString(ctypes.string_at(binary, size))
-        loop = asyncio.new_event_loop()
+        loop = asyncio.get_event_loop()
         loop.run_until_complete(self.list_func[code](self.client, message))
-        loop.close()
+        #loop.close()
 
     async def __onqr(self, _: NewAClient, data_qr: bytes):
         """
