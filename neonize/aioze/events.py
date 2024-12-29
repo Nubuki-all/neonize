@@ -2,7 +2,7 @@ from __future__ import annotations
 import ctypes
 import asyncio
 import segno
-import time
+import time, traceback
 from ..events import EVENT_TO_INT, INT_TO_EVENT, UnsupportedEvent, log
 from ..proto.Neonize_pb2 import (
     QR as QREv,
@@ -45,6 +45,7 @@ from ..proto.Neonize_pb2 import (
     CallTerminate as CallTerminateEv,
     UnknownCallEvent as UnknownCallEventEV,
 )
+from ..utils.log import log
 
 from google.protobuf.message import Message
 from typing import Awaitable, Coroutine, Dict, Callable, Type, TypeVar, TYPE_CHECKING
@@ -86,8 +87,12 @@ class Event:
         message = INT_TO_EVENT[code].FromString(ctypes.string_at(binary, size))
         #loop = asyncio.get_event_loop()
         #self.client.loop.run_until_complete(self.list_func[code](self.client, message))
-        future = asyncio.run_coroutine_threadsafe(self.list_func[code](self.client, message), self.client.loop)
-        future.result()
+        try:
+            future = asyncio.run_coroutine_threadsafe(self.list_func[code](self.client, message), self.client.loop)
+            print('here')
+            future.result()
+        except Exception:
+            log.info(traceback.format_exc())
         #loop.close()
 
     async def __onqr(self, _: NewAClient, data_qr: bytes):
