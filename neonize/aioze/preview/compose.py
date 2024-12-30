@@ -39,7 +39,9 @@ async def link_preview(
             content, url = await grabber.get_content(url)
         except InvalidMimeTypeError:
             content = ""
-        except (HTTPStatusError, ConnectTimeout):
+        except ConnectTimeout:
+            return False
+        except HTTPStatusError:
             content, url = fallback_grab_link(url)
             if not content:
                 return
