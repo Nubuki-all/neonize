@@ -121,9 +121,9 @@ class Event:
             """
 
             def wrap_blocking(_):
-                loop = asyncio.new_event_loop()
-                loop.run_until_complete(f(self.client))
-                loop.close()
+                #loop = asyncio.new_event_loop()
+                self.client.loop.run_until_complete(f(self.client))
+                #loop.close()
 
             self.blocking_func = wrap_blocking
             return self.blocking_func
