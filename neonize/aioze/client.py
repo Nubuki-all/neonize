@@ -176,7 +176,7 @@ from .._binder import gocode
 from .events import Event
 from ..utils.log import log
 
-#import nest_asyncio
+import nest_asyncio
 from concurrent.futures import ThreadPoolExecutor
 from linkpreview import link_preview as fallback_link_preview
 from linkpreview.exceptions import MaximumContentSizeError
@@ -434,8 +434,8 @@ class NewAClient:
         self.qr = self.event.qr
         self.contact = ContactStore(self.uuid)
         self.chat_settings = ChatSettingsStore(self.uuid)
-        #self.loop = asyncio.new_event_loop()
-        #nest_asyncio.apply(self.loop)
+        self.loop = asyncio.new_event_loop()
+        nest_asyncio.apply(self.loop)
         log.debug("🔨 Creating a NewClient instance")
 
     def __onLoginStatus(self, s: str):
