@@ -1,5 +1,5 @@
 from typing import Literal, Optional, TypeVar, overload
-from httpx import URL, HTTPStatusError
+from httpx import URL, HTTPStatusError, ConnectTimeout
 from linkpreview import Link, LinkPreview
 from linkpreview import LinkGrabber as fallback_LinkGrabber
 from linkpreview.exceptions import InvalidMimeTypeError
@@ -39,7 +39,7 @@ async def link_preview(
             content, url = await grabber.get_content(url)
         except InvalidMimeTypeError:
             content = ""
-        except HTTPStatusError:
+        except (HTTPStatusError, ConnectTimeout):
             content, url = fallback_grab_link(url)
             if not content:
                 return
