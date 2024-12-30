@@ -85,12 +85,9 @@ class Event:
             raise UnsupportedEvent()
 
         message = INT_TO_EVENT[code].FromString(ctypes.string_at(binary, size))
-        #loop = asyncio.get_event_loop()
-        #self.client.loop.run_until_complete(self.list_func[code](self.client, message))
         try:
-            future = asyncio.run_coroutine_threadsafe(self.list_func[code](self.client, message), self.client.loop)
-            print('here')
-            future.result()
+        #loop = asyncio.get_event_loop()
+            self.client.loop.run_until_complete(self.list_func[code](self.client, message))
         except Exception:
             log.info(traceback.format_exc())
         #loop.close()
