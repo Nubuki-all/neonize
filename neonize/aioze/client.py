@@ -479,6 +479,8 @@ class NewAClient:
         valid_links = list(filter(validate_link, links))
         if valid_links:
             preview = await link_preview(valid_links[0])
+            if preview is False:
+                return None
             if not preview:
                 try:
                     preview = fallback_link_preview(valid_links[0])
