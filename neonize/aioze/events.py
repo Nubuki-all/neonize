@@ -85,10 +85,9 @@ class Event:
             raise UnsupportedEvent()
 
         message = INT_TO_EVENT[code].FromString(ctypes.string_at(binary, size))
-        #loop = asyncio.new_event_loop()
-        #loop.run_until_complete(self.list_func[code](self.client, message))
-        #loop.close()
-        self.client.loop.run_until_complete(self.list_func[code](self.client, message))
+        loop = asyncio.new_event_loop()
+        loop.run_until_complete(self.list_func[code](self.client, message))
+        loop.close()
         
 
     async def __onqr(self, _: NewAClient, data_qr: bytes):
@@ -121,9 +120,9 @@ class Event:
             """
 
             def wrap_blocking(_):
-                #loop = asyncio.new_event_loop()
-                self.client.loop.run_until_complete(f(self.client))
-                #loop.close()
+                loop = asyncio.new_event_loop()
+                loop.run_until_complete(f(self.client))
+                loop.close()
 
             self.blocking_func = wrap_blocking
             return self.blocking_func
