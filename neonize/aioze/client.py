@@ -1569,11 +1569,11 @@ class NewAClient:
         :rtype: str
         """
         data = get_bytes_from_name_or_url(file_or_bytes)
-        jid_buf = jid.SerializeToString()
+        jid_buf = jid.SerializeToString() if jid else str()
         response = await self.__client.SetGroupPhoto(
             self.uuid, jid_buf, len(jid_buf), data, len(data)
         )
-        model = SetGroupPhotoReturnFunction.FromString(response.get_bytes())
+        model = SetGroupPhotoReturnFunction.FromString(response)
         if model.Error:
             raise SetGroupPhotoError(model.Error)
         return model.PictureID
