@@ -1569,14 +1569,14 @@ class NewAClient:
         :rtype: str
         """
         data = get_bytes_from_name_or_url(file_or_bytes)
-        jid_buf = jid.SerializeToString() if jid else b'\x80\x04\x95\x04\x00\x00\x00\x00\x00\x00\x00\x8c\x00\x94.'
+        jid_buf = jid.SerializeToString()
         response = await self.__client.SetGroupPhoto(
             self.uuid, jid_buf, len(jid_buf), data, len(data)
         )
-        #model = SetGroupPhotoReturnFunction.FromString(response)
-        #if model.Error:
-            #raise SetGroupPhotoError(model.Error)
-        #return model.PictureID
+        model = SetGroupPhotoReturnFunction.FromString(response.get_bytes())
+        if model.Error:
+            raise SetGroupPhotoError(model.Error)
+        return model.PictureID
 
     async def leave_group(self, jid: JID) -> str:
         """Leaves a group.
