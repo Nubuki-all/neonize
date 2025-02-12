@@ -257,7 +257,7 @@ class AFFmpeg:
                     "-preset",
                     "picture",
                     "-fs",
-                    MAX_STICKER_FILESIZE,
+                    f"{MAX_STICKER_FILESIZE}",
                     "-q:v",
                     bitrate,
                 ]
