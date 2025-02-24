@@ -56,19 +56,22 @@ func getBytesAndSize(data []byte) (*C.char, C.size_t) {
 	messageSourceCSize := C.size_t(len(data))
 	return messageSourceCDATA, messageSourceCSize
 }
-func decryptVote(id string, evt *events.Message){
+func decryptVote(id string, evt *events.Message) []*defproto.DecryptedVote {
+    var decryptedVotes []*defproto.DecryptedVote
     if evt.Message.GetPollUpdateMessage() != nil {
         cli := clients[id]
-    	pollVote, err := cli.DecryptPollVote(evt)
-    	if err != nil {
-    		fmt.Printf(":(", err)
-    		return
-    	}
-    	fmt.Printf("Selected hashes:")
-    	for _, hash := range pollVote.GetSelectedOptions() {
-    		fmt.Printf("- %X\n", hash)
-    	}
+        pollVote, err := cli.DecryptPollVote(evt)
+        if err != nil {
+            fmt.Printf("Decryption error: %v\n", err)
+            return nil
+        }
+        for _, hash := range pollVote.GetSelectedOptions() {
+            decryptedVotes = append(decryptedVotes, &defproto.DecryptedVote{
+                Hash: fmt.Sprintf("%X", hash),
+            })
+        }
     }
+    return decryptedVotes
 }
 
 //export Upload
@@ -345,11 +348,13 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 		case *events.Message:
 			if _, ok := subscribers[17]; ok {
 				messageSource := utils.EncodeEventTypesMessage(v)
+				decryptedVotes := decryptVote(uuid, v)
+				messageSource := utils.EncodeEventTypesMessage(v)
+				messageSource.DecryptedVote = decryptedVotes
 				messageSourceBytes, err := proto.Marshal(messageSource)
 				if err != nil {
 					panic(err)
 				}
-				decryptVote(uuid, v)
 				data, size := getBytesAndSize(messageSourceBytes)
 				go C.call_c_func_callback_bytes(event, data, size, C.int(17))
 			}
