@@ -61,7 +61,7 @@ def get_poll_update_message(message: neonize_proto.Message) -> PollUpdateMessage
     :return: The extracted poll update message.
     :rtype: PollUpdateMessage
     """
-    msg = message.message
+    msg = message.Message
     if msg.pollUpdateMessage.ListFields():
         pollUpdateMessage: PollUpdateMessage = msg.pollUpdateMessage
         return pollUpdateMessage
