@@ -124,7 +124,7 @@ jobs:
         uv build
         uv run task repack
         mv neonize/*.so LIBS
-        uv publish
+        # uv publish
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with: 
@@ -186,7 +186,7 @@ jobs:
         uv build
         uv run task repack
         mv neonize/*.so LIBS
-        uv publish
+        # uv publish
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
@@ -238,7 +238,7 @@ jobs:
         uv build
         uv run task repack
         mv neonize/*.dylib LIBS/
-        uv publish
+        # uv publish
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with: 
@@ -283,4 +283,4 @@ jobs:
       name: set target goneonize to last release
       run: uv run task version goneonize --last
     - name: Publish
-      run: uv build && uv publish
+      run: echo "Skipped" # uv build && uv publish
