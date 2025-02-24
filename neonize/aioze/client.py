@@ -50,6 +50,7 @@ from ..proto.waE2E.WAWebProtobufsE2E_pb2 import (
     AudioMessage,
     DocumentMessage,
     ContactMessage,
+    PollVoteMessage,
 )
 from ..utils.enum import (
     BlocklistAction,
@@ -659,6 +660,19 @@ class NewAClient:
         """
         return await self.send_message(chat, await self.build_revoke(chat, sender, message_id))
 
+    async def decrypt_poll_vote(self, message: neonize_proto.Message) -> PollVoteMessage:
+        """WIP"""
+        message_buf = message.SerializeToString()
+        return PollVoteMessage.FromString(
+            (
+                await self.__client.DecryptPollVote(
+                    self.uuid,
+                    message_buf,
+                    len(message_buf),
+                )
+            ).get_bytes()
+        )
+        
     async def build_poll_vote_creation(
         self, name: str, options: List[str], selectable_count: int
     ) -> Message:
