@@ -60,10 +60,10 @@ func decryptVote(client *whatsmeow.NewClient, evt *events.Message){
     if evt.Message.GetPollUpdateMessage() != nil {
     	pollVote, err := cli.DecryptPollVote(evt)
     	if err != nil {
-    		fmt.Println(":(", err)
+    		fmt.Printf(":(", err)
     		return
     	}
-    	fmt.Println("Selected hashes:")
+    	fmt.Printf("Selected hashes:")
     	for _, hash := range pollVote.GetSelectedOptions() {
     		fmt.Printf("- %X\n", hash)
     	}
