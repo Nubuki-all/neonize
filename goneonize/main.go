@@ -85,7 +85,7 @@ func DecryptPollVote(id *C.char, messagebuff *C.uchar, messageSize C.int) C.stru
 
 	pollVote, err := client.DecryptPollVote(utils.DecodeEventTypesMessage(&message))
 	if err != nil {
-		return C.CString(fmt.Sprintf("Error: %v", err))
+		panic(err)
 	}
 
 	// Process the decrypted poll vote data
