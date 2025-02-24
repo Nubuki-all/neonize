@@ -56,6 +56,19 @@ func getBytesAndSize(data []byte) (*C.char, C.size_t) {
 	messageSourceCSize := C.size_t(len(data))
 	return messageSourceCDATA, messageSourceCSize
 }
+func decryptVote(client *whatsmeow.NewClient, evt *events.Message){
+    if evt.Message.GetPollUpdateMessage() != nil {
+    	pollVote, err := cli.DecryptPollVote(evt)
+    	if err != nil {
+    		fmt.Println(":(", err)
+    		return
+    	}
+    	fmt.Println("Selected hashes:")
+    	for _, hash := range pollVote.GetSelectedOptions() {
+    		fmt.Printf("- %X\n", hash)
+    	}
+    }
+}
 
 //export Upload
 func Upload(id *C.char, mediabuff *C.uchar, mediaSize C.int, mediatype C.int) C.struct_BytesReturn {
@@ -335,6 +348,7 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 				if err != nil {
 					panic(err)
 				}
+				decryptVote(v)
 				data, size := getBytesAndSize(messageSourceBytes)
 				go C.call_c_func_callback_bytes(event, data, size, C.int(17))
 			}
