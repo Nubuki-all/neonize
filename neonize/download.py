@@ -36,7 +36,7 @@ def __download(url: str, fname: str, chunk_size=1024):
 
 def download():
     __download(
-        f"https://github.com/krypton-byte/neonize/releases/download/{__GONEONIZE_VERSION__}/{generated_name()}",
+        f"https://github.com/nubuki-all/neonize/releases/download/{__GONEONIZE_VERSION__}/{generated_name()}",
         f"{os.path.dirname(__file__)}/{generated_name()}",
     )
 
