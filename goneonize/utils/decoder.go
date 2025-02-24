@@ -88,7 +88,7 @@ func DecodeDeviceSentMeta(deviceSentMeta *defproto.DeviceSentMeta) *types.Device
 		Phash:          *deviceSentMeta.Phash,
 	}
 }
-func DecodeNewsLetterMessageMeta(newsLetter, *defproto.NewsLetterMessageMeta) *events.NewsletterMessageMeta {
+func DecodeNewsLetterMessageMeta(newsLetter *defproto.NewsLetterMessageMeta) *events.NewsletterMessageMeta {
     return &events.NewsletterMessageMeta{
         EditTS:      time.Unix(0, *newsLetter.EditTS),
         OriginalTS:  time.Unix(0, *newsLetter.OriginalTS),
@@ -96,7 +96,7 @@ func DecodeNewsLetterMessageMeta(newsLetter, *defproto.NewsLetterMessageMeta) *e
 }
 func DecodeEventTypesMessage(protoMessage *defproto.Message) *events.Message {
 	model := &events.Message{
-		Info:                  DecodeMessageInfo(protoMessage.Info),
+		Info:                  *DecodeMessageInfo(protoMessage.Info),
 		IsEphemeral:           protoMessage.GetIsEphemeral(),
 		IsViewOnce:            protoMessage.GetIsViewOnce(),
 		IsViewOnceV2:          protoMessage.GetIsViewOnceV2(),
@@ -107,8 +107,8 @@ func DecodeEventTypesMessage(protoMessage *defproto.Message) *events.Message {
 		UnavailableRequestID:  protoMessage.GetUnavailableRequestID(),
 		RetryCount:            int(protoMessage.GetRetryCount()),
 	}
-	if protoMessage.NewsletterMeta != nil {
-		model.NewsLetterMeta = DecodeNewsLetterMessageMeta(protoMessage.NewsletterMeta)
+	if protoMessage.NewsLetterMeta != nil {
+		model.NewsLetterMeta = DecodeNewsLetterMessageMeta(protoMessage.NewsLetterMeta)
 	}
 	if protoMessage.SourceWebMsg != nil {
 		model.SourceWebMsg = protoMessage.SourceWebMsg
@@ -116,6 +116,7 @@ func DecodeEventTypesMessage(protoMessage *defproto.Message) *events.Message {
 	if protoMessage.Message != nil {
 	    model.Message = protoMessage.Message
 	}
+	return model
 }
 func DecodeMessageInfo(messageInfo *defproto.MessageInfo) *types.MessageInfo {
 	ts := *messageInfo.Timestamp
