@@ -95,7 +95,7 @@ func DecodeNewsLetterMessageMeta(newsLetter, *defproto.NewsLetterMessageMeta) *e
     }
 }
 func DecodeEventTypesMessage(protoMessage *defproto.Message) *events.Message {
-	model = &events.Message{
+	model := &events.Message{
 		Info:                  DecodeMessageInfo(protoMessage.Info),
 		IsEphemeral:           protoMessage.GetIsEphemeral(),
 		IsViewOnce:            protoMessage.GetIsViewOnce(),
