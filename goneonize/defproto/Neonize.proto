@@ -274,7 +274,7 @@ message GroupDelete {
     required string DeletedReason = 2;
 }
 message DecryptedVote {
-    string hash = 1;
+    required string hash = 1;
 }
 message Message {
     required MessageInfo Info = 1;
