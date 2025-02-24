@@ -254,8 +254,7 @@ func EncodeNewsLetterMessageMeta(newsLetter *events.NewsletterMessageMeta) *defp
 	}
 }
 
-
-func EncodeEventTypesMessage(message *events.Message, decryptedVotes []*defproto.DecryptedVote) *defproto.Message {
+func EncodeEventTypesMessage(message *events.Message) *defproto.Message {
 	model := &defproto.Message{
 		Info:                  EncodeMessageInfo(message.Info),
 		IsEphemeral:           &message.IsEphemeral,
@@ -277,9 +276,6 @@ func EncodeEventTypesMessage(message *events.Message, decryptedVotes []*defproto
 	if message.Message != nil {
 		model.Message = message.Message
 	}
-	if decryptedVotes != nil {
-        model.DecryptedVote = decryptedVotes
-    }
 	return model
 }
 func EncodeNewsletterText(newsletterText types.NewsletterText) *defproto.NewsletterText {

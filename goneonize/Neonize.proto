@@ -273,10 +273,6 @@ message GroupDelete {
     required bool Deleted = 1;
     required string DeletedReason = 2;
 }
-
-message DecryptedVote {
-    required string hash = 1;
-}
 message Message {
     required MessageInfo Info = 1;
     optional WAWebProtobufsE2E.Message Message = 2;
@@ -291,8 +287,6 @@ message Message {
     required string UnavailableRequestID = 11;
     required int64 RetryCount = 12;
     optional NewsLetterMessageMeta NewsLetterMeta = 13;
-    repeated DecryptedVote DecryptedVote = 14;
-    
 }
 message CreateNewsletterParams {
     required string Name = 1;
