@@ -66,8 +66,9 @@ func decryptVote(id string, evt *events.Message) []*defproto.DecryptedVote {
             return nil
         }
         for _, hash := range pollVote.GetSelectedOptions() {
+            hashString := fmt.Sprintf("%X", hash)
             decryptedVotes = append(decryptedVotes, &defproto.DecryptedVote{
-                Hash: fmt.Sprintf("%X", hash),
+                Hash: &hashString,
             })
         }
     }
