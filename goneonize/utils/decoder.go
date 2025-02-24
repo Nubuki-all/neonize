@@ -108,7 +108,7 @@ func DecodeEventTypesMessage(protoMessage *defproto.Message) *events.Message {
 		RetryCount:            int(protoMessage.GetRetryCount()),
 	}
 	if protoMessage.NewsLetterMeta != nil {
-		model.NewsLetterMeta = DecodeNewsLetterMessageMeta(protoMessage.NewsLetterMeta)
+		model.NewsletterMeta = DecodeNewsLetterMessageMeta(protoMessage.NewsLetterMeta)
 	}
 	if protoMessage.SourceWebMsg != nil {
 		model.SourceWebMsg = protoMessage.SourceWebMsg
