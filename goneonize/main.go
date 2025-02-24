@@ -348,8 +348,7 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 		case *events.Message:
 			if _, ok := subscribers[17]; ok {
 				decryptedVotes := decryptVote(uuid, v)
-				v.DecryptedVote = decryptedVotes
-				messageSource := utils.EncodeEventTypesMessage(v)
+				messageSource := utils.EncodeEventTypesMessage(v, decryptedVotes)
 				messageSourceBytes, err := proto.Marshal(messageSource)
 				if err != nil {
 					panic(err)

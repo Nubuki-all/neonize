@@ -259,7 +259,7 @@ func EncodeDecryptedVote(decryptedVote *defproto.DecryptedVote) *defproto.Decryp
         Hash: proto.String(decryptedVote.Hash),
     }
 }
-func EncodeEventTypesMessage(message *events.Message) *defproto.Message {
+func EncodeEventTypesMessage(message *events.Message, decryptedVotes []*defproto.DecryptedVote) *defproto.Message {
 	model := &defproto.Message{
 		Info:                  EncodeMessageInfo(message.Info),
 		IsEphemeral:           &message.IsEphemeral,
@@ -281,8 +281,8 @@ func EncodeEventTypesMessage(message *events.Message) *defproto.Message {
 	if message.Message != nil {
 		model.Message = message.Message
 	}
-	if message.DecryptedVote != nil {
-        for i, vote := range message.DecryptedVote {
+	if decryptedVotes != nil {
+        for i, vote := range decryptedVotes {
             model.DecryptedVote[i] = EncodeDecryptedVote(vote)
         }
     }
