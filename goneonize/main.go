@@ -72,11 +72,10 @@ func DecryptPollVote(id *C.char, messagebuff *C.uchar, messageSize C.int) C.stru
 	}
 
 	// Process the decrypted poll vote data
-	var result strings.Builder
-	fmt.Println("Selected hashes:")
-	for _, hash := range pollVote.GetSelectedOptions() {
-		fmt.Printf("- %X\n", hash)
-	}
+	// fmt.Println("Selected hashes:")
+	// for _, hash := range pollVote.GetSelectedOptions() {
+		// fmt.Printf("- %X\n", hash)
+	// }
 	return_, err_marshal := proto.Marshal(pollVote)
 	if err_marshal != nil {
 		panic(err_marshal)
