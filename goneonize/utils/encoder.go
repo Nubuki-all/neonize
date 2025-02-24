@@ -254,11 +254,7 @@ func EncodeNewsLetterMessageMeta(newsLetter *events.NewsletterMessageMeta) *defp
 	}
 }
 
-func EncodeDecryptedVote(decryptedVote *defproto.DecryptedVote) *defproto.DecryptedVote {
-    return &defproto.DecryptedVote{
-        Hash: proto.String(decryptedVote.Hash),
-    }
-}
+
 func EncodeEventTypesMessage(message *events.Message, decryptedVotes []*defproto.DecryptedVote) *defproto.Message {
 	model := &defproto.Message{
 		Info:                  EncodeMessageInfo(message.Info),
@@ -282,9 +278,7 @@ func EncodeEventTypesMessage(message *events.Message, decryptedVotes []*defproto
 		model.Message = message.Message
 	}
 	if decryptedVotes != nil {
-        for i, vote := range decryptedVotes {
-            model.DecryptedVote[i] = EncodeDecryptedVote(vote)
-        }
+        model.DecryptedVote = decryptedVotes
     }
 	return model
 }
