@@ -27,6 +27,7 @@ from .preview.compose import link_preview
 from .events import EventsManager
 from ..utils.ffmpeg import AFFmpeg
 from ..utils.calc import AspectRatioMethod, auto_sticker, original_sticker
+from ..utils.message import get_poll_update_message
 from ..utils import add_exif, gen_vcard
 from PIL import Image
 from google.protobuf.internal.containers import RepeatedCompositeFieldContainer
