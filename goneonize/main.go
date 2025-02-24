@@ -56,7 +56,7 @@ func getBytesAndSize(data []byte) (*C.char, C.size_t) {
 	messageSourceCSize := C.size_t(len(data))
 	return messageSourceCDATA, messageSourceCSize
 }
-func decryptVote(id C.GoString, evt *events.Message){
+func decryptVote(id string, evt *events.Message){
     if evt.Message.GetPollUpdateMessage() != nil {
         cli := clients[id]
     	pollVote, err := cli.DecryptPollVote(evt)
