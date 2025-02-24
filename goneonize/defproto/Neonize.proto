@@ -290,7 +290,7 @@ message Message {
     required string UnavailableRequestID = 11;
     required int64 RetryCount = 12;
     optional NewsLetterMessageMeta NewsLetterMeta = 13;
-    repeated DecryptedVote DecryptedVote = 17;
+    repeated DecryptedVote DecryptedVote = 14;
 }
 message CreateNewsletterParams {
     required string Name = 1;
