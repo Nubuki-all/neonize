@@ -8,6 +8,7 @@ import (
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/appstate"
 	waVname "go.mau.fi/whatsmeow/proto/waVnameCert"
+	"go.mau.fi/whatsmeow/types/events"
 	"go.mau.fi/whatsmeow/store"
 	"go.mau.fi/whatsmeow/types"
 )
@@ -87,6 +88,35 @@ func DecodeDeviceSentMeta(deviceSentMeta *defproto.DeviceSentMeta) *types.Device
 		Phash:          *deviceSentMeta.Phash,
 	}
 }
+func DecodeNewsLetterMessageMeta(newsLetter, *defproto.NewsLetterMessageMeta) *events.NewsletterMessageMeta {
+    return &events.NewsletterMessageMeta{
+        EditTS:      time.Unix(0, *newsLetter.EditTS),
+        OriginalTS:  time.Unix(0, *newsLetter.OriginalTS),
+    }
+}
+func DecodeEventTypesMessage(protoMessage *defproto.Message) *events.Message {
+	model = &events.Message{
+		Info:                  DecodeMessageInfo(protoMessage.Info),
+		IsEphemeral:           protoMessage.GetIsEphemeral(),
+		IsViewOnce:            protoMessage.GetIsViewOnce(),
+		IsViewOnceV2:          protoMessage.GetIsViewOnceV2(),
+		IsEdit:                protoMessage.GetIsEdit(),
+		IsViewOnceV2Extension: protoMessage.GetIsViewOnceV2Extension(),
+		IsDocumentWithCaption: protoMessage.GetIsDocumentWithCaption(),
+		IsLottieSticker:       protoMessage.GetIsLottieSticker(),
+		UnavailableRequestID:  protoMessage.GetUnavailableRequestID(),
+		RetryCount:            int(protoMessage.GetRetryCount()),
+	}
+	if protoMessage.NewsletterMeta != nil {
+		model.NewsLetterMeta = DecodeNewsLetterMessageMeta(protoMessage.NewsletterMeta)
+	}
+	if protoMessage.SourceWebMsg != nil {
+		model.SourceWebMsg = protoMessage.SourceWebMsg
+	}
+	if protoMessage.Message != nil {
+	    model.Message = protoMessage.Message
+	}
+}
 func DecodeMessageInfo(messageInfo *defproto.MessageInfo) *types.MessageInfo {
 	ts := *messageInfo.Timestamp
 	model := &types.MessageInfo{
@@ -109,6 +139,7 @@ func DecodeMessageInfo(messageInfo *defproto.MessageInfo) *types.MessageInfo {
 	}
 	return model
 }
+
 
 func DecodeCreateNewsletterParams(createletterNewsParams *defproto.CreateNewsletterParams) whatsmeow.CreateNewsletterParams {
 	return whatsmeow.CreateNewsletterParams{

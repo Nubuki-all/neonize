@@ -66,6 +66,8 @@ if not os.environ.get("SPHINX"):
         ctypes.c_int,
     ]
     gocode.Upload.restype = Bytes
+    gocode.DecryptPollVote.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int]
+    gocode.DecryptPollVote.restype = Bytes
     gocode.DownloadAny.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int]
     gocode.DownloadAny.restype = Bytes
     gocode.DownloadMediaWithPath.argtypes = [

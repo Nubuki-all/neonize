@@ -74,7 +74,32 @@ func decryptVote(id string, evt *events.Message) []*defproto.DecryptedVote {
     }
     return decryptedVotes
 }
+//export DecryptPollVote
+func DecryptPollVote(id *C.char, messagebuff *C.uchar, messageSize C.int) C.struct_BytesReturn {
+	client := clients[C.GoString(id)]
+	var message defproto.Message 
+	err := proto.Unmarshal(getByteByAddr(messagebuff, messageSize), &message)
+	if err != nil {
+		panic(err)
+	}
 
+	pollVote, err := client.DecryptPollVote(utils
+	.DecodeEventTypesMessage(&message))
+	if err != nil {
+		return C.CString(fmt.Sprintf("Error: %v", err))
+	}
+
+	// Process the decrypted poll vote data
+	fmt.Println("Selected hashes:")
+	for _, hash := range pollVote.GetSelectedOptions() {
+		fmt.Printf("- %X\n", hash)
+	}
+	return_, err_marshal := proto.Marshal(pollVote)
+	if err_marshal != nil {
+		panic(err_marshal)
+	}
+	return ReturnBytes(return_)
+}
 //export Upload
 func Upload(id *C.char, mediabuff *C.uchar, mediaSize C.int, mediatype C.int) C.struct_BytesReturn {
 	client := clients[C.GoString(id)]
