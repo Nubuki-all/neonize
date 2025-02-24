@@ -73,6 +73,7 @@ from ..exc import (
     ContactStoreError,
     CreateGroupError,
     CreateNewsletterError,
+    DecryptPollVoteError,
     DownloadError,
     FollowNewsletterError,
     GetBlocklistError,
@@ -662,6 +663,8 @@ class NewAClient:
 
     async def decrypt_poll_vote(self, message: neonize_proto.Message) -> PollVoteMessage:
         """WIP"""
+        if not get_poll_update_message(message):
+            raise DecryptPollVoteError("Given message isn't a poll update message")
         message_buf = message.SerializeToString()
         return PollVoteMessage.FromString(
             (
