@@ -923,7 +923,7 @@ func GetGroupRequestParticipants(id *C.char, JIDByte *C.uchar, JIDSize C.int) C.
 	request_participants, err_request := clients[C.GoString(id)].GetGroupRequestParticipants(utils.DecodeJidProto(&JID))
 	participants := []*defproto.JID{}
 	for _, participant := range request_participants {
-		participants = append(participants, utils.EncodeJidProto(participant))
+		participants = append(participants, utils.EncodeJidProto(participant.JID))
 	}
 	return_ := defproto.GetGroupRequestParticipantsReturnFunction{
 		Participants: participants,
