@@ -57,6 +57,7 @@ func getBytesAndSize(data []byte) (*C.char, C.size_t) {
 	return messageSourceCDATA, messageSourceCSize
 }
 func decryptVote(client *whatsmeow.NewClient, evt *events.Message){
+    fmt.Printf("Here.")
     if evt.Message.GetPollUpdateMessage() != nil {
     	pollVote, err := cli.DecryptPollVote(evt)
     	if err != nil {
