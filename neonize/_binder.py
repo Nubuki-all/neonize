@@ -93,7 +93,7 @@ if not os.environ.get("SPHINX"):
         ctypes.c_char_p,
         ctypes.c_int,
     ]
-    gocode.SetGroupPhoto.restype = ctypes.c_char_p
+    gocode.SetGroupPhoto.restype = Bytes
     gocode.LeaveGroup.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int]
     gocode.LeaveGroup.restype = ctypes.c_char_p
     gocode.SetGroupName.argtypes = [
