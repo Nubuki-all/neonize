@@ -999,7 +999,7 @@ func SetGroupPhoto(id *C.char, JIDByte *C.uchar, JIDSize C.int, Photo *C.uchar, 
 	}
 	photo_buf := getByteByAddr(Photo, PhotoSize)
 	var err_status error
-	var empty string
+	var empty types.JID
 	var response string
 	if bool(avatar) {
 	    response, err_status := clients[C.GoString(id)].SetGroupPhoto(empty, photo_buf)
