@@ -999,9 +999,10 @@ func SetGroupPhoto(id *C.char, JIDByte *C.uchar, JIDSize C.int, Photo *C.uchar, 
 	}
 	photo_buf := getByteByAddr(Photo, PhotoSize)
 	var err_status error
+	var empty string
 	var response string
 	if bool(avatar) {
-	    response, err_status := clients[C.GoString(id)].SetGroupPhoto("", photo_buf)
+	    response, err_status := clients[C.GoString(id)].SetGroupPhoto(empty, photo_buf)
 	} else {
 	    response, err_status := clients[C.GoString(id)].SetGroupPhoto(utils.DecodeJidProto(&neoJIDProto), photo_buf)
 	}
