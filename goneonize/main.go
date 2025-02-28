@@ -1002,9 +1002,9 @@ func SetGroupPhoto(id *C.char, JIDByte *C.uchar, JIDSize C.int, Photo *C.uchar, 
 	var empty types.JID
 	var response string
 	if bool(avatar) {
-	    response, err_status := clients[C.GoString(id)].SetGroupPhoto(empty, photo_buf)
+	    response, err_status = clients[C.GoString(id)].SetGroupPhoto(empty, photo_buf)
 	} else {
-	    response, err_status := clients[C.GoString(id)].SetGroupPhoto(utils.DecodeJidProto(&neoJIDProto), photo_buf)
+	    response, err_status = clients[C.GoString(id)].SetGroupPhoto(utils.DecodeJidProto(&neoJIDProto), photo_buf)
 	}
 	return_ := defproto.SetGroupPhotoReturnFunction{
 		PictureID: &response,
