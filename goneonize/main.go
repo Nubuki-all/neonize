@@ -998,16 +998,20 @@ func SetGroupPhoto(id *C.char, JIDByte *C.uchar, JIDSize C.int, Photo *C.uchar, 
 		panic(err)
 	}
 	photo_buf := getByteByAddr(Photo, PhotoSize)
+	var response string
 	if bool(avatar) {
 	    response, err_status := clients[C.GoString(id)].SetGroupPhoto("", photo_buf)
+	    if err_status != nil {
+	        return_.Error = proto.String(err_status.Error())
+	    }
 	} else {
 	    response, err_status := clients[C.GoString(id)].SetGroupPhoto(utils.DecodeJidProto(&neoJIDProto), photo_buf)
+	    if err_status != nil {
+	        return_.Error = proto.String(err_status.Error())
+    	}
 	}
 	return_ := defproto.SetGroupPhotoReturnFunction{
 		PictureID: &response,
-	}
-	if err_status != nil {
-		return_.Error = proto.String(err_status.Error())
 	}
 	return_buf, err_marshal := proto.Marshal(&return_)
 	if err_marshal != nil {
