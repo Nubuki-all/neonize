@@ -1534,10 +1534,12 @@ class NewAClient:
         response = await self.__client.SetGroupPhoto(
             self.uuid, jid_buf, len(jid_buf), data, len(data)
         )
-        model = SetGroupPhotoReturnFunction.FromString(response.get_bytes())
-        if model.Error:
-            raise SetGroupPhotoError(model.Error)
-        return model.PictureID
+        print(dir(response))
+        print(response)
+        #model = SetGroupPhotoReturnFunction.FromString(response.get_bytes())
+        #if model.Error:
+            #raise SetGroupPhotoError(model.Error)
+        #return model.PictureID
 
     async def leave_group(self, jid: JID) -> str:
         """Leaves a group.
