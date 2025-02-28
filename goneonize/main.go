@@ -990,7 +990,7 @@ func SetGroupName(id *C.char, JIDByte *C.uchar, JIDSize C.int, name *C.char) *C.
 }
 
 //export SetGroupPhoto
-func SetGroupPhoto(id *C.char, JIDByte *C.uchar, JIDSize C.int, Photo *C.uchar, PhotoSize C.int) C.struct_BytesReturn {
+func SetGroupPhoto(id *C.char, JIDByte *C.uchar, JIDSize C.int, Photo *C.uchar, PhotoSize C.int, avatar C.bool) C.struct_BytesReturn {
 	var neoJIDProto defproto.JID
 	JIDbyte := getByteByAddr(JIDByte, JIDSize)
 	err := proto.Unmarshal(JIDbyte, &neoJIDProto)
@@ -998,7 +998,11 @@ func SetGroupPhoto(id *C.char, JIDByte *C.uchar, JIDSize C.int, Photo *C.uchar, 
 		panic(err)
 	}
 	photo_buf := getByteByAddr(Photo, PhotoSize)
-	response, err_status := clients[C.GoString(id)].SetGroupPhoto(utils.DecodeJidProto(&neoJIDProto), photo_buf)
+	if bool(avatar) {
+	    response, err_status := clients[C.GoString(id)].SetGroupPhoto("", photo_buf)
+	} else {
+	    response, err_status := clients[C.GoString(id)].SetGroupPhoto(utils.DecodeJidProto(&neoJIDProto), photo_buf)
+	}
 	return_ := defproto.SetGroupPhotoReturnFunction{
 		PictureID: &response,
 	}

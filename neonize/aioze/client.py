@@ -1518,7 +1518,7 @@ class NewAClient:
             )
         ).decode()
 
-    async def set_group_photo(self, jid: JID, file_or_bytes: typing.Union[str, bytes]) -> str:
+    async def set_group_photo(self, jid: JID, file_or_bytes: typing.Union[str, bytes], avatar: bool = False) -> str:
         """Sets the photo of a group.
 
         :param jid: The JID (Jabber Identifier) of the group.
@@ -1532,7 +1532,7 @@ class NewAClient:
         data = get_bytes_from_name_or_url(file_or_bytes)
         jid_buf = jid.SerializeToString()
         response = await self.__client.SetGroupPhoto(
-            self.uuid, jid_buf, len(jid_buf), data, len(data)
+            self.uuid, jid_buf, len(jid_buf), data, len(data), avatar
         )
         model = SetGroupPhotoReturnFunction.FromString(response.get_bytes())
         if model.Error:
