@@ -511,7 +511,7 @@ class NewAClient:
         )
 
     async def send_message(
-        self, to: JID, message: typing.Union[Message, str], link_preview: bool = False
+        self, to: JID, message: typing.Union[Message, str], link_preview: bool = False, ghost_mentions: str = ""
     ) -> SendResponse:
         """Send a message to the specified JID.
 
@@ -521,13 +521,15 @@ class NewAClient:
         :type message: typing.Union[Message, str]
         :param link_preview: Whether to send a link preview, defaults to False
         :type link_preview: bool, optional
+        :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
+        :type ghost_mentions: str, optional
         :raises SendMessageError: If there was an error sending the message.
         :return: The response from the server.
         :rtype: SendResponse
         """
         to_bytes = to.SerializeToString()
         if isinstance(message, str):
-            mentioned_jid = self._parse_mention(message)
+            mentioned_jid = self._parse_mention(ghost_mentions or message)
             partial_msg = ExtendedTextMessage(
                 text=message, contextInfo=ContextInfo(mentionedJID=mentioned_jid)
             )
@@ -558,6 +560,7 @@ class NewAClient:
         quoted: neonize_proto.Message,
         link_preview: bool = False,
         reply_privately: bool = False,
+        ghost_mentions: str = "",
     ) -> Message:
         """Send a reply message to a specified JID.
 
@@ -569,8 +572,8 @@ class NewAClient:
         :type link_preview: bool, optional
         :param reply_privately: If set to True, the message is sent as a private reply. Defaults to False.
         :type reply_privately: bool, optional
-        :param mentioned_jid: List of JIDs to be mentioned in the message. Defaults to an empty list.
-        :type mentioned_jid: List[str], optional
+        :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
+        :type ghost_mentions: str, optional
         :return: Response of the send operation.
         :rtype: SendResponse
         """
@@ -578,7 +581,7 @@ class NewAClient:
         if isinstance(message, str):
             partial_message = ExtendedTextMessage(
                 text=message,
-                contextInfo=ContextInfo(mentionedJID=self._parse_mention(message)),
+                contextInfo=ContextInfo(mentionedJID=self._parse_mention(ghost_mentions or message)),
             )
             if link_preview:
                 preview = await self._generate_link_preview(message)
@@ -814,7 +817,7 @@ class NewAClient:
         else:
             async with AFFmpeg(sticker) as ffmpeg:
                 animated = True
-                sticker = await ffmpeg.cv_to_webp(enforce_not_broken)
+                sticker = await ffmpeg.cv_to_webp(enforce_not_broken=enforce_not_broken)
                 io_save = BytesIO(sticker)
                 img = Image.open(io_save)
                 io_save.seek(0)
@@ -881,6 +884,7 @@ class NewAClient:
         viewonce: bool = False,
         gifplayback: bool = False,
         is_gif: bool = False,
+        ghost_mentions: str = "",
     ) -> Message:
         """
         This function is used to build a video message. It uploads a video file, extracts necessary information,
@@ -899,6 +903,8 @@ class NewAClient:
         :param is_gif: Optional. Whether the video to be sent is a gif. Defaults to False.
         :type is_gif: bool, optional
         :return: A video message with the given parameters.
+        :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
+        :type ghost_mentions: str, optional
         :rtype: Message
         """
         io = BytesIO(await get_bytes_from_name_or_url_async(file))
@@ -929,7 +935,7 @@ class NewAClient:
                 thumbnailSHA256=upload.FileSHA256,
                 viewOnce=viewonce,
                 contextInfo=ContextInfo(
-                    mentionedJID=self._parse_mention(caption),
+                    mentionedJID=self._parse_mention(ghost_mentions or caption),
                 ),
             )
         )
@@ -946,6 +952,7 @@ class NewAClient:
         viewonce: bool = False,
         gifplayback: bool = False,
         is_gif: bool = False,
+        ghost_mentions: str = "",
     ) -> SendResponse:
         """Sends a video to the specified recipient.
 
@@ -963,12 +970,14 @@ class NewAClient:
         :type gifplayback: bool, optional
         :param is_gif: Optional. Whether the video to be sent is a gif. Defaults to False.
         :type is_gif: bool, optional
+        :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
+        :type ghost_mentions: str, optional
         :return: A function for handling the result of the video sending process.
         :rtype: SendResponse
         """
         return await self.send_message(
             to,
-            await self.build_video_message(file, caption, quoted, viewonce, gifplayback, is_gif),
+            await self.build_video_message(file, caption, quoted, viewonce, gifplayback, is_gif, ghost_mentions),
         )
 
     async def build_image_message(
@@ -977,6 +986,7 @@ class NewAClient:
         caption: Optional[str] = None,
         quoted: Optional[neonize_proto.Message] = None,
         viewonce: bool = False,
+        ghost_mentions: str = "",
     ) -> Message:
         """
         This function builds an image message. It takes a file (either a string or bytes),
@@ -993,6 +1003,8 @@ class NewAClient:
         :type quoted: Optional[neonize_proto.Message], optional
         :param viewonce: Whether the image message should be viewable only once, defaults to False.
         :type viewonce: bool, optional
+        :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
+        :type ghost_mentions: str, optional
         :return: The constructed image message.
         :rtype: Message
         """
@@ -1019,7 +1031,7 @@ class NewAClient:
                 thumbnailSHA256=upload.FileSHA256,
                 viewOnce=viewonce,
                 contextInfo=ContextInfo(
-                    mentionedJID=self._parse_mention(caption),
+                    mentionedJID=self._parse_mention(ghost_mentions or caption),
                 ),
             )
         )
@@ -1034,6 +1046,7 @@ class NewAClient:
         caption: Optional[str] = None,
         quoted: Optional[neonize_proto.Message] = None,
         viewonce: bool = False,
+        ghost_mentions: str = "",
     ) -> SendResponse:
         """Sends an image to the specified recipient.
 
@@ -1047,6 +1060,8 @@ class NewAClient:
         :type quoted: Optional[Message], optional
         :param viewonce: Optional. Whether the image should be viewonce. Defaults to False.
         :type viewonce: bool, optional
+        :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
+        :type ghost_mentions: str, optional
         :return: A function for handling the result of the image sending process.
         :rtype: SendResponse
         """
@@ -1126,6 +1141,7 @@ class NewAClient:
         filename: Optional[str] = None,
         mimetype: Optional[str] = None,
         quoted: Optional[neonize_proto.Message] = None,
+        ghost_mentions: Optional[str] = None,
     ):
         io = BytesIO(await get_bytes_from_name_or_url_async(file))
         io.seek(0)
@@ -1144,7 +1160,7 @@ class NewAClient:
                 title=title,
                 fileName=filename,
                 contextInfo=ContextInfo(
-                    mentionedJID=self._parse_mention(caption),
+                    mentionedJID=self._parse_mention(ghost_mentions or caption),
                 ),
             )
         )
@@ -1161,6 +1177,7 @@ class NewAClient:
         filename: Optional[str] = None,
         mimetype: Optional[str] = None,
         quoted: Optional[neonize_proto.Message] = None,
+        ghost_mentions: Optional[str] = None,
     ) -> SendResponse:
         """Sends a document to the specified recipient.
 
@@ -1176,6 +1193,8 @@ class NewAClient:
         :type filename: Optional[str], optional
         :param quoted: Optional. The message to which the document is a reply. Defaults to None.
         :type quoted: Optional[Message], optional
+        :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
+        :type ghost_mentions: str, optional
         :return: A function for handling the result of the document sending process.
         :rtype: SendResponse
         """
@@ -1518,6 +1537,24 @@ class NewAClient:
         jid_buf = jid.SerializeToString()
         response = await self.__client.SetGroupPhoto(
             self.uuid, jid_buf, len(jid_buf), data, len(data)
+        )
+        model = SetGroupPhotoReturnFunction.FromString(response.get_bytes())
+        if model.Error:
+            raise SetGroupPhotoError(model.Error)
+        return model.PictureID
+
+    async def set_profile_photo(self, file_or_bytes: typing.Union[str, bytes]) -> str:
+        """Sets profile photo.
+
+        :param file_or_bytes: Either a file path (str) or binary data (bytes) representing the group photo.
+        :type file_or_bytes: typing.Union[str, bytes]
+        :raises SetGroupPhotoError: Raised if there is an issue setting the profile photo.
+        :return: A string indicating the result or an error status.
+        :rtype: str
+        """
+        data = get_bytes_from_name_or_url(file_or_bytes)
+        response = await self.__client.SetProfilePhoto(
+            self.uuid, data, len(data)
         )
         model = SetGroupPhotoReturnFunction.FromString(response.get_bytes())
         if model.Error:
