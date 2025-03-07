@@ -21,6 +21,7 @@ from typing import (
 )
 import typing
 import magic
+import traceback
 from io import BytesIO
 
 from .preview.compose import link_preview
@@ -51,6 +52,7 @@ from ..proto.waE2E.WAWebProtobufsE2E_pb2 import (
     AudioMessage,
     DocumentMessage,
     ContactMessage,
+    GroupMention,
 )
 from ..utils.enum import (
     BlocklistAction,
@@ -448,6 +450,37 @@ class NewAClient:
             return []
         return [jid.group(1) + "@s.whatsapp.net" for jid in re.finditer(r"@([0-9]{5,16}|0)", text)]
 
+def _parse_group_mention(self, text: Optional[str] = None) -> list[GroupMention]:
+        """
+        This function parses a given text and returns a list of 'mentions' in the format of 'mention@g.us'
+        A 'mention' is defined as a sequence of numbers (5 to 16 digits long) that is prefixed by '@' in the text.
+
+        :param text: The text to be parsed for mentions, defaults to None
+        :type text: Optional[str], optional
+        :return: A list of mentions in the format of 'GroupMention(groupJID="group_id@g.us", groupSubject="group_name")'
+        :rtype: list[GroupMention]
+        """
+        if text is None:
+            return []
+        
+        gc_mentions = []
+        for jid in re.finditer(r"@([0-9-]{11,26}|0)", text):
+            try:
+                group = self.get_group_info(build_jid(jid.group(1), "g.us"))
+            except GetGroupInfoError:
+                continue
+            except Exception:
+                log.info(traceback.format_exc())
+                continue
+            gc_mentions.append(
+                GroupMention(
+                    groupJID=Jid2String(group.JID),
+                    groupSubject=group.GroupName.Name
+                )
+            )
+            
+        return gc_mentions
+
     async def _generate_link_preview(self, text: str) -> ExtendedTextMessage | None:
         youtube_url_pattern = re.compile(
             r"(?:https?:)?//(?:www\.)?(?:youtube\.com/(?:[^/\n\s]+"
@@ -511,7 +544,7 @@ class NewAClient:
         )
 
     async def send_message(
-        self, to: JID, message: typing.Union[Message, str], link_preview: bool = False, ghost_mentions: str = ""
+        self, to: JID, message: typing.Union[Message, str], link_preview: bool = False, ghost_mentions: Optional[str] = None
     ) -> SendResponse:
         """Send a message to the specified JID.
 
@@ -529,15 +562,16 @@ class NewAClient:
         """
         to_bytes = to.SerializeToString()
         if isinstance(message, str):
+            mentioned_groups = self._parse_group_mention(message)
             mentioned_jid = self._parse_mention(ghost_mentions or message)
             partial_msg = ExtendedTextMessage(
-                text=message, contextInfo=ContextInfo(mentionedJID=mentioned_jid)
+                text=message, contextInfo=ContextInfo(mentionedJID=mentioned_jid, groupMentions=mentioned_groups)
             )
             if link_preview:
                 preview = await self._generate_link_preview(message)
                 if preview:
                     partial_msg.MergeFrom(preview)
-            if partial_msg.previewType is None and not mentioned_jid:
+            if partial_msg.previewType is None and not (mentioned_groups or mentioned_jid):
                 msg = Message(conversation=message)
             else:
                 msg = Message(extendedTextMessage=partial_msg)
@@ -560,7 +594,7 @@ class NewAClient:
         quoted: neonize_proto.Message,
         link_preview: bool = False,
         reply_privately: bool = False,
-        ghost_mentions: str = "",
+        ghost_mentions: Optional[str] = None,
     ) -> Message:
         """Send a reply message to a specified JID.
 
@@ -581,7 +615,10 @@ class NewAClient:
         if isinstance(message, str):
             partial_message = ExtendedTextMessage(
                 text=message,
-                contextInfo=ContextInfo(mentionedJID=self._parse_mention(ghost_mentions or message)),
+                contextInfo=ContextInfo(
+                    mentionedJID=self._parse_mention(ghost_mentions or message),
+                    groupMentions=self._parse_group_mention(message),
+                    ),
             )
             if link_preview:
                 preview = await self._generate_link_preview(message)
@@ -886,7 +923,7 @@ class NewAClient:
         viewonce: bool = False,
         gifplayback: bool = False,
         is_gif: bool = False,
-        ghost_mentions: str = "",
+        ghost_mentions: Optional[str] = None,
     ) -> Message:
         """
         This function is used to build a video message. It uploads a video file, extracts necessary information,
@@ -938,6 +975,7 @@ class NewAClient:
                 viewOnce=viewonce,
                 contextInfo=ContextInfo(
                     mentionedJID=self._parse_mention(ghost_mentions or caption),
+                    groupMentions=self._parse_group_mention(caption),
                 ),
             )
         )
@@ -954,7 +992,7 @@ class NewAClient:
         viewonce: bool = False,
         gifplayback: bool = False,
         is_gif: bool = False,
-        ghost_mentions: str = "",
+        ghost_mentions: Optional[str] = None,
     ) -> SendResponse:
         """Sends a video to the specified recipient.
 
@@ -988,7 +1026,7 @@ class NewAClient:
         caption: Optional[str] = None,
         quoted: Optional[neonize_proto.Message] = None,
         viewonce: bool = False,
-        ghost_mentions: str = "",
+        ghost_mentions: Optional[str] = None,
     ) -> Message:
         """
         This function builds an image message. It takes a file (either a string or bytes),
@@ -1034,6 +1072,7 @@ class NewAClient:
                 viewOnce=viewonce,
                 contextInfo=ContextInfo(
                     mentionedJID=self._parse_mention(ghost_mentions or caption),
+                    groupMentions=self._parse_group_mention(caption),
                 ),
             )
         )
@@ -1048,7 +1087,7 @@ class NewAClient:
         caption: Optional[str] = None,
         quoted: Optional[neonize_proto.Message] = None,
         viewonce: bool = False,
-        ghost_mentions: str = "",
+        ghost_mentions: Optional[str] = None,
     ) -> SendResponse:
         """Sends an image to the specified recipient.
 
@@ -1163,6 +1202,7 @@ class NewAClient:
                 fileName=filename,
                 contextInfo=ContextInfo(
                     mentionedJID=self._parse_mention(ghost_mentions or caption),
+                    groupMentions=self._parse_group_mention(caption),
                 ),
             )
         )
