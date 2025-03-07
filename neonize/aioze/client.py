@@ -450,7 +450,7 @@ class NewAClient:
             return []
         return [jid.group(1) + "@s.whatsapp.net" for jid in re.finditer(r"@([0-9]{5,16}|0)", text)]
 
-def _parse_group_mention(self, text: Optional[str] = None) -> list[GroupMention]:
+    def _parse_group_mention(self, text: Optional[str] = None) -> list[GroupMention]:
         """
         This function parses a given text and returns a list of 'mentions' in the format of 'mention@g.us'
         A 'mention' is defined as a sequence of numbers (5 to 16 digits long) that is prefixed by '@' in the text.
