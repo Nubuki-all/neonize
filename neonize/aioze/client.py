@@ -450,7 +450,7 @@ class NewAClient:
             return []
         return [jid.group(1) + "@s.whatsapp.net" for jid in re.finditer(r"@([0-9]{5,16}|0)", text)]
 
-    def _parse_group_mention(self, text: Optional[str] = None) -> list[GroupMention]:
+    async def _parse_group_mention(self, text: Optional[str] = None) -> list[GroupMention]:
         """
         This function parses a given text and returns a list of 'mentions' in the format of 'mention@g.us'
         A 'mention' is defined as a sequence of numbers (5 to 16 digits long) that is prefixed by '@' in the text.
@@ -466,7 +466,7 @@ class NewAClient:
         gc_mentions = []
         for jid in re.finditer(r"@([0-9-]{11,26}|0)", text):
             try:
-                group = self.get_group_info(build_jid(jid.group(1), "g.us"))
+                group = await self.get_group_info(build_jid(jid.group(1), "g.us"))
             except GetGroupInfoError:
                 continue
             except Exception:
@@ -562,7 +562,7 @@ class NewAClient:
         """
         to_bytes = to.SerializeToString()
         if isinstance(message, str):
-            mentioned_groups = self._parse_group_mention(message)
+            mentioned_groups = await self._parse_group_mention(message)
             mentioned_jid = self._parse_mention(ghost_mentions or message)
             partial_msg = ExtendedTextMessage(
                 text=message, contextInfo=ContextInfo(mentionedJID=mentioned_jid, groupMentions=mentioned_groups)
@@ -617,7 +617,7 @@ class NewAClient:
                 text=message,
                 contextInfo=ContextInfo(
                     mentionedJID=self._parse_mention(ghost_mentions or message),
-                    groupMentions=self._parse_group_mention(message),
+                    groupMentions=(await self._parse_group_mention(message)),
                     ),
             )
             if link_preview:
@@ -975,7 +975,7 @@ class NewAClient:
                 viewOnce=viewonce,
                 contextInfo=ContextInfo(
                     mentionedJID=self._parse_mention(ghost_mentions or caption),
-                    groupMentions=self._parse_group_mention(caption),
+                    groupMentions=(await self._parse_group_mention(caption)),
                 ),
             )
         )
@@ -1072,7 +1072,7 @@ class NewAClient:
                 viewOnce=viewonce,
                 contextInfo=ContextInfo(
                     mentionedJID=self._parse_mention(ghost_mentions or caption),
-                    groupMentions=self._parse_group_mention(caption),
+                    groupMentions=(await self._parse_group_mention(caption)),
                 ),
             )
         )
@@ -1202,7 +1202,7 @@ class NewAClient:
                 fileName=filename,
                 contextInfo=ContextInfo(
                     mentionedJID=self._parse_mention(ghost_mentions or caption),
-                    groupMentions=self._parse_group_mention(caption),
+                    groupMentions=(await self._parse_group_mention(caption)),
                 ),
             )
         )
