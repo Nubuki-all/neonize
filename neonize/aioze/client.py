@@ -603,6 +603,7 @@ class NewAClient:
         to: Optional[JID] = None,
         link_preview: bool = False,
         reply_privately: bool = False,
+        ghost_mentions: Optional[str] = None,
     ) -> SendResponse:
         """Send a reply message to a specified JID.
 
@@ -616,8 +617,8 @@ class NewAClient:
         :type link_preview: bool, optional
         :param reply_privately: If set to True, the message is sent as a private reply. Defaults to False.
         :type reply_privately: bool, optional
-        :param mentioned_jid: List of JIDs to be mentioned in the message. Defaults to an empty list.
-        :type mentioned_jid: List[str], optional
+        :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
+        :type ghost_mentions: str, optional
         :return: Response of the send operation.
         :rtype: SendResponse
         """
@@ -633,6 +634,7 @@ class NewAClient:
                 quoted=quoted,
                 link_preview=link_preview,
                 reply_privately=reply_privately,
+                ghost_mentions=ghost_mentions,
             ),
             link_preview,
         )
