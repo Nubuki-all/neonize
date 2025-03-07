@@ -2642,7 +2642,7 @@ class NewAClient:
     async def decrypt_poll_vote(self, message: neonize_proto.Message) -> PollVoteMessage:
         """Decrypt PollMessage"""
         msg_buff = message.SerializeToString()
-        response = await self.__client.DecryptPollVote(self.uuid, msg_buff)
+        response = await self.__client.DecryptPollVote(self.uuid, msg_buff, len(msg_buff))
         model = ReturnFunctionWithError.FromString(response.get_bytes())
         if model.Error:
             raise DecryptPollVoteError(model.Error)
