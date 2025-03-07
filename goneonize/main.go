@@ -2032,7 +2032,7 @@ func DecryptPollVote(id *C.char, message *C.uchar, messageSize C.int) C.struct_B
 			PollVoteMessage: result,
 		}
 	}
-	return_buf, err := proto.Marshal(result)
+	return_buf, err := proto.Marshal(&return_proto)
 	if err != nil {
 		panic(err)
 	}
