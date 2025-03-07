@@ -464,7 +464,7 @@ class NewAClient:
             return []
         
         gc_mentions = []
-        for jid in re.finditer(r"@([0-9-]{11,26}|0)", text):
+        for jid in re.finditer(r"@([0-9-]{11,26}|0)@g\.us", text):
             try:
                 group = await self.get_group_info(build_jid(jid.group(1), "g.us"))
             except GetGroupInfoError:
