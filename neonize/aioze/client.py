@@ -452,8 +452,8 @@ class NewAClient:
 
     async def _parse_group_mention(self, text: Optional[str] = None) -> list[GroupMention]:
         """
-        This function parses a given text and returns a list of 'mentions' in the format of 'mention@g.us'
-        A 'mention' is defined as a sequence of numbers (5 to 16 digits long) that is prefixed by '@' in the text.
+        This function parses a given text and returns a list of 'mentions' in the format of 'GroupMention(…'
+        A 'mention' is defined as a sequence of numbers (11 to 26 digits long) (might also include an hypen) that is prefixed by '@' and suffixed by @g.us in the text.
 
         :param text: The text to be parsed for mentions, defaults to None
         :type text: Optional[str], optional
