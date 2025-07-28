@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
-        <title>neonize.utils.message - neonize 0.3.10.4 documentation</title>
+        <title>neonize.utils.log - neonize 0.3.10.4 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=25af2a20" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -249,95 +249,90 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <h1>Source code for neonize.utils.message</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">..proto</span><span class="w"> </span><span class="kn">import</span> <span class="n">Neonize_pb2</span> <span class="k">as</span> <span class="n">neonize_proto</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..proto.waE2E.WAWebProtobufsE2E_pb2</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">DocumentMessage</span><span class="p">,</span>
-    <span class="n">ExtendedTextMessage</span><span class="p">,</span>
-    <span class="n">ImageMessage</span><span class="p">,</span>
-    <span class="n">Message</span><span class="p">,</span>
-    <span class="n">PollUpdateMessage</span><span class="p">,</span>
-    <span class="n">VideoMessage</span><span class="p">,</span>
+          <h1>Source code for neonize.utils.log</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ctypes</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">queue</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">..proto.Neonize_pb2</span><span class="w"> </span><span class="kn">import</span> <span class="n">LogEntry</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">colorlog</span><span class="w"> </span><span class="kn">import</span> <span class="n">ColoredFormatter</span>
+<span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+    <span class="n">ColoredFormatter</span> <span class="o">=</span> <span class="kc">None</span>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+<span class="n">_log_</span> <span class="o">=</span> <span class="n">log</span>
+
+<span class="k">if</span> <span class="n">ColoredFormatter</span><span class="p">:</span>
+    <span class="n">formatter</span> <span class="o">=</span> <span class="n">ColoredFormatter</span><span class="p">(</span>
+        <span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2">.</span><span class="si">%(msecs)03d</span><span class="s2"> </span><span class="si">%(log_color)s</span><span class="s2">[</span><span class="si">%(name)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2">] - </span><span class="si">%(message)s%(reset)s</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">datefmt</span><span class="o">=</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">,</span>
+        <span class="n">log_colors</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;INFO&quot;</span><span class="p">:</span> <span class="s2">&quot;cyan&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;WARNING&quot;</span><span class="p">:</span> <span class="s2">&quot;yellow&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;ERROR&quot;</span><span class="p">:</span> <span class="s2">&quot;red&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;CRITICAL&quot;</span><span class="p">:</span> <span class="s2">&quot;bold_red&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="n">stream_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+    <span class="n">stream_handler</span><span class="o">.</span><span class="n">setFormatter</span><span class="p">(</span><span class="n">formatter</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">stream_handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">StreamHandler</span><span class="p">()</span>
+
+<span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span>
+    <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">%(asctime)s</span><span class="s2">.</span><span class="si">%(msecs)03d</span><span class="s2"> [</span><span class="si">%(name)s</span><span class="s2"> </span><span class="si">%(levelname)s</span><span class="s2">] - </span><span class="si">%(message)s</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="n">datefmt</span><span class="o">=</span><span class="s2">&quot;%H:%M:%S&quot;</span><span class="p">,</span>
+    <span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
+    <span class="n">handlers</span><span class="o">=</span><span class="p">[</span><span class="n">stream_handler</span><span class="p">],</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">..types</span><span class="w"> </span><span class="kn">import</span> <span class="n">MediaMessageType</span><span class="p">,</span> <span class="n">MessageWithContextInfo</span><span class="p">,</span> <span class="n">TextMessageType</span>
+
+<span class="n">clientlogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;whatsmeow.Client&quot;</span><span class="p">)</span>
+<span class="n">dblogger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;Whatsmeow.Database&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_message_type">
-<a class="viewcode-back" href="../../../source/neonize.utils.html#neonize.utils.message.get_message_type">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_message_type</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MediaMessageType</span> <span class="o">|</span> <span class="n">TextMessageType</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Determines the type of message.</span>
-
-<span class="sd">    :param message: The message object.</span>
-<span class="sd">    :type message: Message</span>
-<span class="sd">    :raises IndexError: If the message type cannot be determined.</span>
-<span class="sd">    :return: The type of the message.</span>
-<span class="sd">    :rtype: MediaMessageType | TextMessageType</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">ListFields</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">field_name</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">&quot;Message&quot;</span><span class="p">,</span> <span class="s2">&quot;MessageV2&quot;</span><span class="p">,</span> <span class="s2">&quot;MessageV3&quot;</span><span class="p">)):</span>
-            <span class="k">return</span> <span class="n">v</span>
-        <span class="k">elif</span> <span class="n">field_name</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;conversation&quot;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">v</span>
-    <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">()</span></div>
+<span class="n">_log_queue</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_worker</span><span class="p">():</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">binary</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">_log_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">binary</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">break</span>  <span class="c1"># sentinel for shutdown</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">log_msg</span> <span class="o">=</span> <span class="n">LogEntry</span><span class="o">.</span><span class="n">FromString</span><span class="p">(</span><span class="n">ctypes</span><span class="o">.</span><span class="n">string_at</span><span class="p">(</span><span class="n">binary</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">log_msg</span><span class="o">.</span><span class="n">Name</span> <span class="o">==</span> <span class="s2">&quot;Client&quot;</span><span class="p">:</span>
+                <span class="n">log</span> <span class="o">=</span> <span class="n">clientlogger</span>
+            <span class="k">elif</span> <span class="n">log_msg</span><span class="o">.</span><span class="n">Name</span> <span class="o">==</span> <span class="s2">&quot;Database&quot;</span><span class="p">:</span>
+                <span class="n">log</span> <span class="o">=</span> <span class="n">dblogger</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">log_msg</span><span class="o">.</span><span class="n">Name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                <span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;whatsmeow.</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">level_fn</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">log</span><span class="p">,</span> <span class="n">log_msg</span><span class="o">.</span><span class="n">Level</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">)</span>
+            <span class="n">level_fn</span><span class="p">(</span><span class="n">log_msg</span><span class="o">.</span><span class="n">Message</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">_log_</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="s2">&quot;Failed to handle WhatsMeow log&quot;</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">_log_queue</span><span class="o">.</span><span class="n">task_done</span><span class="p">()</span>
 
-<div class="viewcode-block" id="extract_text">
-<a class="viewcode-back" href="../../../source/neonize.utils.html#neonize.utils.message.extract_text">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">extract_text</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracts text content from a message.</span>
 
-<span class="sd">    :param message: The message object.</span>
-<span class="sd">    :type message: Message</span>
-<span class="sd">    :return: The extracted text content.</span>
-<span class="sd">    :rtype: str</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">message</span><span class="o">.</span><span class="n">imageMessage</span><span class="o">.</span><span class="n">ListFields</span><span class="p">():</span>
-        <span class="n">imageMessage</span><span class="p">:</span> <span class="n">ImageMessage</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">imageMessage</span>
-        <span class="k">return</span> <span class="n">imageMessage</span><span class="o">.</span><span class="n">caption</span>
-    <span class="k">elif</span> <span class="n">message</span><span class="o">.</span><span class="n">extendedTextMessage</span><span class="o">.</span><span class="n">ListFields</span><span class="p">():</span>
-        <span class="n">extendedTextMessage</span><span class="p">:</span> <span class="n">ExtendedTextMessage</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">extendedTextMessage</span>
-        <span class="k">return</span> <span class="n">extendedTextMessage</span><span class="o">.</span><span class="n">text</span>
-    <span class="k">elif</span> <span class="n">message</span><span class="o">.</span><span class="n">videoMessage</span><span class="o">.</span><span class="n">ListFields</span><span class="p">():</span>
-        <span class="n">videoMessage</span><span class="p">:</span> <span class="n">VideoMessage</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">videoMessage</span>
-        <span class="k">return</span> <span class="n">videoMessage</span><span class="o">.</span><span class="n">caption</span>
-    <span class="k">elif</span> <span class="n">message</span><span class="o">.</span><span class="n">documentMessage</span><span class="o">.</span><span class="n">ListFields</span><span class="p">():</span>
-        <span class="n">documentMessage</span><span class="p">:</span> <span class="n">DocumentMessage</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">documentMessage</span>
-        <span class="k">return</span> <span class="n">documentMessage</span><span class="o">.</span><span class="n">caption</span>
-    <span class="k">elif</span> <span class="n">message</span><span class="o">.</span><span class="n">conversation</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">message</span><span class="o">.</span><span class="n">conversation</span>
-    <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+<span class="n">_thread</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">_worker</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">_thread</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="log_whatsmeow">
+<a class="viewcode-back" href="../../../source/neonize.utils.html#neonize.utils.log.log_whatsmeow">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">log_whatsmeow</span><span class="p">(</span><span class="n">binary</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+    <span class="n">_log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="n">binary</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span></div>
 
 
 
-<div class="viewcode-block" id="get_poll_update_message">
-<a class="viewcode-back" href="../../../source/neonize.utils.html#neonize.utils.message.get_poll_update_message">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_poll_update_message</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">neonize_proto</span><span class="o">.</span><span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PollUpdateMessage</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracts pollUpdateMessage from event Message</span>
-<span class="sd">    :param message: The message object.</span>
-<span class="sd">    :type message: neonize_proto.Message</span>
-<span class="sd">    :return: The extracted poll update message.</span>
-<span class="sd">    :rtype: PollUpdateMessage</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">msg</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">Message</span>
-    <span class="k">if</span> <span class="n">msg</span><span class="o">.</span><span class="n">pollUpdateMessage</span><span class="o">.</span><span class="n">ListFields</span><span class="p">():</span>
-        <span class="n">pollUpdateMessage</span><span class="p">:</span> <span class="n">PollUpdateMessage</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">pollUpdateMessage</span>
-        <span class="k">return</span> <span class="n">pollUpdateMessage</span></div>
-
-
-
-<div class="viewcode-block" id="message_has_contextinfo">
-<a class="viewcode-back" href="../../../source/neonize.utils.html#neonize.utils.message.message_has_contextinfo">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">message_has_contextinfo</span><span class="p">(</span><span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">field_name</span><span class="p">,</span> <span class="n">msg</span> <span class="ow">in</span> <span class="n">message</span><span class="o">.</span><span class="n">ListFields</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">field_name</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;Message&quot;</span><span class="p">):</span>
-            <span class="k">break</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">False</span>
-    <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span> <span class="ow">in</span> <span class="n">MessageWithContextInfo</span><span class="o">.</span><span class="n">__constraints__</span></div>
+<div class="viewcode-block" id="shutdown_log_worker">
+<a class="viewcode-back" href="../../../source/neonize.utils.html#neonize.utils.log.shutdown_log_worker">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">shutdown_log_worker</span><span class="p">():</span>
+    <span class="n">_log_queue</span><span class="o">.</span><span class="n">put</span><span class="p">((</span><span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+    <span class="n">_thread</span><span class="o">.</span><span class="n">join</span><span class="p">()</span></div>
 
 </pre></div>
         </article>

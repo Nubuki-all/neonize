@@ -4,31 +4,31 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" />
 
-    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>neonize.utils.enum - neonize 1.2.3 documentation</title>
-      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=354aac6f" />
-    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=302659d7" />
+    <!-- Generated with Sphinx 8.2.3 and Furo 2025.07.19 -->
+        <title>neonize.utils.enum - neonize 0.3.10.4 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=25af2a20" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
     
     
 
 
 <style>
   body {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
   
   }
   @media not print {
     body[data-theme="dark"] {
-      --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
+      --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
   
     }
     @media (prefers-color-scheme: dark) {
       body:not([data-theme="light"]) {
-        --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
+        --color-code-background: #2b2b2b;
+  --color-code-foreground: #f8f8f2;
   
       }
     }
@@ -165,7 +165,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../../index.html"><div class="brand">neonize 1.2.3 documentation</div></a>
+      <a href="../../../index.html"><div class="brand">neonize 0.3.10.4 documentation</div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -188,8 +188,7 @@
       
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../index.html">
   
-  
-  <span class="sidebar-brand-text">neonize 1.2.3 documentation</span>
+  <span class="sidebar-brand-text">neonize 0.3.10.4 documentation</span>
   
 </a><form class="sidebar-search-container" method="get" action="../../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -197,7 +196,27 @@
   <input type="hidden" name="area" value="default">
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../getstarted.html">Getting Started with Neonize</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API Reference:</span></p>
+<ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../source/modules.html">neonize</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of neonize</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../../source/neonize.html">neonize package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of neonize package</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../../source/neonize.proto.html">neonize.proto package</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../source/neonize.utils.html">neonize.utils package</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/krypton-byte/neonize">GitHub Repository</a></li>
+<li class="toctree-l1"><a class="reference external" href="https://github.com/krypton-byte/neonize/issues">Issue Tracker</a></li>
+</ul>
+
 </div>
 </div>
 
@@ -232,15 +251,20 @@
         <article role="main" id="furo-main-content">
           <h1>Source code for neonize.utils.enum</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">magic</span>
+
 <span class="kn">import</span><span class="w"> </span><span class="nn">typing</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">magic</span>
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">..proto.waE2E.WAWebProtobufsE2E_pb2</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Message</span><span class="p">,</span>
-    <span class="n">ImageMessage</span><span class="p">,</span>
     <span class="n">AudioMessage</span><span class="p">,</span>
-    <span class="n">VideoMessage</span><span class="p">,</span>
     <span class="n">DocumentMessage</span><span class="p">,</span>
+    <span class="n">ImageMessage</span><span class="p">,</span>
+    <span class="n">Message</span><span class="p">,</span>
+    <span class="n">StickerMessage</span><span class="p">,</span>
+    <span class="n">StickerPackMessage</span><span class="p">,</span>
+    <span class="n">VideoMessage</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.message</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_message_type</span>
 
@@ -255,6 +279,7 @@
     <span class="n">MediaHistory</span> <span class="o">=</span> <span class="s2">&quot;md-msg-hist&quot;</span>
     <span class="n">MediaAppState</span> <span class="o">=</span> <span class="s2">&quot;md-app-state&quot;</span>
     <span class="n">MediaLinkThumbnail</span> <span class="o">=</span> <span class="s2">&quot;thumbnail-link&quot;</span>
+    <span class="n">MediaStickerPack</span> <span class="o">=</span> <span class="s2">&quot;sticker-pack&quot;</span>
 
 <div class="viewcode-block" id="MediaTypeToMMS.from_message">
 <a class="viewcode-back" href="../../../source/neonize.utils.html#neonize.utils.enum.MediaTypeToMMS.from_message">[docs]</a>
@@ -262,9 +287,11 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">from_message</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
             <span class="n">ImageMessage</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaImage</span><span class="p">,</span>
+            <span class="n">StickerMessage</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaImage</span><span class="p">,</span>
             <span class="n">AudioMessage</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaAudio</span><span class="p">,</span>
             <span class="n">VideoMessage</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaVideo</span><span class="p">,</span>
             <span class="n">DocumentMessage</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaDocument</span><span class="p">,</span>
+            <span class="n">StickerPackMessage</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaStickerPack</span><span class="p">,</span>
         <span class="p">}[</span><span class="nb">type</span><span class="p">(</span><span class="n">get_message_type</span><span class="p">(</span><span class="n">message</span><span class="p">))]</span></div>
 
 
@@ -292,6 +319,27 @@
     <span class="n">MediaHistory</span> <span class="o">=</span> <span class="mi">4</span>
     <span class="n">MediaAppState</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">MediaLinkThumbnail</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">MediaStickerPack</span> <span class="o">=</span> <span class="mi">7</span>
+
+<div class="viewcode-block" id="MediaType.to_mms">
+<a class="viewcode-back" href="../../../source/neonize.utils.html#neonize.utils.enum.MediaType.to_mms">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">to_mms</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">MediaTypeToMMS</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Converts the MediaType to its corresponding MediaTypeToMMS enum member.</span>
+
+<span class="sd">        :return: The corresponding MediaTypeToMMS enum member.</span>
+<span class="sd">        :rtype: MediaTypeToMMS</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MediaImage</span><span class="p">:</span> <span class="n">MediaTypeToMMS</span><span class="o">.</span><span class="n">MediaImage</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MediaVideo</span><span class="p">:</span> <span class="n">MediaTypeToMMS</span><span class="o">.</span><span class="n">MediaVideo</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MediaAudio</span><span class="p">:</span> <span class="n">MediaTypeToMMS</span><span class="o">.</span><span class="n">MediaAudio</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MediaDocument</span><span class="p">:</span> <span class="n">MediaTypeToMMS</span><span class="o">.</span><span class="n">MediaDocument</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MediaHistory</span><span class="p">:</span> <span class="n">MediaTypeToMMS</span><span class="o">.</span><span class="n">MediaHistory</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MediaAppState</span><span class="p">:</span> <span class="n">MediaTypeToMMS</span><span class="o">.</span><span class="n">MediaAppState</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MediaLinkThumbnail</span><span class="p">:</span> <span class="n">MediaTypeToMMS</span><span class="o">.</span><span class="n">MediaLinkThumbnail</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MediaStickerPack</span><span class="p">:</span> <span class="n">MediaTypeToMMS</span><span class="o">.</span><span class="n">MediaStickerPack</span><span class="p">,</span>
+        <span class="p">}[</span><span class="bp">self</span><span class="p">]</span></div>
+
 
 <div class="viewcode-block" id="MediaType.from_magic">
 <a class="viewcode-back" href="../../../source/neonize.utils.html#neonize.utils.enum.MediaType.from_magic">[docs]</a>
@@ -317,6 +365,20 @@
                 <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaAudio</span>
             <span class="k">case</span><span class="w"> </span><span class="k">_</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaDocument</span></div>
+
+
+<div class="viewcode-block" id="MediaType.from_message">
+<a class="viewcode-back" href="../../../source/neonize.utils.html#neonize.utils.enum.MediaType.from_message">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">from_message</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="n">Message</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">ImageMessage</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaImage</span><span class="p">,</span>
+            <span class="n">StickerMessage</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaImage</span><span class="p">,</span>
+            <span class="n">AudioMessage</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaAudio</span><span class="p">,</span>
+            <span class="n">VideoMessage</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaVideo</span><span class="p">,</span>
+            <span class="n">DocumentMessage</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaDocument</span><span class="p">,</span>
+            <span class="n">StickerPackMessage</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">MediaStickerPack</span><span class="p">,</span>
+        <span class="p">}[</span><span class="nb">type</span><span class="p">(</span><span class="n">get_message_type</span><span class="p">(</span><span class="n">message</span><span class="p">))]</span></div>
 </div>
 
 
@@ -642,6 +704,22 @@
     <span class="n">AVAILABLE</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;available&quot;</span>
     <span class="n">UNAVAILABLE</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;unavailable&quot;</span></div>
 
+
+
+<div class="viewcode-block" id="VoteType">
+<a class="viewcode-back" href="../../../source/neonize.utils.html#neonize.utils.enum.VoteType">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">VoteType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enumeration of vote types.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        MULTIPLE (int): Allows selecting multiple options in a poll.</span>
+<span class="sd">        SINGLE (int): Allows selecting only a single option in a poll.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">MULTIPLE</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">SINGLE</span> <span class="o">=</span> <span class="mi">1</span></div>
+
 </pre></div>
         </article>
       </div>
@@ -674,9 +752,9 @@
       
     </aside>
   </div>
-</div><script src="../../../_static/documentation_options.js?v=590429e0"></script>
+</div><script src="../../../_static/documentation_options.js?v=22326f2a"></script>
     <script src="../../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    <script src="../../../_static/scripts/furo.js?v=46bd48cc"></script>
     </body>
 </html>
