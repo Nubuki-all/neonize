@@ -56,6 +56,7 @@ class _BotMetricsEntryPointEnumTypeWrapper(google.protobuf.internal.enum_type_wr
     ASK_META_AI_CONTEXT_MENU_GROUP: _BotMetricsEntryPoint.ValueType  # 28
     INVOKE_META_AI_1ON1: _BotMetricsEntryPoint.ValueType  # 29
     INVOKE_META_AI_GROUP: _BotMetricsEntryPoint.ValueType  # 30
+    META_AI_FORWARD: _BotMetricsEntryPoint.ValueType  # 31
 
 class BotMetricsEntryPoint(_BotMetricsEntryPoint, metaclass=_BotMetricsEntryPointEnumTypeWrapper): ...
 
@@ -89,6 +90,7 @@ ASK_META_AI_CONTEXT_MENU_1ON1: BotMetricsEntryPoint.ValueType  # 27
 ASK_META_AI_CONTEXT_MENU_GROUP: BotMetricsEntryPoint.ValueType  # 28
 INVOKE_META_AI_1ON1: BotMetricsEntryPoint.ValueType  # 29
 INVOKE_META_AI_GROUP: BotMetricsEntryPoint.ValueType  # 30
+META_AI_FORWARD: BotMetricsEntryPoint.ValueType  # 31
 global___BotMetricsEntryPoint = BotMetricsEntryPoint
 
 class _BotMetricsThreadEntryPoint:

@@ -37,6 +37,34 @@ class DeviceCapabilities(google.protobuf.message.Message):
     FULL: DeviceCapabilities.ChatLockSupportLevel.ValueType  # 2
 
     @typing.final
+    class UserHasAvatar(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+        USERHASAVATAR_FIELD_NUMBER: builtins.int
+        userHasAvatar: builtins.bool
+        def __init__(
+            self,
+            *,
+            userHasAvatar: builtins.bool | None = ...,
+        ) -> None: ...
+        def HasField(self, field_name: typing.Literal["userHasAvatar", b"userHasAvatar"]) -> builtins.bool: ...
+        def ClearField(self, field_name: typing.Literal["userHasAvatar", b"userHasAvatar"]) -> None: ...
+
+    @typing.final
+    class BusinessBroadcast(google.protobuf.message.Message):
+        DESCRIPTOR: google.protobuf.descriptor.Descriptor
+
+        IMPORTLISTENABLED_FIELD_NUMBER: builtins.int
+        importListEnabled: builtins.bool
+        def __init__(
+            self,
+            *,
+            importListEnabled: builtins.bool | None = ...,
+        ) -> None: ...
+        def HasField(self, field_name: typing.Literal["importListEnabled", b"importListEnabled"]) -> builtins.bool: ...
+        def ClearField(self, field_name: typing.Literal["importListEnabled", b"importListEnabled"]) -> None: ...
+
+    @typing.final
     class LIDMigration(google.protobuf.message.Message):
         DESCRIPTOR: google.protobuf.descriptor.Descriptor
 
@@ -52,16 +80,24 @@ class DeviceCapabilities(google.protobuf.message.Message):
 
     CHATLOCKSUPPORTLEVEL_FIELD_NUMBER: builtins.int
     LIDMIGRATION_FIELD_NUMBER: builtins.int
-    chatLockSupportLevel: global___DeviceCapabilities.ChatLockSupportLevel.ValueType
+    BUSINESSBROADCAST_FIELD_NUMBER: builtins.int
+    USERHASAVATAR_FIELD_NUMBER: builtins.int
+    chatLockSupportLevel: Global___DeviceCapabilities.ChatLockSupportLevel.ValueType
     @property
-    def lidMigration(self) -> global___DeviceCapabilities.LIDMigration: ...
+    def lidMigration(self) -> Global___DeviceCapabilities.LIDMigration: ...
+    @property
+    def businessBroadcast(self) -> Global___DeviceCapabilities.BusinessBroadcast: ...
+    @property
+    def userHasAvatar(self) -> Global___DeviceCapabilities.UserHasAvatar: ...
     def __init__(
         self,
         *,
-        chatLockSupportLevel: global___DeviceCapabilities.ChatLockSupportLevel.ValueType | None = ...,
-        lidMigration: global___DeviceCapabilities.LIDMigration | None = ...,
+        chatLockSupportLevel: Global___DeviceCapabilities.ChatLockSupportLevel.ValueType | None = ...,
+        lidMigration: Global___DeviceCapabilities.LIDMigration | None = ...,
+        businessBroadcast: Global___DeviceCapabilities.BusinessBroadcast | None = ...,
+        userHasAvatar: Global___DeviceCapabilities.UserHasAvatar | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["chatLockSupportLevel", b"chatLockSupportLevel", "lidMigration", b"lidMigration"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["chatLockSupportLevel", b"chatLockSupportLevel", "lidMigration", b"lidMigration"]) -> None: ...
+    def HasField(self, field_name: typing.Literal["businessBroadcast", b"businessBroadcast", "chatLockSupportLevel", b"chatLockSupportLevel", "lidMigration", b"lidMigration", "userHasAvatar", b"userHasAvatar"]) -> builtins.bool: ...
+    def ClearField(self, field_name: typing.Literal["businessBroadcast", b"businessBroadcast", "chatLockSupportLevel", b"chatLockSupportLevel", "lidMigration", b"lidMigration", "userHasAvatar", b"userHasAvatar"]) -> None: ...
 
-global___DeviceCapabilities = DeviceCapabilities
+Global___DeviceCapabilities: typing_extensions.TypeAlias = DeviceCapabilities
