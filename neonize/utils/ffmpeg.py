@@ -391,7 +391,7 @@ class AFFmpeg:
                     extra.extend(
                         [
                             "-vf",
-                            "scale='if(gt(iw,ih),%i,-1)':'if(gt(iw,ih),-1,%i)'"
+                            "format=yuv420p,scale='if(gt(iw,ih),%i,-1)':'if(gt(iw,ih),-1,%i)'"
                             % (size, size),
                         ]
                     )
@@ -406,8 +406,6 @@ class AFFmpeg:
                 "1",
                 "-an",
                 *extra,
-                "-pix_fmt",
-                "yuvj420p",
                 "-f",
                 format.value,
                 "-",
@@ -667,7 +665,7 @@ class FFmpeg:
                     extra.extend(
                         [
                             "-vf",
-                            "scale='if(gt(iw,ih),%i,-1)':'if(gt(iw,ih),-1,%i)'"
+                            "format=yuv420p,scale='if(gt(iw,ih),%i,-1)':'if(gt(iw,ih),-1,%i)'"
                             % (size, size),
                         ]
                     )
@@ -682,8 +680,6 @@ class FFmpeg:
                 "1",
                 "-an",
                 *extra,
-                "-pix_fmt",
-                "yuvj420p",
                 "-f",
                 format.value,
                 "-",
