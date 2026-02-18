@@ -391,7 +391,7 @@ class AFFmpeg:
                     extra.extend(
                         [
                             "-vf",
-                            "format=yuv420p,scale='if(gt(iw,ih),%i,-1)':'if(gt(iw,ih),-1,%i)'"
+                            "scale='if(gt(iw,ih),%i,-1)':'if(gt(iw,ih),-1,%i)'"
                             % (size, size),
                         ]
                     )
@@ -405,7 +405,6 @@ class AFFmpeg:
                 "-vframes",
                 "1",
                 "-an",
-                "-bsf:v", "h264_metadata=matrix_coefficients=1:colour_primaries=1:transfer_characteristics=1",
                 *extra,
                 "-f",
                 format.value,
@@ -666,7 +665,7 @@ class FFmpeg:
                     extra.extend(
                         [
                             "-vf",
-                            "format=yuv420p,scale='if(gt(iw,ih),%i,-1)':'if(gt(iw,ih),-1,%i)'"
+                            "scale='if(gt(iw,ih),%i,-1)':'if(gt(iw,ih),-1,%i)'"
                             % (size, size),
                         ]
                     )
@@ -680,7 +679,6 @@ class FFmpeg:
                 "-vframes",
                 "1",
                 "-an",
-                "-bsf:v", "h264_metadata=matrix_coefficients=1:colour_primaries=1:transfer_characteristics=1",
                 *extra,
                 "-f",
                 format.value,
