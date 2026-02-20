@@ -20,11 +20,17 @@ def get_message_type(message: Message) -> MediaMessageType | TextMessageType:
     :return: The type of the message.
     :rtype: MediaMessageType | TextMessageType
     """
+    fallback = None
     for field_name, v in message.ListFields():
         if field_name.name.endswith(("Message", "MessageV2", "MessageV3")):
+            if not hasattr(v, "contextInfo"):
+                fallback = v
+                continue
             return v
         elif field_name.name == "conversation":
             return v
+    if fallback:
+        return fallback
     raise IndexError()
 
 
