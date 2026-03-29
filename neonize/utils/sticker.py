@@ -99,6 +99,30 @@ async def aio_convert_to_sticker(
     os.remove(temp)
     return buf, True
 
+async def aio_add_exif_to_sticker(sticker, name, packname):
+    if not WEBPMUX_IS_AVAILABLE:
+        return None
+    exif_filename = TemporaryFile(prefix=None, touch=False).__enter__()
+    with open(exif_filename.path, "wb") as file:
+        file.write(add_exif(name=name, packname=packname))
+    temp = tempfile.gettempdir() + "/" + f"{uuid.uuid4()}" + ".webp"
+    async with AFFmpeg(sticker) as ffmpeg:
+        cmd = [
+            "webpmux",
+            "-set",
+            "exif",
+            f"{exif_filename.path}",
+            ffmpeg.filepath,
+            "-o",
+            temp,
+        ]
+        await ffmpeg.call(cmd)
+    exif_filename.__exit__(None, None, None)
+    with open(temp, "rb") as file:
+        buf = file.read()
+    os.remove(temp)
+    return buf
+
 
 def convert_to_sticker(
     file: bytes,

@@ -194,7 +194,7 @@ from ..utils.iofile import (
 )
 from ..utils.jid import Jid2String, JIDToNonAD, build_jid, jid_is_lid
 from ..utils.log import log, log_whatsmeow
-from ..utils.sticker import aio_convert_to_sticker, aio_convert_to_webp
+from ..utils.sticker import aio_convert_to_sticker, aio_convert_to_webp, aio_add_exif_to_sticker
 from .events import Event, EventsManager, event_global_loop
 from .preview.compose import link_preview
 
@@ -1013,6 +1013,10 @@ class NewAClient:
                 raise ConvertStickerError(
                     "File is not a webp, which is required for passthrough."
                 )
+            if name or pack_name:
+              b = await aio_add_exif_to_sticker(sticker, name, packname)
+              io_save = BytesIO(b) if b else io_save
+            
         if not (passthrough or saved_exif):
             stk.save(
                 io_save,
