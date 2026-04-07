@@ -3,34 +3,97 @@
 isort:skip_file
 """
 
-import builtins
-import google.protobuf.descriptor
-import google.protobuf.message
+from google.protobuf import descriptor as _descriptor
+from google.protobuf import message as _message
+import builtins as _builtins
 import sys
-import typing
+import typing as _typing
 
 if sys.version_info >= (3, 10):
-    import typing as typing_extensions
+    from typing import TypeAlias as _TypeAlias
 else:
-    import typing_extensions
+    from typing_extensions import TypeAlias as _TypeAlias
 
-DESCRIPTOR: google.protobuf.descriptor.FileDescriptor
+DESCRIPTOR: _descriptor.FileDescriptor
 
-@typing.final
-class Subprotocol(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor
+@_typing.final
+class Subprotocol(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
 
-    PAYLOAD_FIELD_NUMBER: builtins.int
-    VERSION_FIELD_NUMBER: builtins.int
-    payload: builtins.bytes
-    version: builtins.int
+    PAYLOAD_FIELD_NUMBER: _builtins.int
+    VERSION_FIELD_NUMBER: _builtins.int
+    payload: _builtins.bytes
+    version: _builtins.int
     def __init__(
         self,
         *,
-        payload: builtins.bytes | None = ...,
-        version: builtins.int | None = ...,
+        payload: _builtins.bytes | None = ...,
+        version: _builtins.int | None = ...,
     ) -> None: ...
-    def HasField(self, field_name: typing.Literal["payload", b"payload", "version", b"version"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing.Literal["payload", b"payload", "version", b"version"]) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["payload", b"payload", "version", b"version"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["payload", b"payload", "version", b"version"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-Global___Subprotocol: typing_extensions.TypeAlias = Subprotocol
+Global___Subprotocol: _TypeAlias = Subprotocol  # noqa: Y015
+
+@_typing.final
+class FrankingMetadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    FRANKINGTAG_FIELD_NUMBER: _builtins.int
+    REPORTINGTAG_FIELD_NUMBER: _builtins.int
+    frankingTag: _builtins.bytes
+    reportingTag: _builtins.bytes
+    def __init__(
+        self,
+        *,
+        frankingTag: _builtins.bytes | None = ...,
+        reportingTag: _builtins.bytes | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["frankingTag", b"frankingTag", "reportingTag", b"reportingTag"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["frankingTag", b"frankingTag", "reportingTag", b"reportingTag"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___FrankingMetadata: _TypeAlias = FrankingMetadata  # noqa: Y015
+
+@_typing.final
+class Metadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    SENDERID_FIELD_NUMBER: _builtins.int
+    MESSAGEID_FIELD_NUMBER: _builtins.int
+    TIMESTAMPMS_FIELD_NUMBER: _builtins.int
+    FRANKINGMETADATA_FIELD_NUMBER: _builtins.int
+    PAYLOADVERSION_FIELD_NUMBER: _builtins.int
+    FUTUREPROOFBEHAVIOR_FIELD_NUMBER: _builtins.int
+    THREADTYPETAG_FIELD_NUMBER: _builtins.int
+    CLIENTTIMESTAMPMS_FIELD_NUMBER: _builtins.int
+    senderID: _builtins.str
+    messageID: _builtins.str
+    timestampMS: _builtins.int
+    payloadVersion: _builtins.int
+    futureProofBehavior: _builtins.int
+    threadTypeTag: _builtins.int
+    clientTimestampMS: _builtins.int
+    @_builtins.property
+    def frankingMetadata(self) -> Global___FrankingMetadata: ...
+    def __init__(
+        self,
+        *,
+        senderID: _builtins.str | None = ...,
+        messageID: _builtins.str | None = ...,
+        timestampMS: _builtins.int | None = ...,
+        frankingMetadata: Global___FrankingMetadata | None = ...,
+        payloadVersion: _builtins.int | None = ...,
+        futureProofBehavior: _builtins.int | None = ...,
+        threadTypeTag: _builtins.int | None = ...,
+        clientTimestampMS: _builtins.int | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["clientTimestampMS", b"clientTimestampMS", "frankingMetadata", b"frankingMetadata", "futureProofBehavior", b"futureProofBehavior", "messageID", b"messageID", "payloadVersion", b"payloadVersion", "senderID", b"senderID", "threadTypeTag", b"threadTypeTag", "timestampMS", b"timestampMS"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["clientTimestampMS", b"clientTimestampMS", "frankingMetadata", b"frankingMetadata", "futureProofBehavior", b"futureProofBehavior", "messageID", b"messageID", "payloadVersion", b"payloadVersion", "senderID", b"senderID", "threadTypeTag", b"threadTypeTag", "timestampMS", b"timestampMS"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___Metadata: _TypeAlias = Metadata  # noqa: Y015

@@ -99,6 +99,7 @@ async def aio_convert_to_sticker(
     os.remove(temp)
     return buf, True
 
+
 async def aio_add_exif_to_sticker(sticker, name, packname):
     if not WEBPMUX_IS_AVAILABLE:
         return None

@@ -26,6 +26,7 @@ class _BotMetricsEntryPoint:
 
 class _BotMetricsEntryPointEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_BotMetricsEntryPoint.ValueType], _builtins.type):
     DESCRIPTOR: _descriptor.EnumDescriptor
+    UNDEFINED_ENTRY_POINT: _BotMetricsEntryPoint.ValueType  # 0
     FAVICON: _BotMetricsEntryPoint.ValueType  # 1
     CHATLIST: _BotMetricsEntryPoint.ValueType  # 2
     AISEARCH_NULL_STATE_PAPER_PLANE: _BotMetricsEntryPoint.ValueType  # 3
@@ -58,9 +59,24 @@ class _BotMetricsEntryPointEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_
     INVOKE_META_AI_GROUP: _BotMetricsEntryPoint.ValueType  # 30
     META_AI_FORWARD: _BotMetricsEntryPoint.ValueType  # 31
     NEW_CHAT_AI_CONTACT: _BotMetricsEntryPoint.ValueType  # 32
+    MESSAGE_QUICK_ACTION_1_ON_1_CHAT: _BotMetricsEntryPoint.ValueType  # 33
+    MESSAGE_QUICK_ACTION_GROUP_CHAT: _BotMetricsEntryPoint.ValueType  # 34
+    ATTACHMENT_TRAY_1_ON_1_CHAT: _BotMetricsEntryPoint.ValueType  # 35
+    ATTACHMENT_TRAY_GROUP_CHAT: _BotMetricsEntryPoint.ValueType  # 36
+    ASK_META_AI_MEDIA_VIEWER_1ON1: _BotMetricsEntryPoint.ValueType  # 37
+    ASK_META_AI_MEDIA_VIEWER_GROUP: _BotMetricsEntryPoint.ValueType  # 38
+    MEDIA_PICKER_1_ON_1_CHAT: _BotMetricsEntryPoint.ValueType  # 39
+    MEDIA_PICKER_GROUP_CHAT: _BotMetricsEntryPoint.ValueType  # 40
+    ASK_META_AI_NO_SEARCH_RESULTS: _BotMetricsEntryPoint.ValueType  # 41
+    META_AI_SETTINGS: _BotMetricsEntryPoint.ValueType  # 45
+    WEB_INTRO_PANEL: _BotMetricsEntryPoint.ValueType  # 46
+    WEB_NAVIGATION_BAR: _BotMetricsEntryPoint.ValueType  # 47
+    GROUP_MEMBER: _BotMetricsEntryPoint.ValueType  # 54
+    CHATLIST_SEARCH: _BotMetricsEntryPoint.ValueType  # 55
 
 class BotMetricsEntryPoint(_BotMetricsEntryPoint, metaclass=_BotMetricsEntryPointEnumTypeWrapper): ...
 
+UNDEFINED_ENTRY_POINT: BotMetricsEntryPoint.ValueType  # 0
 FAVICON: BotMetricsEntryPoint.ValueType  # 1
 CHATLIST: BotMetricsEntryPoint.ValueType  # 2
 AISEARCH_NULL_STATE_PAPER_PLANE: BotMetricsEntryPoint.ValueType  # 3
@@ -93,6 +109,20 @@ INVOKE_META_AI_1ON1: BotMetricsEntryPoint.ValueType  # 29
 INVOKE_META_AI_GROUP: BotMetricsEntryPoint.ValueType  # 30
 META_AI_FORWARD: BotMetricsEntryPoint.ValueType  # 31
 NEW_CHAT_AI_CONTACT: BotMetricsEntryPoint.ValueType  # 32
+MESSAGE_QUICK_ACTION_1_ON_1_CHAT: BotMetricsEntryPoint.ValueType  # 33
+MESSAGE_QUICK_ACTION_GROUP_CHAT: BotMetricsEntryPoint.ValueType  # 34
+ATTACHMENT_TRAY_1_ON_1_CHAT: BotMetricsEntryPoint.ValueType  # 35
+ATTACHMENT_TRAY_GROUP_CHAT: BotMetricsEntryPoint.ValueType  # 36
+ASK_META_AI_MEDIA_VIEWER_1ON1: BotMetricsEntryPoint.ValueType  # 37
+ASK_META_AI_MEDIA_VIEWER_GROUP: BotMetricsEntryPoint.ValueType  # 38
+MEDIA_PICKER_1_ON_1_CHAT: BotMetricsEntryPoint.ValueType  # 39
+MEDIA_PICKER_GROUP_CHAT: BotMetricsEntryPoint.ValueType  # 40
+ASK_META_AI_NO_SEARCH_RESULTS: BotMetricsEntryPoint.ValueType  # 41
+META_AI_SETTINGS: BotMetricsEntryPoint.ValueType  # 45
+WEB_INTRO_PANEL: BotMetricsEntryPoint.ValueType  # 46
+WEB_NAVIGATION_BAR: BotMetricsEntryPoint.ValueType  # 47
+GROUP_MEMBER: BotMetricsEntryPoint.ValueType  # 54
+CHATLIST_SEARCH: BotMetricsEntryPoint.ValueType  # 55
 Global___BotMetricsEntryPoint: _TypeAlias = BotMetricsEntryPoint  # noqa: Y015
 
 class _BotMetricsThreadEntryPoint:
@@ -129,6 +159,7 @@ class _BotSessionSourceEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_BotS
     EMU_FLASH: _BotSessionSource.ValueType  # 4
     EMU_FLASH_FOLLOWUP: _BotSessionSource.ValueType  # 5
     VOICE: _BotSessionSource.ValueType  # 6
+    AI_HOME_SESSION: _BotSessionSource.ValueType  # 7
 
 class BotSessionSource(_BotSessionSource, metaclass=_BotSessionSourceEnumTypeWrapper): ...
 
@@ -139,7 +170,23 @@ USER_INPUT: BotSessionSource.ValueType  # 3
 EMU_FLASH: BotSessionSource.ValueType  # 4
 EMU_FLASH_FOLLOWUP: BotSessionSource.ValueType  # 5
 VOICE: BotSessionSource.ValueType  # 6
+AI_HOME_SESSION: BotSessionSource.ValueType  # 7
 Global___BotSessionSource: _TypeAlias = BotSessionSource  # noqa: Y015
+
+class _SessionTransparencyType:
+    ValueType = _typing.NewType("ValueType", _builtins.int)
+    V: _TypeAlias = ValueType  # noqa: Y015
+
+class _SessionTransparencyTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_SessionTransparencyType.ValueType], _builtins.type):
+    DESCRIPTOR: _descriptor.EnumDescriptor
+    UNKNOWN_TYPE: _SessionTransparencyType.ValueType  # 0
+    NY_AI_SAFETY_DISCLAIMER: _SessionTransparencyType.ValueType  # 1
+
+class SessionTransparencyType(_SessionTransparencyType, metaclass=_SessionTransparencyTypeEnumTypeWrapper): ...
+
+UNKNOWN_TYPE: SessionTransparencyType.ValueType  # 0
+NY_AI_SAFETY_DISCLAIMER: SessionTransparencyType.ValueType  # 1
+Global___SessionTransparencyType: _TypeAlias = SessionTransparencyType  # noqa: Y015
 
 @_typing.final
 class BotPluginMetadata(_message.Message):
@@ -264,10 +311,14 @@ class BotSignatureVerificationUseCaseProof(_message.Message):
 
     class _BotSignatureUseCaseEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[BotSignatureVerificationUseCaseProof._BotSignatureUseCase.ValueType], _builtins.type):
         DESCRIPTOR: _descriptor.EnumDescriptor
-        WA_BOT_MSG: BotSignatureVerificationUseCaseProof._BotSignatureUseCase.ValueType  # 0
+        UNSPECIFIED: BotSignatureVerificationUseCaseProof._BotSignatureUseCase.ValueType  # 0
+        WA_BOT_MSG: BotSignatureVerificationUseCaseProof._BotSignatureUseCase.ValueType  # 1
+        WA_TEE_BOT_MSG: BotSignatureVerificationUseCaseProof._BotSignatureUseCase.ValueType  # 2
 
     class BotSignatureUseCase(_BotSignatureUseCase, metaclass=_BotSignatureUseCaseEnumTypeWrapper): ...
-    WA_BOT_MSG: BotSignatureVerificationUseCaseProof.BotSignatureUseCase.ValueType  # 0
+    UNSPECIFIED: BotSignatureVerificationUseCaseProof.BotSignatureUseCase.ValueType  # 0
+    WA_BOT_MSG: BotSignatureVerificationUseCaseProof.BotSignatureUseCase.ValueType  # 1
+    WA_TEE_BOT_MSG: BotSignatureVerificationUseCaseProof.BotSignatureUseCase.ValueType  # 2
 
     VERSION_FIELD_NUMBER: _builtins.int
     USECASE_FIELD_NUMBER: _builtins.int
@@ -276,16 +327,17 @@ class BotSignatureVerificationUseCaseProof(_message.Message):
     version: _builtins.int
     useCase: Global___BotSignatureVerificationUseCaseProof.BotSignatureUseCase.ValueType
     signature: _builtins.bytes
-    certificateChain: _builtins.bytes
+    @_builtins.property
+    def certificateChain(self) -> _containers.RepeatedScalarFieldContainer[_builtins.bytes]: ...
     def __init__(
         self,
         *,
         version: _builtins.int | None = ...,
         useCase: Global___BotSignatureVerificationUseCaseProof.BotSignatureUseCase.ValueType | None = ...,
         signature: _builtins.bytes | None = ...,
-        certificateChain: _builtins.bytes | None = ...,
+        certificateChain: _abc.Iterable[_builtins.bytes] | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["certificateChain", b"certificateChain", "signature", b"signature", "useCase", b"useCase", "version", b"version"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["signature", b"signature", "useCase", b"useCase", "version", b"version"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["certificateChain", b"certificateChain", "signature", b"signature", "useCase", b"useCase", "version", b"version"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
@@ -482,17 +534,20 @@ class BotModelMetadata(_message.Message):
 
     MODELTYPE_FIELD_NUMBER: _builtins.int
     PREMIUMMODELSTATUS_FIELD_NUMBER: _builtins.int
+    MODELNAMEOVERRIDE_FIELD_NUMBER: _builtins.int
     modelType: Global___BotModelMetadata.ModelType.ValueType
     premiumModelStatus: Global___BotModelMetadata.PremiumModelStatus.ValueType
+    modelNameOverride: _builtins.str
     def __init__(
         self,
         *,
         modelType: Global___BotModelMetadata.ModelType.ValueType | None = ...,
         premiumModelStatus: Global___BotModelMetadata.PremiumModelStatus.ValueType | None = ...,
+        modelNameOverride: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["modelType", b"modelType", "premiumModelStatus", b"premiumModelStatus"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["modelNameOverride", b"modelNameOverride", "modelType", b"modelType", "premiumModelStatus", b"premiumModelStatus"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["modelType", b"modelType", "premiumModelStatus", b"premiumModelStatus"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["modelNameOverride", b"modelNameOverride", "modelType", b"modelType", "premiumModelStatus", b"premiumModelStatus"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
 Global___BotModelMetadata: _TypeAlias = BotModelMetadata  # noqa: Y015
@@ -660,7 +715,9 @@ class BotProgressIndicatorMetadata(_message.Message):
 
     PROGRESSDESCRIPTION_FIELD_NUMBER: _builtins.int
     STEPSMETADATA_FIELD_NUMBER: _builtins.int
+    ESTIMATEDCOMPLETIONTIME_FIELD_NUMBER: _builtins.int
     progressDescription: _builtins.str
+    estimatedCompletionTime: _builtins.int
     @_builtins.property
     def stepsMetadata(self) -> _containers.RepeatedCompositeFieldContainer[Global___BotProgressIndicatorMetadata.BotPlanningStepMetadata]: ...
     def __init__(
@@ -668,10 +725,11 @@ class BotProgressIndicatorMetadata(_message.Message):
         *,
         progressDescription: _builtins.str | None = ...,
         stepsMetadata: _abc.Iterable[Global___BotProgressIndicatorMetadata.BotPlanningStepMetadata] | None = ...,
+        estimatedCompletionTime: _builtins.int | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["progressDescription", b"progressDescription"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["estimatedCompletionTime", b"estimatedCompletionTime", "progressDescription", b"progressDescription"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["progressDescription", b"progressDescription", "stepsMetadata", b"stepsMetadata"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["estimatedCompletionTime", b"estimatedCompletionTime", "progressDescription", b"progressDescription", "stepsMetadata", b"stepsMetadata"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
 Global___BotProgressIndicatorMetadata: _TypeAlias = BotProgressIndicatorMetadata  # noqa: Y015
@@ -729,6 +787,25 @@ class BotCapabilityMetadata(_message.Message):
         AI_SHARED_MEMORY: BotCapabilityMetadata._BotCapabilityType.ValueType  # 40
         RICH_RESPONSE_UNIFIED_SOURCES: BotCapabilityMetadata._BotCapabilityType.ValueType  # 41
         RICH_RESPONSE_UNIFIED_DOMAIN_CITATIONS: BotCapabilityMetadata._BotCapabilityType.ValueType  # 42
+        RICH_RESPONSE_UR_INLINE_REELS_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 43
+        RICH_RESPONSE_UR_MEDIA_GRID_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 44
+        RICH_RESPONSE_UR_TIMESTAMP_PLACEHOLDER: BotCapabilityMetadata._BotCapabilityType.ValueType  # 45
+        RICH_RESPONSE_IN_APP_SURVEY: BotCapabilityMetadata._BotCapabilityType.ValueType  # 46
+        AI_RESPONSE_MODEL_BRANDING: BotCapabilityMetadata._BotCapabilityType.ValueType  # 47
+        SESSION_TRANSPARENCY_SYSTEM_MESSAGE: BotCapabilityMetadata._BotCapabilityType.ValueType  # 48
+        RICH_RESPONSE_UR_REASONING: BotCapabilityMetadata._BotCapabilityType.ValueType  # 49
+        RICH_RESPONSE_UR_ZEITGEIST_CITATIONS: BotCapabilityMetadata._BotCapabilityType.ValueType  # 50
+        RICH_RESPONSE_UR_ZEITGEIST_CAROUSEL: BotCapabilityMetadata._BotCapabilityType.ValueType  # 51
+        AI_IMAGINE_LOADING_INDICATOR: BotCapabilityMetadata._BotCapabilityType.ValueType  # 52
+        RICH_RESPONSE_UR_IMAGINE: BotCapabilityMetadata._BotCapabilityType.ValueType  # 53
+        AI_IMAGINE_UR_TO_NATIVE_LOADING_INDICATOR: BotCapabilityMetadata._BotCapabilityType.ValueType  # 54
+        RICH_RESPONSE_UR_BLOKS_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 55
+        RICH_RESPONSE_INLINE_LINKS_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 56
+        RICH_RESPONSE_UR_IMAGINE_VIDEO: BotCapabilityMetadata._BotCapabilityType.ValueType  # 57
+        JSON_PATCH_STREAMING: BotCapabilityMetadata._BotCapabilityType.ValueType  # 58
+        AI_TAB_FORCE_CLIPPY: BotCapabilityMetadata._BotCapabilityType.ValueType  # 59
+        UNIFIED_RESPONSE_EMBEDDED_SCREENS: BotCapabilityMetadata._BotCapabilityType.ValueType  # 60
+        AI_SUBSCRIPTION_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 61
 
     class BotCapabilityType(_BotCapabilityType, metaclass=_BotCapabilityTypeEnumTypeWrapper): ...
     UNKNOWN: BotCapabilityMetadata.BotCapabilityType.ValueType  # 0
@@ -774,6 +851,25 @@ class BotCapabilityMetadata(_message.Message):
     AI_SHARED_MEMORY: BotCapabilityMetadata.BotCapabilityType.ValueType  # 40
     RICH_RESPONSE_UNIFIED_SOURCES: BotCapabilityMetadata.BotCapabilityType.ValueType  # 41
     RICH_RESPONSE_UNIFIED_DOMAIN_CITATIONS: BotCapabilityMetadata.BotCapabilityType.ValueType  # 42
+    RICH_RESPONSE_UR_INLINE_REELS_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 43
+    RICH_RESPONSE_UR_MEDIA_GRID_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 44
+    RICH_RESPONSE_UR_TIMESTAMP_PLACEHOLDER: BotCapabilityMetadata.BotCapabilityType.ValueType  # 45
+    RICH_RESPONSE_IN_APP_SURVEY: BotCapabilityMetadata.BotCapabilityType.ValueType  # 46
+    AI_RESPONSE_MODEL_BRANDING: BotCapabilityMetadata.BotCapabilityType.ValueType  # 47
+    SESSION_TRANSPARENCY_SYSTEM_MESSAGE: BotCapabilityMetadata.BotCapabilityType.ValueType  # 48
+    RICH_RESPONSE_UR_REASONING: BotCapabilityMetadata.BotCapabilityType.ValueType  # 49
+    RICH_RESPONSE_UR_ZEITGEIST_CITATIONS: BotCapabilityMetadata.BotCapabilityType.ValueType  # 50
+    RICH_RESPONSE_UR_ZEITGEIST_CAROUSEL: BotCapabilityMetadata.BotCapabilityType.ValueType  # 51
+    AI_IMAGINE_LOADING_INDICATOR: BotCapabilityMetadata.BotCapabilityType.ValueType  # 52
+    RICH_RESPONSE_UR_IMAGINE: BotCapabilityMetadata.BotCapabilityType.ValueType  # 53
+    AI_IMAGINE_UR_TO_NATIVE_LOADING_INDICATOR: BotCapabilityMetadata.BotCapabilityType.ValueType  # 54
+    RICH_RESPONSE_UR_BLOKS_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 55
+    RICH_RESPONSE_INLINE_LINKS_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 56
+    RICH_RESPONSE_UR_IMAGINE_VIDEO: BotCapabilityMetadata.BotCapabilityType.ValueType  # 57
+    JSON_PATCH_STREAMING: BotCapabilityMetadata.BotCapabilityType.ValueType  # 58
+    AI_TAB_FORCE_CLIPPY: BotCapabilityMetadata.BotCapabilityType.ValueType  # 59
+    UNIFIED_RESPONSE_EMBEDDED_SCREENS: BotCapabilityMetadata.BotCapabilityType.ValueType  # 60
+    AI_SUBSCRIPTION_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 61
 
     CAPABILITIES_FIELD_NUMBER: _builtins.int
     @_builtins.property
@@ -798,22 +894,26 @@ class BotModeSelectionMetadata(_message.Message):
 
     class _BotUserSelectionModeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[BotModeSelectionMetadata._BotUserSelectionMode.ValueType], _builtins.type):
         DESCRIPTOR: _descriptor.EnumDescriptor
-        UNKNOWN_MODE: BotModeSelectionMetadata._BotUserSelectionMode.ValueType  # 0
-        REASONING_MODE: BotModeSelectionMetadata._BotUserSelectionMode.ValueType  # 1
+        DEFAULT_MODE: BotModeSelectionMetadata._BotUserSelectionMode.ValueType  # 0
+        THINK_HARD_MODE: BotModeSelectionMetadata._BotUserSelectionMode.ValueType  # 1
 
     class BotUserSelectionMode(_BotUserSelectionMode, metaclass=_BotUserSelectionModeEnumTypeWrapper): ...
-    UNKNOWN_MODE: BotModeSelectionMetadata.BotUserSelectionMode.ValueType  # 0
-    REASONING_MODE: BotModeSelectionMetadata.BotUserSelectionMode.ValueType  # 1
+    DEFAULT_MODE: BotModeSelectionMetadata.BotUserSelectionMode.ValueType  # 0
+    THINK_HARD_MODE: BotModeSelectionMetadata.BotUserSelectionMode.ValueType  # 1
 
     MODE_FIELD_NUMBER: _builtins.int
+    OVERRIDEMODE_FIELD_NUMBER: _builtins.int
     @_builtins.property
     def mode(self) -> _containers.RepeatedScalarFieldContainer[Global___BotModeSelectionMetadata.BotUserSelectionMode.ValueType]: ...
+    @_builtins.property
+    def overrideMode(self) -> _containers.RepeatedScalarFieldContainer[_builtins.int]: ...
     def __init__(
         self,
         *,
         mode: _abc.Iterable[Global___BotModeSelectionMetadata.BotUserSelectionMode.ValueType] | None = ...,
+        overrideMode: _abc.Iterable[_builtins.int] | None = ...,
     ) -> None: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["mode", b"mode"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["mode", b"mode", "overrideMode", b"overrideMode"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
 Global___BotModeSelectionMetadata: _TypeAlias = BotModeSelectionMetadata  # noqa: Y015
@@ -894,18 +994,58 @@ class BotImagineMetadata(_message.Message):
     EDIT: BotImagineMetadata.ImagineType.ValueType  # 4
 
     IMAGINETYPE_FIELD_NUMBER: _builtins.int
+    SHORTPROMPT_FIELD_NUMBER: _builtins.int
     imagineType: Global___BotImagineMetadata.ImagineType.ValueType
+    shortPrompt: _builtins.str
     def __init__(
         self,
         *,
         imagineType: Global___BotImagineMetadata.ImagineType.ValueType | None = ...,
+        shortPrompt: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["imagineType", b"imagineType"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["imagineType", b"imagineType", "shortPrompt", b"shortPrompt"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["imagineType", b"imagineType"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["imagineType", b"imagineType", "shortPrompt", b"shortPrompt"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
 Global___BotImagineMetadata: _TypeAlias = BotImagineMetadata  # noqa: Y015
+
+@_typing.final
+class BotAgeCollectionMetadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    class _AgeCollectionType:
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
+
+    class _AgeCollectionTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[BotAgeCollectionMetadata._AgeCollectionType.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
+        O18_BINARY: BotAgeCollectionMetadata._AgeCollectionType.ValueType  # 0
+        WAFFLE: BotAgeCollectionMetadata._AgeCollectionType.ValueType  # 1
+
+    class AgeCollectionType(_AgeCollectionType, metaclass=_AgeCollectionTypeEnumTypeWrapper): ...
+    O18_BINARY: BotAgeCollectionMetadata.AgeCollectionType.ValueType  # 0
+    WAFFLE: BotAgeCollectionMetadata.AgeCollectionType.ValueType  # 1
+
+    AGECOLLECTIONELIGIBLE_FIELD_NUMBER: _builtins.int
+    SHOULDTRIGGERAGECOLLECTIONONCLIENT_FIELD_NUMBER: _builtins.int
+    AGECOLLECTIONTYPE_FIELD_NUMBER: _builtins.int
+    ageCollectionEligible: _builtins.bool
+    shouldTriggerAgeCollectionOnClient: _builtins.bool
+    ageCollectionType: Global___BotAgeCollectionMetadata.AgeCollectionType.ValueType
+    def __init__(
+        self,
+        *,
+        ageCollectionEligible: _builtins.bool | None = ...,
+        shouldTriggerAgeCollectionOnClient: _builtins.bool | None = ...,
+        ageCollectionType: Global___BotAgeCollectionMetadata.AgeCollectionType.ValueType | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["ageCollectionEligible", b"ageCollectionEligible", "ageCollectionType", b"ageCollectionType", "shouldTriggerAgeCollectionOnClient", b"shouldTriggerAgeCollectionOnClient"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["ageCollectionEligible", b"ageCollectionEligible", "ageCollectionType", b"ageCollectionType", "shouldTriggerAgeCollectionOnClient", b"shouldTriggerAgeCollectionOnClient"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___BotAgeCollectionMetadata: _TypeAlias = BotAgeCollectionMetadata  # noqa: Y015
 
 @_typing.final
 class BotSourcesMetadata(_message.Message):
@@ -1023,22 +1163,27 @@ class AIThreadInfo(_message.Message):
             UNKNOWN: AIThreadInfo.AIThreadClientInfo._AIThreadType.ValueType  # 0
             DEFAULT: AIThreadInfo.AIThreadClientInfo._AIThreadType.ValueType  # 1
             INCOGNITO: AIThreadInfo.AIThreadClientInfo._AIThreadType.ValueType  # 2
+            SIDE_CHAT: AIThreadInfo.AIThreadClientInfo._AIThreadType.ValueType  # 3
 
         class AIThreadType(_AIThreadType, metaclass=_AIThreadTypeEnumTypeWrapper): ...
         UNKNOWN: AIThreadInfo.AIThreadClientInfo.AIThreadType.ValueType  # 0
         DEFAULT: AIThreadInfo.AIThreadClientInfo.AIThreadType.ValueType  # 1
         INCOGNITO: AIThreadInfo.AIThreadClientInfo.AIThreadType.ValueType  # 2
+        SIDE_CHAT: AIThreadInfo.AIThreadClientInfo.AIThreadType.ValueType  # 3
 
         TYPE_FIELD_NUMBER: _builtins.int
+        SOURCECHATJID_FIELD_NUMBER: _builtins.int
         type: Global___AIThreadInfo.AIThreadClientInfo.AIThreadType.ValueType
+        sourceChatJID: _builtins.str
         def __init__(
             self,
             *,
             type: Global___AIThreadInfo.AIThreadClientInfo.AIThreadType.ValueType | None = ...,
+            sourceChatJID: _builtins.str | None = ...,
         ) -> None: ...
-        _HasFieldArgType: _TypeAlias = _typing.Literal["type", b"type"]  # noqa: Y015
+        _HasFieldArgType: _TypeAlias = _typing.Literal["sourceChatJID", b"sourceChatJID", "type", b"type"]  # noqa: Y015
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-        _ClearFieldArgType: _TypeAlias = _typing.Literal["type", b"type"]  # noqa: Y015
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["sourceChatJID", b"sourceChatJID", "type", b"type"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
     @_typing.final
@@ -1077,34 +1222,470 @@ class AIThreadInfo(_message.Message):
 Global___AIThreadInfo: _TypeAlias = AIThreadInfo  # noqa: Y015
 
 @_typing.final
-class BotAvatarMetadata(_message.Message):
+class BotFeedbackMessage(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
-    SENTIMENT_FIELD_NUMBER: _builtins.int
-    BEHAVIORGRAPH_FIELD_NUMBER: _builtins.int
-    ACTION_FIELD_NUMBER: _builtins.int
-    INTENSITY_FIELD_NUMBER: _builtins.int
-    WORDCOUNT_FIELD_NUMBER: _builtins.int
-    sentiment: _builtins.int
-    behaviorGraph: _builtins.str
-    action: _builtins.int
-    intensity: _builtins.int
-    wordCount: _builtins.int
+    class _ReportKind:
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
+
+    class _ReportKindEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[BotFeedbackMessage._ReportKind.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
+        NONE: BotFeedbackMessage._ReportKind.ValueType  # 0
+        GENERIC: BotFeedbackMessage._ReportKind.ValueType  # 1
+
+    class ReportKind(_ReportKind, metaclass=_ReportKindEnumTypeWrapper): ...
+    NONE: BotFeedbackMessage.ReportKind.ValueType  # 0
+    GENERIC: BotFeedbackMessage.ReportKind.ValueType  # 1
+
+    class _BotFeedbackKindMultiplePositive:
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
+
+    class _BotFeedbackKindMultiplePositiveEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[BotFeedbackMessage._BotFeedbackKindMultiplePositive.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
+        BOT_FEEDBACK_MULTIPLE_POSITIVE_GENERIC: BotFeedbackMessage._BotFeedbackKindMultiplePositive.ValueType  # 1
+
+    class BotFeedbackKindMultiplePositive(_BotFeedbackKindMultiplePositive, metaclass=_BotFeedbackKindMultiplePositiveEnumTypeWrapper): ...
+    BOT_FEEDBACK_MULTIPLE_POSITIVE_GENERIC: BotFeedbackMessage.BotFeedbackKindMultiplePositive.ValueType  # 1
+
+    class _BotFeedbackKindMultipleNegative:
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
+
+    class _BotFeedbackKindMultipleNegativeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[BotFeedbackMessage._BotFeedbackKindMultipleNegative.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
+        BOT_FEEDBACK_MULTIPLE_NEGATIVE_GENERIC: BotFeedbackMessage._BotFeedbackKindMultipleNegative.ValueType  # 1
+        BOT_FEEDBACK_MULTIPLE_NEGATIVE_HELPFUL: BotFeedbackMessage._BotFeedbackKindMultipleNegative.ValueType  # 2
+        BOT_FEEDBACK_MULTIPLE_NEGATIVE_INTERESTING: BotFeedbackMessage._BotFeedbackKindMultipleNegative.ValueType  # 4
+        BOT_FEEDBACK_MULTIPLE_NEGATIVE_ACCURATE: BotFeedbackMessage._BotFeedbackKindMultipleNegative.ValueType  # 8
+        BOT_FEEDBACK_MULTIPLE_NEGATIVE_SAFE: BotFeedbackMessage._BotFeedbackKindMultipleNegative.ValueType  # 16
+        BOT_FEEDBACK_MULTIPLE_NEGATIVE_OTHER: BotFeedbackMessage._BotFeedbackKindMultipleNegative.ValueType  # 32
+        BOT_FEEDBACK_MULTIPLE_NEGATIVE_REFUSED: BotFeedbackMessage._BotFeedbackKindMultipleNegative.ValueType  # 64
+        BOT_FEEDBACK_MULTIPLE_NEGATIVE_NOT_VISUALLY_APPEALING: BotFeedbackMessage._BotFeedbackKindMultipleNegative.ValueType  # 128
+        BOT_FEEDBACK_MULTIPLE_NEGATIVE_NOT_RELEVANT_TO_TEXT: BotFeedbackMessage._BotFeedbackKindMultipleNegative.ValueType  # 256
+
+    class BotFeedbackKindMultipleNegative(_BotFeedbackKindMultipleNegative, metaclass=_BotFeedbackKindMultipleNegativeEnumTypeWrapper): ...
+    BOT_FEEDBACK_MULTIPLE_NEGATIVE_GENERIC: BotFeedbackMessage.BotFeedbackKindMultipleNegative.ValueType  # 1
+    BOT_FEEDBACK_MULTIPLE_NEGATIVE_HELPFUL: BotFeedbackMessage.BotFeedbackKindMultipleNegative.ValueType  # 2
+    BOT_FEEDBACK_MULTIPLE_NEGATIVE_INTERESTING: BotFeedbackMessage.BotFeedbackKindMultipleNegative.ValueType  # 4
+    BOT_FEEDBACK_MULTIPLE_NEGATIVE_ACCURATE: BotFeedbackMessage.BotFeedbackKindMultipleNegative.ValueType  # 8
+    BOT_FEEDBACK_MULTIPLE_NEGATIVE_SAFE: BotFeedbackMessage.BotFeedbackKindMultipleNegative.ValueType  # 16
+    BOT_FEEDBACK_MULTIPLE_NEGATIVE_OTHER: BotFeedbackMessage.BotFeedbackKindMultipleNegative.ValueType  # 32
+    BOT_FEEDBACK_MULTIPLE_NEGATIVE_REFUSED: BotFeedbackMessage.BotFeedbackKindMultipleNegative.ValueType  # 64
+    BOT_FEEDBACK_MULTIPLE_NEGATIVE_NOT_VISUALLY_APPEALING: BotFeedbackMessage.BotFeedbackKindMultipleNegative.ValueType  # 128
+    BOT_FEEDBACK_MULTIPLE_NEGATIVE_NOT_RELEVANT_TO_TEXT: BotFeedbackMessage.BotFeedbackKindMultipleNegative.ValueType  # 256
+
+    class _BotFeedbackKind:
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
+
+    class _BotFeedbackKindEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[BotFeedbackMessage._BotFeedbackKind.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
+        BOT_FEEDBACK_POSITIVE: BotFeedbackMessage._BotFeedbackKind.ValueType  # 0
+        BOT_FEEDBACK_NEGATIVE_GENERIC: BotFeedbackMessage._BotFeedbackKind.ValueType  # 1
+        BOT_FEEDBACK_NEGATIVE_HELPFUL: BotFeedbackMessage._BotFeedbackKind.ValueType  # 2
+        BOT_FEEDBACK_NEGATIVE_INTERESTING: BotFeedbackMessage._BotFeedbackKind.ValueType  # 3
+        BOT_FEEDBACK_NEGATIVE_ACCURATE: BotFeedbackMessage._BotFeedbackKind.ValueType  # 4
+        BOT_FEEDBACK_NEGATIVE_SAFE: BotFeedbackMessage._BotFeedbackKind.ValueType  # 5
+        BOT_FEEDBACK_NEGATIVE_OTHER: BotFeedbackMessage._BotFeedbackKind.ValueType  # 6
+        BOT_FEEDBACK_NEGATIVE_REFUSED: BotFeedbackMessage._BotFeedbackKind.ValueType  # 7
+        BOT_FEEDBACK_NEGATIVE_NOT_VISUALLY_APPEALING: BotFeedbackMessage._BotFeedbackKind.ValueType  # 8
+        BOT_FEEDBACK_NEGATIVE_NOT_RELEVANT_TO_TEXT: BotFeedbackMessage._BotFeedbackKind.ValueType  # 9
+        BOT_FEEDBACK_NEGATIVE_PERSONALIZED: BotFeedbackMessage._BotFeedbackKind.ValueType  # 10
+        BOT_FEEDBACK_NEGATIVE_CLARITY: BotFeedbackMessage._BotFeedbackKind.ValueType  # 11
+        BOT_FEEDBACK_NEGATIVE_DOESNT_LOOK_LIKE_THE_PERSON: BotFeedbackMessage._BotFeedbackKind.ValueType  # 12
+        BOT_FEEDBACK_NEGATIVE_HALLUCINATION_INTERNAL_ONLY: BotFeedbackMessage._BotFeedbackKind.ValueType  # 13
+        BOT_FEEDBACK_NEGATIVE: BotFeedbackMessage._BotFeedbackKind.ValueType  # 14
+
+    class BotFeedbackKind(_BotFeedbackKind, metaclass=_BotFeedbackKindEnumTypeWrapper): ...
+    BOT_FEEDBACK_POSITIVE: BotFeedbackMessage.BotFeedbackKind.ValueType  # 0
+    BOT_FEEDBACK_NEGATIVE_GENERIC: BotFeedbackMessage.BotFeedbackKind.ValueType  # 1
+    BOT_FEEDBACK_NEGATIVE_HELPFUL: BotFeedbackMessage.BotFeedbackKind.ValueType  # 2
+    BOT_FEEDBACK_NEGATIVE_INTERESTING: BotFeedbackMessage.BotFeedbackKind.ValueType  # 3
+    BOT_FEEDBACK_NEGATIVE_ACCURATE: BotFeedbackMessage.BotFeedbackKind.ValueType  # 4
+    BOT_FEEDBACK_NEGATIVE_SAFE: BotFeedbackMessage.BotFeedbackKind.ValueType  # 5
+    BOT_FEEDBACK_NEGATIVE_OTHER: BotFeedbackMessage.BotFeedbackKind.ValueType  # 6
+    BOT_FEEDBACK_NEGATIVE_REFUSED: BotFeedbackMessage.BotFeedbackKind.ValueType  # 7
+    BOT_FEEDBACK_NEGATIVE_NOT_VISUALLY_APPEALING: BotFeedbackMessage.BotFeedbackKind.ValueType  # 8
+    BOT_FEEDBACK_NEGATIVE_NOT_RELEVANT_TO_TEXT: BotFeedbackMessage.BotFeedbackKind.ValueType  # 9
+    BOT_FEEDBACK_NEGATIVE_PERSONALIZED: BotFeedbackMessage.BotFeedbackKind.ValueType  # 10
+    BOT_FEEDBACK_NEGATIVE_CLARITY: BotFeedbackMessage.BotFeedbackKind.ValueType  # 11
+    BOT_FEEDBACK_NEGATIVE_DOESNT_LOOK_LIKE_THE_PERSON: BotFeedbackMessage.BotFeedbackKind.ValueType  # 12
+    BOT_FEEDBACK_NEGATIVE_HALLUCINATION_INTERNAL_ONLY: BotFeedbackMessage.BotFeedbackKind.ValueType  # 13
+    BOT_FEEDBACK_NEGATIVE: BotFeedbackMessage.BotFeedbackKind.ValueType  # 14
+
+    @_typing.final
+    class SideBySideSurveyMetadata(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
+
+        @_typing.final
+        class SidebySideSurveyMetaAiAnalyticsData(_message.Message):
+            DESCRIPTOR: _descriptor.Descriptor
+
+            @_typing.final
+            class SideBySideSurveyAbandonEventData(_message.Message):
+                DESCRIPTOR: _descriptor.Descriptor
+
+                ABANDONDWELLTIMEMSSTRING_FIELD_NUMBER: _builtins.int
+                abandonDwellTimeMSString: _builtins.str
+                def __init__(
+                    self,
+                    *,
+                    abandonDwellTimeMSString: _builtins.str | None = ...,
+                ) -> None: ...
+                _HasFieldArgType: _TypeAlias = _typing.Literal["abandonDwellTimeMSString", b"abandonDwellTimeMSString"]  # noqa: Y015
+                def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+                _ClearFieldArgType: _TypeAlias = _typing.Literal["abandonDwellTimeMSString", b"abandonDwellTimeMSString"]  # noqa: Y015
+                def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+            @_typing.final
+            class SideBySideSurveyResponseEventData(_message.Message):
+                DESCRIPTOR: _descriptor.Descriptor
+
+                RESPONSEDWELLTIMEMSSTRING_FIELD_NUMBER: _builtins.int
+                SELECTEDRESPONSEID_FIELD_NUMBER: _builtins.int
+                responseDwellTimeMSString: _builtins.str
+                selectedResponseID: _builtins.str
+                def __init__(
+                    self,
+                    *,
+                    responseDwellTimeMSString: _builtins.str | None = ...,
+                    selectedResponseID: _builtins.str | None = ...,
+                ) -> None: ...
+                _HasFieldArgType: _TypeAlias = _typing.Literal["responseDwellTimeMSString", b"responseDwellTimeMSString", "selectedResponseID", b"selectedResponseID"]  # noqa: Y015
+                def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+                _ClearFieldArgType: _TypeAlias = _typing.Literal["responseDwellTimeMSString", b"responseDwellTimeMSString", "selectedResponseID", b"selectedResponseID"]  # noqa: Y015
+                def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+            @_typing.final
+            class SideBySideSurveyCardImpressionEventData(_message.Message):
+                DESCRIPTOR: _descriptor.Descriptor
+
+                def __init__(
+                    self,
+                ) -> None: ...
+
+            @_typing.final
+            class SideBySideSurveyCTAClickEventData(_message.Message):
+                DESCRIPTOR: _descriptor.Descriptor
+
+                ISSURVEYEXPIRED_FIELD_NUMBER: _builtins.int
+                CLICKDWELLTIMEMSSTRING_FIELD_NUMBER: _builtins.int
+                isSurveyExpired: _builtins.bool
+                clickDwellTimeMSString: _builtins.str
+                def __init__(
+                    self,
+                    *,
+                    isSurveyExpired: _builtins.bool | None = ...,
+                    clickDwellTimeMSString: _builtins.str | None = ...,
+                ) -> None: ...
+                _HasFieldArgType: _TypeAlias = _typing.Literal["clickDwellTimeMSString", b"clickDwellTimeMSString", "isSurveyExpired", b"isSurveyExpired"]  # noqa: Y015
+                def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+                _ClearFieldArgType: _TypeAlias = _typing.Literal["clickDwellTimeMSString", b"clickDwellTimeMSString", "isSurveyExpired", b"isSurveyExpired"]  # noqa: Y015
+                def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+            @_typing.final
+            class SideBySideSurveyCTAImpressionEventData(_message.Message):
+                DESCRIPTOR: _descriptor.Descriptor
+
+                ISSURVEYEXPIRED_FIELD_NUMBER: _builtins.int
+                isSurveyExpired: _builtins.bool
+                def __init__(
+                    self,
+                    *,
+                    isSurveyExpired: _builtins.bool | None = ...,
+                ) -> None: ...
+                _HasFieldArgType: _TypeAlias = _typing.Literal["isSurveyExpired", b"isSurveyExpired"]  # noqa: Y015
+                def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+                _ClearFieldArgType: _TypeAlias = _typing.Literal["isSurveyExpired", b"isSurveyExpired"]  # noqa: Y015
+                def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+            SURVEYID_FIELD_NUMBER: _builtins.int
+            PRIMARYRESPONSEID_FIELD_NUMBER: _builtins.int
+            TESTARMNAME_FIELD_NUMBER: _builtins.int
+            TIMESTAMPMSSTRING_FIELD_NUMBER: _builtins.int
+            CTAIMPRESSIONEVENT_FIELD_NUMBER: _builtins.int
+            CTACLICKEVENT_FIELD_NUMBER: _builtins.int
+            CARDIMPRESSIONEVENT_FIELD_NUMBER: _builtins.int
+            RESPONSEEVENT_FIELD_NUMBER: _builtins.int
+            ABANDONEVENT_FIELD_NUMBER: _builtins.int
+            surveyID: _builtins.int
+            primaryResponseID: _builtins.str
+            testArmName: _builtins.str
+            timestampMSString: _builtins.str
+            @_builtins.property
+            def ctaImpressionEvent(self) -> Global___BotFeedbackMessage.SideBySideSurveyMetadata.SidebySideSurveyMetaAiAnalyticsData.SideBySideSurveyCTAImpressionEventData: ...
+            @_builtins.property
+            def ctaClickEvent(self) -> Global___BotFeedbackMessage.SideBySideSurveyMetadata.SidebySideSurveyMetaAiAnalyticsData.SideBySideSurveyCTAClickEventData: ...
+            @_builtins.property
+            def cardImpressionEvent(self) -> Global___BotFeedbackMessage.SideBySideSurveyMetadata.SidebySideSurveyMetaAiAnalyticsData.SideBySideSurveyCardImpressionEventData: ...
+            @_builtins.property
+            def responseEvent(self) -> Global___BotFeedbackMessage.SideBySideSurveyMetadata.SidebySideSurveyMetaAiAnalyticsData.SideBySideSurveyResponseEventData: ...
+            @_builtins.property
+            def abandonEvent(self) -> Global___BotFeedbackMessage.SideBySideSurveyMetadata.SidebySideSurveyMetaAiAnalyticsData.SideBySideSurveyAbandonEventData: ...
+            def __init__(
+                self,
+                *,
+                surveyID: _builtins.int | None = ...,
+                primaryResponseID: _builtins.str | None = ...,
+                testArmName: _builtins.str | None = ...,
+                timestampMSString: _builtins.str | None = ...,
+                ctaImpressionEvent: Global___BotFeedbackMessage.SideBySideSurveyMetadata.SidebySideSurveyMetaAiAnalyticsData.SideBySideSurveyCTAImpressionEventData | None = ...,
+                ctaClickEvent: Global___BotFeedbackMessage.SideBySideSurveyMetadata.SidebySideSurveyMetaAiAnalyticsData.SideBySideSurveyCTAClickEventData | None = ...,
+                cardImpressionEvent: Global___BotFeedbackMessage.SideBySideSurveyMetadata.SidebySideSurveyMetaAiAnalyticsData.SideBySideSurveyCardImpressionEventData | None = ...,
+                responseEvent: Global___BotFeedbackMessage.SideBySideSurveyMetadata.SidebySideSurveyMetaAiAnalyticsData.SideBySideSurveyResponseEventData | None = ...,
+                abandonEvent: Global___BotFeedbackMessage.SideBySideSurveyMetadata.SidebySideSurveyMetaAiAnalyticsData.SideBySideSurveyAbandonEventData | None = ...,
+            ) -> None: ...
+            _HasFieldArgType: _TypeAlias = _typing.Literal["abandonEvent", b"abandonEvent", "cardImpressionEvent", b"cardImpressionEvent", "ctaClickEvent", b"ctaClickEvent", "ctaImpressionEvent", b"ctaImpressionEvent", "primaryResponseID", b"primaryResponseID", "responseEvent", b"responseEvent", "surveyID", b"surveyID", "testArmName", b"testArmName", "timestampMSString", b"timestampMSString"]  # noqa: Y015
+            def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+            _ClearFieldArgType: _TypeAlias = _typing.Literal["abandonEvent", b"abandonEvent", "cardImpressionEvent", b"cardImpressionEvent", "ctaClickEvent", b"ctaClickEvent", "ctaImpressionEvent", b"ctaImpressionEvent", "primaryResponseID", b"primaryResponseID", "responseEvent", b"responseEvent", "surveyID", b"surveyID", "testArmName", b"testArmName", "timestampMSString", b"timestampMSString"]  # noqa: Y015
+            def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+        @_typing.final
+        class SideBySideSurveyAnalyticsData(_message.Message):
+            DESCRIPTOR: _descriptor.Descriptor
+
+            TESSAEVENT_FIELD_NUMBER: _builtins.int
+            TESSASESSIONFBID_FIELD_NUMBER: _builtins.int
+            SIMONSESSIONFBID_FIELD_NUMBER: _builtins.int
+            tessaEvent: _builtins.str
+            tessaSessionFbid: _builtins.str
+            simonSessionFbid: _builtins.str
+            def __init__(
+                self,
+                *,
+                tessaEvent: _builtins.str | None = ...,
+                tessaSessionFbid: _builtins.str | None = ...,
+                simonSessionFbid: _builtins.str | None = ...,
+            ) -> None: ...
+            _HasFieldArgType: _TypeAlias = _typing.Literal["simonSessionFbid", b"simonSessionFbid", "tessaEvent", b"tessaEvent", "tessaSessionFbid", b"tessaSessionFbid"]  # noqa: Y015
+            def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+            _ClearFieldArgType: _TypeAlias = _typing.Literal["simonSessionFbid", b"simonSessionFbid", "tessaEvent", b"tessaEvent", "tessaSessionFbid", b"tessaSessionFbid"]  # noqa: Y015
+            def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+        SELECTEDREQUESTID_FIELD_NUMBER: _builtins.int
+        SURVEYID_FIELD_NUMBER: _builtins.int
+        SIMONSESSIONFBID_FIELD_NUMBER: _builtins.int
+        RESPONSEOTID_FIELD_NUMBER: _builtins.int
+        RESPONSETIMESTAMPMSSTRING_FIELD_NUMBER: _builtins.int
+        ISSELECTEDRESPONSEPRIMARY_FIELD_NUMBER: _builtins.int
+        MESSAGEIDTOEDIT_FIELD_NUMBER: _builtins.int
+        ANALYTICSDATA_FIELD_NUMBER: _builtins.int
+        METAAIANALYTICSDATA_FIELD_NUMBER: _builtins.int
+        selectedRequestID: _builtins.str
+        surveyID: _builtins.int
+        simonSessionFbid: _builtins.str
+        responseOtid: _builtins.str
+        responseTimestampMSString: _builtins.str
+        isSelectedResponsePrimary: _builtins.bool
+        messageIDToEdit: _builtins.str
+        @_builtins.property
+        def analyticsData(self) -> Global___BotFeedbackMessage.SideBySideSurveyMetadata.SideBySideSurveyAnalyticsData: ...
+        @_builtins.property
+        def metaAiAnalyticsData(self) -> Global___BotFeedbackMessage.SideBySideSurveyMetadata.SidebySideSurveyMetaAiAnalyticsData: ...
+        def __init__(
+            self,
+            *,
+            selectedRequestID: _builtins.str | None = ...,
+            surveyID: _builtins.int | None = ...,
+            simonSessionFbid: _builtins.str | None = ...,
+            responseOtid: _builtins.str | None = ...,
+            responseTimestampMSString: _builtins.str | None = ...,
+            isSelectedResponsePrimary: _builtins.bool | None = ...,
+            messageIDToEdit: _builtins.str | None = ...,
+            analyticsData: Global___BotFeedbackMessage.SideBySideSurveyMetadata.SideBySideSurveyAnalyticsData | None = ...,
+            metaAiAnalyticsData: Global___BotFeedbackMessage.SideBySideSurveyMetadata.SidebySideSurveyMetaAiAnalyticsData | None = ...,
+        ) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["analyticsData", b"analyticsData", "isSelectedResponsePrimary", b"isSelectedResponsePrimary", "messageIDToEdit", b"messageIDToEdit", "metaAiAnalyticsData", b"metaAiAnalyticsData", "responseOtid", b"responseOtid", "responseTimestampMSString", b"responseTimestampMSString", "selectedRequestID", b"selectedRequestID", "simonSessionFbid", b"simonSessionFbid", "surveyID", b"surveyID"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["analyticsData", b"analyticsData", "isSelectedResponsePrimary", b"isSelectedResponsePrimary", "messageIDToEdit", b"messageIDToEdit", "metaAiAnalyticsData", b"metaAiAnalyticsData", "responseOtid", b"responseOtid", "responseTimestampMSString", b"responseTimestampMSString", "selectedRequestID", b"selectedRequestID", "simonSessionFbid", b"simonSessionFbid", "surveyID", b"surveyID"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+    MESSAGEKEY_FIELD_NUMBER: _builtins.int
+    KIND_FIELD_NUMBER: _builtins.int
+    TEXT_FIELD_NUMBER: _builtins.int
+    KINDNEGATIVE_FIELD_NUMBER: _builtins.int
+    KINDPOSITIVE_FIELD_NUMBER: _builtins.int
+    KINDREPORT_FIELD_NUMBER: _builtins.int
+    SIDEBYSIDESURVEYMETADATA_FIELD_NUMBER: _builtins.int
+    kind: Global___BotFeedbackMessage.BotFeedbackKind.ValueType
+    text: _builtins.str
+    kindNegative: _builtins.int
+    kindPositive: _builtins.int
+    kindReport: Global___BotFeedbackMessage.ReportKind.ValueType
+    @_builtins.property
+    def messageKey(self) -> _WACommon_pb2.MessageKey: ...
+    @_builtins.property
+    def sideBySideSurveyMetadata(self) -> Global___BotFeedbackMessage.SideBySideSurveyMetadata: ...
     def __init__(
         self,
         *,
-        sentiment: _builtins.int | None = ...,
-        behaviorGraph: _builtins.str | None = ...,
-        action: _builtins.int | None = ...,
-        intensity: _builtins.int | None = ...,
-        wordCount: _builtins.int | None = ...,
+        messageKey: _WACommon_pb2.MessageKey | None = ...,
+        kind: Global___BotFeedbackMessage.BotFeedbackKind.ValueType | None = ...,
+        text: _builtins.str | None = ...,
+        kindNegative: _builtins.int | None = ...,
+        kindPositive: _builtins.int | None = ...,
+        kindReport: Global___BotFeedbackMessage.ReportKind.ValueType | None = ...,
+        sideBySideSurveyMetadata: Global___BotFeedbackMessage.SideBySideSurveyMetadata | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["action", b"action", "behaviorGraph", b"behaviorGraph", "intensity", b"intensity", "sentiment", b"sentiment", "wordCount", b"wordCount"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["kind", b"kind", "kindNegative", b"kindNegative", "kindPositive", b"kindPositive", "kindReport", b"kindReport", "messageKey", b"messageKey", "sideBySideSurveyMetadata", b"sideBySideSurveyMetadata", "text", b"text"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["action", b"action", "behaviorGraph", b"behaviorGraph", "intensity", b"intensity", "sentiment", b"sentiment", "wordCount", b"wordCount"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["kind", b"kind", "kindNegative", b"kindNegative", "kindPositive", b"kindPositive", "kindReport", b"kindReport", "messageKey", b"messageKey", "sideBySideSurveyMetadata", b"sideBySideSurveyMetadata", "text", b"text"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
-Global___BotAvatarMetadata: _TypeAlias = BotAvatarMetadata  # noqa: Y015
+Global___BotFeedbackMessage: _TypeAlias = BotFeedbackMessage  # noqa: Y015
+
+@_typing.final
+class BotDocumentMessageMetadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    class _DocumentPluginType:
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
+
+    class _DocumentPluginTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[BotDocumentMessageMetadata._DocumentPluginType.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
+        TEXT_EXTRACTION: BotDocumentMessageMetadata._DocumentPluginType.ValueType  # 0
+        OCR_AND_IMAGES: BotDocumentMessageMetadata._DocumentPluginType.ValueType  # 1
+
+    class DocumentPluginType(_DocumentPluginType, metaclass=_DocumentPluginTypeEnumTypeWrapper): ...
+    TEXT_EXTRACTION: BotDocumentMessageMetadata.DocumentPluginType.ValueType  # 0
+    OCR_AND_IMAGES: BotDocumentMessageMetadata.DocumentPluginType.ValueType  # 1
+
+    PLUGINTYPE_FIELD_NUMBER: _builtins.int
+    pluginType: Global___BotDocumentMessageMetadata.DocumentPluginType.ValueType
+    def __init__(
+        self,
+        *,
+        pluginType: Global___BotDocumentMessageMetadata.DocumentPluginType.ValueType | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["pluginType", b"pluginType"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["pluginType", b"pluginType"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___BotDocumentMessageMetadata: _TypeAlias = BotDocumentMessageMetadata  # noqa: Y015
+
+@_typing.final
+class AIHomeState(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    @_typing.final
+    class AIHomeOption(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
+
+        class _AIHomeActionType:
+            ValueType = _typing.NewType("ValueType", _builtins.int)
+            V: _TypeAlias = ValueType  # noqa: Y015
+
+        class _AIHomeActionTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[AIHomeState.AIHomeOption._AIHomeActionType.ValueType], _builtins.type):
+            DESCRIPTOR: _descriptor.EnumDescriptor
+            PROMPT: AIHomeState.AIHomeOption._AIHomeActionType.ValueType  # 0
+            CREATE_IMAGE: AIHomeState.AIHomeOption._AIHomeActionType.ValueType  # 1
+            ANIMATE_PHOTO: AIHomeState.AIHomeOption._AIHomeActionType.ValueType  # 2
+            ANALYZE_FILE: AIHomeState.AIHomeOption._AIHomeActionType.ValueType  # 3
+            COLLABORATE: AIHomeState.AIHomeOption._AIHomeActionType.ValueType  # 4
+
+        class AIHomeActionType(_AIHomeActionType, metaclass=_AIHomeActionTypeEnumTypeWrapper): ...
+        PROMPT: AIHomeState.AIHomeOption.AIHomeActionType.ValueType  # 0
+        CREATE_IMAGE: AIHomeState.AIHomeOption.AIHomeActionType.ValueType  # 1
+        ANIMATE_PHOTO: AIHomeState.AIHomeOption.AIHomeActionType.ValueType  # 2
+        ANALYZE_FILE: AIHomeState.AIHomeOption.AIHomeActionType.ValueType  # 3
+        COLLABORATE: AIHomeState.AIHomeOption.AIHomeActionType.ValueType  # 4
+
+        TYPE_FIELD_NUMBER: _builtins.int
+        TITLE_FIELD_NUMBER: _builtins.int
+        PROMPTTEXT_FIELD_NUMBER: _builtins.int
+        SESSIONID_FIELD_NUMBER: _builtins.int
+        IMAGEWDSIDENTIFIER_FIELD_NUMBER: _builtins.int
+        IMAGETINTCOLOR_FIELD_NUMBER: _builtins.int
+        IMAGEBACKGROUNDCOLOR_FIELD_NUMBER: _builtins.int
+        CARDTYPEID_FIELD_NUMBER: _builtins.int
+        type: Global___AIHomeState.AIHomeOption.AIHomeActionType.ValueType
+        title: _builtins.str
+        promptText: _builtins.str
+        sessionID: _builtins.str
+        imageWdsIdentifier: _builtins.str
+        imageTintColor: _builtins.str
+        imageBackgroundColor: _builtins.str
+        cardTypeID: _builtins.str
+        def __init__(
+            self,
+            *,
+            type: Global___AIHomeState.AIHomeOption.AIHomeActionType.ValueType | None = ...,
+            title: _builtins.str | None = ...,
+            promptText: _builtins.str | None = ...,
+            sessionID: _builtins.str | None = ...,
+            imageWdsIdentifier: _builtins.str | None = ...,
+            imageTintColor: _builtins.str | None = ...,
+            imageBackgroundColor: _builtins.str | None = ...,
+            cardTypeID: _builtins.str | None = ...,
+        ) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["cardTypeID", b"cardTypeID", "imageBackgroundColor", b"imageBackgroundColor", "imageTintColor", b"imageTintColor", "imageWdsIdentifier", b"imageWdsIdentifier", "promptText", b"promptText", "sessionID", b"sessionID", "title", b"title", "type", b"type"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["cardTypeID", b"cardTypeID", "imageBackgroundColor", b"imageBackgroundColor", "imageTintColor", b"imageTintColor", "imageWdsIdentifier", b"imageWdsIdentifier", "promptText", b"promptText", "sessionID", b"sessionID", "title", b"title", "type", b"type"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+    LASTFETCHTIME_FIELD_NUMBER: _builtins.int
+    CAPABILITYOPTIONS_FIELD_NUMBER: _builtins.int
+    CONVERSATIONOPTIONS_FIELD_NUMBER: _builtins.int
+    lastFetchTime: _builtins.int
+    @_builtins.property
+    def capabilityOptions(self) -> _containers.RepeatedCompositeFieldContainer[Global___AIHomeState.AIHomeOption]: ...
+    @_builtins.property
+    def conversationOptions(self) -> _containers.RepeatedCompositeFieldContainer[Global___AIHomeState.AIHomeOption]: ...
+    def __init__(
+        self,
+        *,
+        lastFetchTime: _builtins.int | None = ...,
+        capabilityOptions: _abc.Iterable[Global___AIHomeState.AIHomeOption] | None = ...,
+        conversationOptions: _abc.Iterable[Global___AIHomeState.AIHomeOption] | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["lastFetchTime", b"lastFetchTime"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["capabilityOptions", b"capabilityOptions", "conversationOptions", b"conversationOptions", "lastFetchTime", b"lastFetchTime"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___AIHomeState: _TypeAlias = AIHomeState  # noqa: Y015
+
+@_typing.final
+class BotInfrastructureDiagnostics(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    class _BotBackend:
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
+
+    class _BotBackendEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[BotInfrastructureDiagnostics._BotBackend.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
+        AAPI: BotInfrastructureDiagnostics._BotBackend.ValueType  # 0
+        CLIPPY: BotInfrastructureDiagnostics._BotBackend.ValueType  # 1
+
+    class BotBackend(_BotBackend, metaclass=_BotBackendEnumTypeWrapper): ...
+    AAPI: BotInfrastructureDiagnostics.BotBackend.ValueType  # 0
+    CLIPPY: BotInfrastructureDiagnostics.BotBackend.ValueType  # 1
+
+    BOTBACKEND_FIELD_NUMBER: _builtins.int
+    TOOLSUSED_FIELD_NUMBER: _builtins.int
+    ISTHINKING_FIELD_NUMBER: _builtins.int
+    botBackend: Global___BotInfrastructureDiagnostics.BotBackend.ValueType
+    isThinking: _builtins.bool
+    @_builtins.property
+    def toolsUsed(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]: ...
+    def __init__(
+        self,
+        *,
+        botBackend: Global___BotInfrastructureDiagnostics.BotBackend.ValueType | None = ...,
+        toolsUsed: _abc.Iterable[_builtins.str] | None = ...,
+        isThinking: _builtins.bool | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["botBackend", b"botBackend", "isThinking", b"isThinking"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["botBackend", b"botBackend", "isThinking", b"isThinking", "toolsUsed", b"toolsUsed"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___BotInfrastructureDiagnostics: _TypeAlias = BotInfrastructureDiagnostics  # noqa: Y015
 
 @_typing.final
 class BotSuggestedPromptMetadata(_message.Message):
@@ -1362,27 +1943,6 @@ class BotMemuMetadata(_message.Message):
 Global___BotMemuMetadata: _TypeAlias = BotMemuMetadata  # noqa: Y015
 
 @_typing.final
-class BotAgeCollectionMetadata(_message.Message):
-    DESCRIPTOR: _descriptor.Descriptor
-
-    AGECOLLECTIONELIGIBLE_FIELD_NUMBER: _builtins.int
-    SHOULDTRIGGERAGECOLLECTIONONCLIENT_FIELD_NUMBER: _builtins.int
-    ageCollectionEligible: _builtins.bool
-    shouldTriggerAgeCollectionOnClient: _builtins.bool
-    def __init__(
-        self,
-        *,
-        ageCollectionEligible: _builtins.bool | None = ...,
-        shouldTriggerAgeCollectionOnClient: _builtins.bool | None = ...,
-    ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["ageCollectionEligible", b"ageCollectionEligible", "shouldTriggerAgeCollectionOnClient", b"shouldTriggerAgeCollectionOnClient"]  # noqa: Y015
-    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["ageCollectionEligible", b"ageCollectionEligible", "shouldTriggerAgeCollectionOnClient", b"shouldTriggerAgeCollectionOnClient"]  # noqa: Y015
-    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
-
-Global___BotAgeCollectionMetadata: _TypeAlias = BotAgeCollectionMetadata  # noqa: Y015
-
-@_typing.final
 class InThreadSurveyMetadata(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
@@ -1467,6 +2027,7 @@ class InThreadSurveyMetadata(_message.Message):
     PRIVACYSTATEMENTFULL_FIELD_NUMBER: _builtins.int
     PRIVACYSTATEMENTPARTS_FIELD_NUMBER: _builtins.int
     FEEDBACKTOASTTEXT_FIELD_NUMBER: _builtins.int
+    STARTQUESTIONINDEX_FIELD_NUMBER: _builtins.int
     tessaSessionID: _builtins.str
     simonSessionID: _builtins.str
     simonSurveyID: _builtins.str
@@ -1482,6 +2043,7 @@ class InThreadSurveyMetadata(_message.Message):
     surveySubmitButtonText: _builtins.str
     privacyStatementFull: _builtins.str
     feedbackToastText: _builtins.str
+    startQuestionIndex: _builtins.int
     @_builtins.property
     def questions(self) -> _containers.RepeatedCompositeFieldContainer[Global___InThreadSurveyMetadata.InThreadSurveyQuestion]: ...
     @_builtins.property
@@ -1506,10 +2068,11 @@ class InThreadSurveyMetadata(_message.Message):
         privacyStatementFull: _builtins.str | None = ...,
         privacyStatementParts: _abc.Iterable[Global___InThreadSurveyMetadata.InThreadSurveyPrivacyStatementPart] | None = ...,
         feedbackToastText: _builtins.str | None = ...,
+        startQuestionIndex: _builtins.int | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["feedbackToastText", b"feedbackToastText", "invitationBodyText", b"invitationBodyText", "invitationCtaText", b"invitationCtaText", "invitationCtaURL", b"invitationCtaURL", "invitationHeaderText", b"invitationHeaderText", "privacyStatementFull", b"privacyStatementFull", "requestID", b"requestID", "simonSessionID", b"simonSessionID", "simonSurveyID", b"simonSurveyID", "surveyContinueButtonText", b"surveyContinueButtonText", "surveySubmitButtonText", b"surveySubmitButtonText", "surveyTitle", b"surveyTitle", "tessaEvent", b"tessaEvent", "tessaRootID", b"tessaRootID", "tessaSessionID", b"tessaSessionID"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["feedbackToastText", b"feedbackToastText", "invitationBodyText", b"invitationBodyText", "invitationCtaText", b"invitationCtaText", "invitationCtaURL", b"invitationCtaURL", "invitationHeaderText", b"invitationHeaderText", "privacyStatementFull", b"privacyStatementFull", "requestID", b"requestID", "simonSessionID", b"simonSessionID", "simonSurveyID", b"simonSurveyID", "startQuestionIndex", b"startQuestionIndex", "surveyContinueButtonText", b"surveyContinueButtonText", "surveySubmitButtonText", b"surveySubmitButtonText", "surveyTitle", b"surveyTitle", "tessaEvent", b"tessaEvent", "tessaRootID", b"tessaRootID", "tessaSessionID", b"tessaSessionID"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["feedbackToastText", b"feedbackToastText", "invitationBodyText", b"invitationBodyText", "invitationCtaText", b"invitationCtaText", "invitationCtaURL", b"invitationCtaURL", "invitationHeaderText", b"invitationHeaderText", "privacyStatementFull", b"privacyStatementFull", "privacyStatementParts", b"privacyStatementParts", "questions", b"questions", "requestID", b"requestID", "simonSessionID", b"simonSessionID", "simonSurveyID", b"simonSurveyID", "surveyContinueButtonText", b"surveyContinueButtonText", "surveySubmitButtonText", b"surveySubmitButtonText", "surveyTitle", b"surveyTitle", "tessaEvent", b"tessaEvent", "tessaRootID", b"tessaRootID", "tessaSessionID", b"tessaSessionID"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["feedbackToastText", b"feedbackToastText", "invitationBodyText", b"invitationBodyText", "invitationCtaText", b"invitationCtaText", "invitationCtaURL", b"invitationCtaURL", "invitationHeaderText", b"invitationHeaderText", "privacyStatementFull", b"privacyStatementFull", "privacyStatementParts", b"privacyStatementParts", "questions", b"questions", "requestID", b"requestID", "simonSessionID", b"simonSessionID", "simonSurveyID", b"simonSurveyID", "startQuestionIndex", b"startQuestionIndex", "surveyContinueButtonText", b"surveyContinueButtonText", "surveySubmitButtonText", b"surveySubmitButtonText", "surveyTitle", b"surveyTitle", "tessaEvent", b"tessaEvent", "tessaRootID", b"tessaRootID", "tessaSessionID", b"tessaSessionID"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
 Global___InThreadSurveyMetadata: _TypeAlias = InThreadSurveyMetadata  # noqa: Y015
@@ -1564,15 +2127,18 @@ class BotUnifiedResponseMutation(_message.Message):
         DESCRIPTOR: _descriptor.Descriptor
 
         PRIMARYRESPONSEID_FIELD_NUMBER: _builtins.int
+        SURVEYCTAHASRENDERED_FIELD_NUMBER: _builtins.int
         primaryResponseID: _builtins.str
+        surveyCtaHasRendered: _builtins.bool
         def __init__(
             self,
             *,
             primaryResponseID: _builtins.str | None = ...,
+            surveyCtaHasRendered: _builtins.bool | None = ...,
         ) -> None: ...
-        _HasFieldArgType: _TypeAlias = _typing.Literal["primaryResponseID", b"primaryResponseID"]  # noqa: Y015
+        _HasFieldArgType: _TypeAlias = _typing.Literal["primaryResponseID", b"primaryResponseID", "surveyCtaHasRendered", b"surveyCtaHasRendered"]  # noqa: Y015
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-        _ClearFieldArgType: _TypeAlias = _typing.Literal["primaryResponseID", b"primaryResponseID"]  # noqa: Y015
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["primaryResponseID", b"primaryResponseID", "surveyCtaHasRendered", b"surveyCtaHasRendered"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
     SBSMETADATA_FIELD_NUMBER: _builtins.int
@@ -1595,10 +2161,54 @@ class BotUnifiedResponseMutation(_message.Message):
 Global___BotUnifiedResponseMutation: _TypeAlias = BotUnifiedResponseMutation  # noqa: Y015
 
 @_typing.final
+class AIMediaCollectionMetadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    COLLECTIONID_FIELD_NUMBER: _builtins.int
+    UPLOADORDERINDEX_FIELD_NUMBER: _builtins.int
+    collectionID: _builtins.str
+    uploadOrderIndex: _builtins.int
+    def __init__(
+        self,
+        *,
+        collectionID: _builtins.str | None = ...,
+        uploadOrderIndex: _builtins.int | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["collectionID", b"collectionID", "uploadOrderIndex", b"uploadOrderIndex"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["collectionID", b"collectionID", "uploadOrderIndex", b"uploadOrderIndex"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___AIMediaCollectionMetadata: _TypeAlias = AIMediaCollectionMetadata  # noqa: Y015
+
+@_typing.final
+class AIMediaCollectionMessage(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    COLLECTIONID_FIELD_NUMBER: _builtins.int
+    EXPECTEDMEDIACOUNT_FIELD_NUMBER: _builtins.int
+    HASGLOBALCAPTION_FIELD_NUMBER: _builtins.int
+    collectionID: _builtins.str
+    expectedMediaCount: _builtins.int
+    hasGlobalCaption: _builtins.bool
+    def __init__(
+        self,
+        *,
+        collectionID: _builtins.str | None = ...,
+        expectedMediaCount: _builtins.int | None = ...,
+        hasGlobalCaption: _builtins.bool | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["collectionID", b"collectionID", "expectedMediaCount", b"expectedMediaCount", "hasGlobalCaption", b"hasGlobalCaption"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["collectionID", b"collectionID", "expectedMediaCount", b"expectedMediaCount", "hasGlobalCaption", b"hasGlobalCaption"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___AIMediaCollectionMessage: _TypeAlias = AIMediaCollectionMessage  # noqa: Y015
+
+@_typing.final
 class BotMetadata(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
-    AVATARMETADATA_FIELD_NUMBER: _builtins.int
     PERSONAID_FIELD_NUMBER: _builtins.int
     PLUGINMETADATA_FIELD_NUMBER: _builtins.int
     SUGGESTEDPROMPTMETADATA_FIELD_NUMBER: _builtins.int
@@ -1629,6 +2239,13 @@ class BotMetadata(_message.Message):
     BOTMESSAGEORIGINMETADATA_FIELD_NUMBER: _builtins.int
     INTHREADSURVEYMETADATA_FIELD_NUMBER: _builtins.int
     BOTTHREADINFO_FIELD_NUMBER: _builtins.int
+    REGENERATEMETADATA_FIELD_NUMBER: _builtins.int
+    SESSIONTRANSPARENCYMETADATA_FIELD_NUMBER: _builtins.int
+    BOTDOCUMENTMESSAGEMETADATA_FIELD_NUMBER: _builtins.int
+    BOTGROUPMETADATA_FIELD_NUMBER: _builtins.int
+    BOTRENDERINGCONFIGMETADATA_FIELD_NUMBER: _builtins.int
+    BOTINFRASTRUCTUREDIAGNOSTICS_FIELD_NUMBER: _builtins.int
+    AIMEDIACOLLECTIONMETADATA_FIELD_NUMBER: _builtins.int
     INTERNALMETADATA_FIELD_NUMBER: _builtins.int
     personaID: _builtins.str
     invokerJID: _builtins.str
@@ -1638,8 +2255,6 @@ class BotMetadata(_message.Message):
     conversationStarterPromptID: _builtins.str
     botResponseID: _builtins.str
     internalMetadata: _builtins.bytes
-    @_builtins.property
-    def avatarMetadata(self) -> Global___BotAvatarMetadata: ...
     @_builtins.property
     def pluginMetadata(self) -> Global___BotPluginMetadata: ...
     @_builtins.property
@@ -1686,10 +2301,23 @@ class BotMetadata(_message.Message):
     def inThreadSurveyMetadata(self) -> Global___InThreadSurveyMetadata: ...
     @_builtins.property
     def botThreadInfo(self) -> Global___AIThreadInfo: ...
+    @_builtins.property
+    def regenerateMetadata(self) -> Global___AIRegenerateMetadata: ...
+    @_builtins.property
+    def sessionTransparencyMetadata(self) -> Global___SessionTransparencyMetadata: ...
+    @_builtins.property
+    def botDocumentMessageMetadata(self) -> Global___BotDocumentMessageMetadata: ...
+    @_builtins.property
+    def botGroupMetadata(self) -> Global___BotGroupMetadata: ...
+    @_builtins.property
+    def botRenderingConfigMetadata(self) -> Global___BotRenderingConfigMetadata: ...
+    @_builtins.property
+    def botInfrastructureDiagnostics(self) -> Global___BotInfrastructureDiagnostics: ...
+    @_builtins.property
+    def aiMediaCollectionMetadata(self) -> Global___AIMediaCollectionMetadata: ...
     def __init__(
         self,
         *,
-        avatarMetadata: Global___BotAvatarMetadata | None = ...,
         personaID: _builtins.str | None = ...,
         pluginMetadata: Global___BotPluginMetadata | None = ...,
         suggestedPromptMetadata: Global___BotSuggestedPromptMetadata | None = ...,
@@ -1720,11 +2348,220 @@ class BotMetadata(_message.Message):
         botMessageOriginMetadata: Global___BotMessageOriginMetadata | None = ...,
         inThreadSurveyMetadata: Global___InThreadSurveyMetadata | None = ...,
         botThreadInfo: Global___AIThreadInfo | None = ...,
+        regenerateMetadata: Global___AIRegenerateMetadata | None = ...,
+        sessionTransparencyMetadata: Global___SessionTransparencyMetadata | None = ...,
+        botDocumentMessageMetadata: Global___BotDocumentMessageMetadata | None = ...,
+        botGroupMetadata: Global___BotGroupMetadata | None = ...,
+        botRenderingConfigMetadata: Global___BotRenderingConfigMetadata | None = ...,
+        botInfrastructureDiagnostics: Global___BotInfrastructureDiagnostics | None = ...,
+        aiMediaCollectionMetadata: Global___AIMediaCollectionMetadata | None = ...,
         internalMetadata: _builtins.bytes | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["aiConversationContext", b"aiConversationContext", "avatarMetadata", b"avatarMetadata", "botAgeCollectionMetadata", b"botAgeCollectionMetadata", "botLinkedAccountsMetadata", b"botLinkedAccountsMetadata", "botMessageOriginMetadata", b"botMessageOriginMetadata", "botMetricsMetadata", b"botMetricsMetadata", "botModeSelectionMetadata", b"botModeSelectionMetadata", "botPromotionMessageMetadata", b"botPromotionMessageMetadata", "botQuotaMetadata", b"botQuotaMetadata", "botResponseID", b"botResponseID", "botThreadInfo", b"botThreadInfo", "capabilityMetadata", b"capabilityMetadata", "conversationStarterPromptID", b"conversationStarterPromptID", "imagineMetadata", b"imagineMetadata", "inThreadSurveyMetadata", b"inThreadSurveyMetadata", "internalMetadata", b"internalMetadata", "invokerJID", b"invokerJID", "memoryMetadata", b"memoryMetadata", "memuMetadata", b"memuMetadata", "messageDisclaimerText", b"messageDisclaimerText", "modelMetadata", b"modelMetadata", "personaID", b"personaID", "pluginMetadata", b"pluginMetadata", "progressIndicatorMetadata", b"progressIndicatorMetadata", "reminderMetadata", b"reminderMetadata", "renderingMetadata", b"renderingMetadata", "richResponseSourcesMetadata", b"richResponseSourcesMetadata", "sessionMetadata", b"sessionMetadata", "suggestedPromptMetadata", b"suggestedPromptMetadata", "timezone", b"timezone", "unifiedResponseMutation", b"unifiedResponseMutation", "verificationMetadata", b"verificationMetadata"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["aiConversationContext", b"aiConversationContext", "aiMediaCollectionMetadata", b"aiMediaCollectionMetadata", "botAgeCollectionMetadata", b"botAgeCollectionMetadata", "botDocumentMessageMetadata", b"botDocumentMessageMetadata", "botGroupMetadata", b"botGroupMetadata", "botInfrastructureDiagnostics", b"botInfrastructureDiagnostics", "botLinkedAccountsMetadata", b"botLinkedAccountsMetadata", "botMessageOriginMetadata", b"botMessageOriginMetadata", "botMetricsMetadata", b"botMetricsMetadata", "botModeSelectionMetadata", b"botModeSelectionMetadata", "botPromotionMessageMetadata", b"botPromotionMessageMetadata", "botQuotaMetadata", b"botQuotaMetadata", "botRenderingConfigMetadata", b"botRenderingConfigMetadata", "botResponseID", b"botResponseID", "botThreadInfo", b"botThreadInfo", "capabilityMetadata", b"capabilityMetadata", "conversationStarterPromptID", b"conversationStarterPromptID", "imagineMetadata", b"imagineMetadata", "inThreadSurveyMetadata", b"inThreadSurveyMetadata", "internalMetadata", b"internalMetadata", "invokerJID", b"invokerJID", "memoryMetadata", b"memoryMetadata", "memuMetadata", b"memuMetadata", "messageDisclaimerText", b"messageDisclaimerText", "modelMetadata", b"modelMetadata", "personaID", b"personaID", "pluginMetadata", b"pluginMetadata", "progressIndicatorMetadata", b"progressIndicatorMetadata", "regenerateMetadata", b"regenerateMetadata", "reminderMetadata", b"reminderMetadata", "renderingMetadata", b"renderingMetadata", "richResponseSourcesMetadata", b"richResponseSourcesMetadata", "sessionMetadata", b"sessionMetadata", "sessionTransparencyMetadata", b"sessionTransparencyMetadata", "suggestedPromptMetadata", b"suggestedPromptMetadata", "timezone", b"timezone", "unifiedResponseMutation", b"unifiedResponseMutation", "verificationMetadata", b"verificationMetadata"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["aiConversationContext", b"aiConversationContext", "avatarMetadata", b"avatarMetadata", "botAgeCollectionMetadata", b"botAgeCollectionMetadata", "botLinkedAccountsMetadata", b"botLinkedAccountsMetadata", "botMessageOriginMetadata", b"botMessageOriginMetadata", "botMetricsMetadata", b"botMetricsMetadata", "botModeSelectionMetadata", b"botModeSelectionMetadata", "botPromotionMessageMetadata", b"botPromotionMessageMetadata", "botQuotaMetadata", b"botQuotaMetadata", "botResponseID", b"botResponseID", "botThreadInfo", b"botThreadInfo", "capabilityMetadata", b"capabilityMetadata", "conversationStarterPromptID", b"conversationStarterPromptID", "imagineMetadata", b"imagineMetadata", "inThreadSurveyMetadata", b"inThreadSurveyMetadata", "internalMetadata", b"internalMetadata", "invokerJID", b"invokerJID", "memoryMetadata", b"memoryMetadata", "memuMetadata", b"memuMetadata", "messageDisclaimerText", b"messageDisclaimerText", "modelMetadata", b"modelMetadata", "personaID", b"personaID", "pluginMetadata", b"pluginMetadata", "progressIndicatorMetadata", b"progressIndicatorMetadata", "reminderMetadata", b"reminderMetadata", "renderingMetadata", b"renderingMetadata", "richResponseSourcesMetadata", b"richResponseSourcesMetadata", "sessionMetadata", b"sessionMetadata", "suggestedPromptMetadata", b"suggestedPromptMetadata", "timezone", b"timezone", "unifiedResponseMutation", b"unifiedResponseMutation", "verificationMetadata", b"verificationMetadata"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["aiConversationContext", b"aiConversationContext", "aiMediaCollectionMetadata", b"aiMediaCollectionMetadata", "botAgeCollectionMetadata", b"botAgeCollectionMetadata", "botDocumentMessageMetadata", b"botDocumentMessageMetadata", "botGroupMetadata", b"botGroupMetadata", "botInfrastructureDiagnostics", b"botInfrastructureDiagnostics", "botLinkedAccountsMetadata", b"botLinkedAccountsMetadata", "botMessageOriginMetadata", b"botMessageOriginMetadata", "botMetricsMetadata", b"botMetricsMetadata", "botModeSelectionMetadata", b"botModeSelectionMetadata", "botPromotionMessageMetadata", b"botPromotionMessageMetadata", "botQuotaMetadata", b"botQuotaMetadata", "botRenderingConfigMetadata", b"botRenderingConfigMetadata", "botResponseID", b"botResponseID", "botThreadInfo", b"botThreadInfo", "capabilityMetadata", b"capabilityMetadata", "conversationStarterPromptID", b"conversationStarterPromptID", "imagineMetadata", b"imagineMetadata", "inThreadSurveyMetadata", b"inThreadSurveyMetadata", "internalMetadata", b"internalMetadata", "invokerJID", b"invokerJID", "memoryMetadata", b"memoryMetadata", "memuMetadata", b"memuMetadata", "messageDisclaimerText", b"messageDisclaimerText", "modelMetadata", b"modelMetadata", "personaID", b"personaID", "pluginMetadata", b"pluginMetadata", "progressIndicatorMetadata", b"progressIndicatorMetadata", "regenerateMetadata", b"regenerateMetadata", "reminderMetadata", b"reminderMetadata", "renderingMetadata", b"renderingMetadata", "richResponseSourcesMetadata", b"richResponseSourcesMetadata", "sessionMetadata", b"sessionMetadata", "sessionTransparencyMetadata", b"sessionTransparencyMetadata", "suggestedPromptMetadata", b"suggestedPromptMetadata", "timezone", b"timezone", "unifiedResponseMutation", b"unifiedResponseMutation", "verificationMetadata", b"verificationMetadata"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
 
 Global___BotMetadata: _TypeAlias = BotMetadata  # noqa: Y015
+
+@_typing.final
+class BotGroupMetadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    PARTICIPANTSMETADATA_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def participantsMetadata(self) -> _containers.RepeatedCompositeFieldContainer[Global___BotGroupParticipantMetadata]: ...
+    def __init__(
+        self,
+        *,
+        participantsMetadata: _abc.Iterable[Global___BotGroupParticipantMetadata] | None = ...,
+    ) -> None: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["participantsMetadata", b"participantsMetadata"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___BotGroupMetadata: _TypeAlias = BotGroupMetadata  # noqa: Y015
+
+@_typing.final
+class BotRenderingConfigMetadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    BLOKSVERSIONINGID_FIELD_NUMBER: _builtins.int
+    PIXELDENSITY_FIELD_NUMBER: _builtins.int
+    bloksVersioningID: _builtins.str
+    pixelDensity: _builtins.float
+    def __init__(
+        self,
+        *,
+        bloksVersioningID: _builtins.str | None = ...,
+        pixelDensity: _builtins.float | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["bloksVersioningID", b"bloksVersioningID", "pixelDensity", b"pixelDensity"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["bloksVersioningID", b"bloksVersioningID", "pixelDensity", b"pixelDensity"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___BotRenderingConfigMetadata: _TypeAlias = BotRenderingConfigMetadata  # noqa: Y015
+
+@_typing.final
+class BotGroupParticipantMetadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    BOTFBID_FIELD_NUMBER: _builtins.int
+    botFbid: _builtins.str
+    def __init__(
+        self,
+        *,
+        botFbid: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["botFbid", b"botFbid"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["botFbid", b"botFbid"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___BotGroupParticipantMetadata: _TypeAlias = BotGroupParticipantMetadata  # noqa: Y015
+
+@_typing.final
+class ForwardedAIBotMessageInfo(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    BOTNAME_FIELD_NUMBER: _builtins.int
+    BOTJID_FIELD_NUMBER: _builtins.int
+    CREATORNAME_FIELD_NUMBER: _builtins.int
+    botName: _builtins.str
+    botJID: _builtins.str
+    creatorName: _builtins.str
+    def __init__(
+        self,
+        *,
+        botName: _builtins.str | None = ...,
+        botJID: _builtins.str | None = ...,
+        creatorName: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["botJID", b"botJID", "botName", b"botName", "creatorName", b"creatorName"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["botJID", b"botJID", "botName", b"botName", "creatorName", b"creatorName"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___ForwardedAIBotMessageInfo: _TypeAlias = ForwardedAIBotMessageInfo  # noqa: Y015
+
+@_typing.final
+class BotMessageSharingInfo(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    BOTENTRYPOINTORIGIN_FIELD_NUMBER: _builtins.int
+    FORWARDSCORE_FIELD_NUMBER: _builtins.int
+    botEntryPointOrigin: Global___BotMetricsEntryPoint.ValueType
+    forwardScore: _builtins.int
+    def __init__(
+        self,
+        *,
+        botEntryPointOrigin: Global___BotMetricsEntryPoint.ValueType | None = ...,
+        forwardScore: _builtins.int | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["botEntryPointOrigin", b"botEntryPointOrigin", "forwardScore", b"forwardScore"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["botEntryPointOrigin", b"botEntryPointOrigin", "forwardScore", b"forwardScore"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___BotMessageSharingInfo: _TypeAlias = BotMessageSharingInfo  # noqa: Y015
+
+@_typing.final
+class AIRichResponseUnifiedResponse(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    DATA_FIELD_NUMBER: _builtins.int
+    data: _builtins.bytes
+    def __init__(
+        self,
+        *,
+        data: _builtins.bytes | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["data", b"data"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["data", b"data"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___AIRichResponseUnifiedResponse: _TypeAlias = AIRichResponseUnifiedResponse  # noqa: Y015
+
+@_typing.final
+class AIRegenerateMetadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    MESSAGEKEY_FIELD_NUMBER: _builtins.int
+    RESPONSETIMESTAMPMS_FIELD_NUMBER: _builtins.int
+    responseTimestampMS: _builtins.int
+    @_builtins.property
+    def messageKey(self) -> _WACommon_pb2.MessageKey: ...
+    def __init__(
+        self,
+        *,
+        messageKey: _WACommon_pb2.MessageKey | None = ...,
+        responseTimestampMS: _builtins.int | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["messageKey", b"messageKey", "responseTimestampMS", b"responseTimestampMS"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["messageKey", b"messageKey", "responseTimestampMS", b"responseTimestampMS"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___AIRegenerateMetadata: _TypeAlias = AIRegenerateMetadata  # noqa: Y015
+
+@_typing.final
+class SessionTransparencyMetadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    DISCLAIMERTEXT_FIELD_NUMBER: _builtins.int
+    HCAID_FIELD_NUMBER: _builtins.int
+    SESSIONTRANSPARENCYTYPE_FIELD_NUMBER: _builtins.int
+    disclaimerText: _builtins.str
+    hcaID: _builtins.str
+    sessionTransparencyType: Global___SessionTransparencyType.ValueType
+    def __init__(
+        self,
+        *,
+        disclaimerText: _builtins.str | None = ...,
+        hcaID: _builtins.str | None = ...,
+        sessionTransparencyType: Global___SessionTransparencyType.ValueType | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["disclaimerText", b"disclaimerText", "hcaID", b"hcaID", "sessionTransparencyType", b"sessionTransparencyType"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["disclaimerText", b"disclaimerText", "hcaID", b"hcaID", "sessionTransparencyType", b"sessionTransparencyType"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___SessionTransparencyMetadata: _TypeAlias = SessionTransparencyMetadata  # noqa: Y015
+
+@_typing.final
+class BotAgentMetadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    DEEPLINKMETADATA_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def deepLinkMetadata(self) -> Global___BotAgentDeepLinkMetadata: ...
+    def __init__(
+        self,
+        *,
+        deepLinkMetadata: Global___BotAgentDeepLinkMetadata | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["deepLinkMetadata", b"deepLinkMetadata"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["deepLinkMetadata", b"deepLinkMetadata"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___BotAgentMetadata: _TypeAlias = BotAgentMetadata  # noqa: Y015
+
+@_typing.final
+class BotAgentDeepLinkMetadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    TOKEN_FIELD_NUMBER: _builtins.int
+    token: _builtins.str
+    def __init__(
+        self,
+        *,
+        token: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["token", b"token"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["token", b"token"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+
+Global___BotAgentDeepLinkMetadata: _TypeAlias = BotAgentDeepLinkMetadata  # noqa: Y015
