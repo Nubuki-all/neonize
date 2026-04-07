@@ -1013,7 +1013,7 @@ class NewAClient:
                 raise ConvertStickerError(
                     "File is not a webp, which is required for passthrough."
                 )
-            if name or pack_name:
+            if name or packname:
               b = await aio_add_exif_to_sticker(sticker, name, packname)
               io_save = BytesIO(b) if b else io_save
             
