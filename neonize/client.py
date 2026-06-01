@@ -3350,7 +3350,44 @@ class NewClient:
             raise DecryptPollVoteError(model.Error)
         return model.PollVoteMessage
 
-    def connect(self):
+    def prepare_pair_phone_payload(
+        self,
+        phone: str,
+        show_push_notification: bool,
+        client_name: ClientName = ClientName.LINUX,
+        client_type: Optional[ClientType] = None
+    ):
+        """
+        Prepares payload for pairing a phone with the client.
+        The return value of this function is to be passed to connect.
+
+        :param phone: The phone number to be paired.
+        :type phone: str
+        :param show_push_notification: If true, a push notification will be shown on the paired phone.
+        :type show_push_notification: bool
+        :param client_name: The name of the client, defaults to LINUX.
+        :type client_name: ClientName, optional
+        :param client_type: The type of the client, defaults to None. If None, it will be set to FIREFOX or determined by the device properties.
+        :type client_type: Optional[ClientType], optional
+        """
+        if client_type is None:
+            if self.device_props is None:
+                client_type = ClientType.FIREFOX
+            else:
+                try:
+                    client_type = ClientType(self.device_props.platformType)
+                except ValueError:
+                    client_type = ClientType.FIREFOX
+
+        pl = neonize_proto.PairPhoneParams(
+            phone=phone,
+            clientDisplayName="%s (%s)" % (client_type.name, client_name.name),
+            clientType=client_type.value,
+            showPushNotification=show_push_notification,
+        )
+        return pl.SerializeToString()
+
+    def connect(self, payload: Optional[bytes] = b""):
         """Establishes a connection to the WhatsApp servers."""
         # Convert the list of functions to a bytearray
         d = bytearray(list(self.event.list_func))
@@ -3383,8 +3420,8 @@ class NewClient:
             len(d),
             deviceprops,
             len(deviceprops),
-            b"",
-            0,
+            payload,
+            len(payload),
         )
         if err:
             raise NeonizeError(err.decode())
