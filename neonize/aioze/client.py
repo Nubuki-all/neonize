@@ -3504,13 +3504,13 @@ class NewAClient:
         if model.Error:
             raise DecryptPollVoteError(model.Error)
         return model.PollVoteMessage
-    
+
     def prepare_pair_phone_payload(
         self,
         phone: str,
         show_push_notification: bool,
         client_name: ClientName = ClientName.LINUX,
-        client_type: Optional[ClientType] = None
+        client_type: Optional[ClientType] = None,
     ):
         """
         Prepares payload for pairing a phone with the client.
@@ -3541,7 +3541,6 @@ class NewAClient:
             showPushNotification=show_push_notification,
         )
         return pl.SerializeToString()
-
 
     async def connect(self, payload: Optional[bytes] = b""):
         """Establishes a connection to the WhatsApp servers."""

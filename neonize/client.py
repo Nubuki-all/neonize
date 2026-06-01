@@ -3355,7 +3355,7 @@ class NewClient:
         phone: str,
         show_push_notification: bool,
         client_name: ClientName = ClientName.LINUX,
-        client_type: Optional[ClientType] = None
+        client_type: Optional[ClientType] = None,
     ):
         """
         Prepares payload for pairing a phone with the client.
