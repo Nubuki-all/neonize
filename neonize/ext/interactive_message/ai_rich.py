@@ -11,45 +11,34 @@ from __future__ import annotations
 import json
 import uuid as _uuid
 from dataclasses import dataclass, field
-from typing import (
-    TYPE_CHECKING,
-    Any,
-    Dict,
-    List,
-    Literal,
-    Optional,
-    Self,
-    Sequence,
-    Union,
-)
+from typing import TYPE_CHECKING, Any, Dict, Self, Union
 
-from ...proto.waE2E.WAWebProtobufsE2E_pb2 import (
-    AIRichResponseMessage,
-    ContextInfo,
-    FutureProofMessage,
-    Message,
-    MessageContextInfo,
+from ...proto.waAICommon.WAWebProtobufsAICommon_pb2 import (
+    AIRichResponseUnifiedResponse,
+    BotMetadata,
+    BotSourcesMetadata,
+    ForwardedAIBotMessageInfo,
 )
 from ...proto.waAICommonDeprecated.WAAICommonDeprecated_pb2 import (
-    AIRichResponseCodeMetadata,
-    AIRichResponseContentItemsMetadata,
-    AIRichResponseGridImageMetadata,
-    AIRichResponseImageURL,
-    AIRichResponseSubMessage,
-    AIRichResponseSubMessageType,
-    AIRichResponseTableMetadata,
     AI_RICH_RESPONSE_CODE,
     AI_RICH_RESPONSE_CONTENT_ITEMS,
     AI_RICH_RESPONSE_GRID_IMAGE,
     AI_RICH_RESPONSE_TABLE,
     AI_RICH_RESPONSE_TEXT,
     AI_RICH_RESPONSE_TYPE_STANDARD,
+    AIRichResponseCodeMetadata,
+    AIRichResponseContentItemsMetadata,
+    AIRichResponseGridImageMetadata,
+    AIRichResponseImageURL,
+    AIRichResponseSubMessage,
+    AIRichResponseTableMetadata,
 )
-from ...proto.waAICommon.WAWebProtobufsAICommon_pb2 import (
-    AIRichResponseUnifiedResponse,
-    BotMetadata,
-    BotSourcesMetadata,
-    ForwardedAIBotMessageInfo,
+from ...proto.waE2E.WAWebProtobufsE2E_pb2 import (
+    AIRichResponseMessage,
+    ContextInfo,
+    FutureProofMessage,
+    Message,
+    MessageContextInfo,
 )
 from .base import CustomInteractiveMessage, InteractiveMessageBuilder
 
@@ -131,13 +120,25 @@ def _extract_inline_entities(
                             "latex_expression": txt,
                             "latex_image": {
                                 "url": url,
-                                "width": int(parts[1]) if len(parts) > 1 and parts[1] else 100,
-                                "height": int(parts[2]) if len(parts) > 2 and parts[2] else 100,
+                                "width": (
+                                    int(parts[1])
+                                    if len(parts) > 1 and parts[1]
+                                    else 100
+                                ),
+                                "height": (
+                                    int(parts[2])
+                                    if len(parts) > 2 and parts[2]
+                                    else 100
+                                ),
                             },
-                            "font_height": float(parts[3])
-                            if len(parts) > 3 and parts[3]
-                            else 83.333,
-                            "padding": float(parts[4]) if len(parts) > 4 and parts[4] else 15.0,
+                            "font_height": (
+                                float(parts[3])
+                                if len(parts) > 3 and parts[3]
+                                else 83.333
+                            ),
+                            "padding": (
+                                float(parts[4]) if len(parts) > 4 and parts[4] else 15.0
+                            ),
                             "__typename": "GenAILatexItem",
                         },
                     )
@@ -279,7 +280,14 @@ _KEYWORDS: dict[str, set[str]] = {
     },
 }
 
-_HIGHLIGHT_MAP = {0: "DEFAULT", 1: "KEYWORD", 2: "METHOD", 3: "STR", 4: "NUMBER", 5: "COMMENT"}
+_HIGHLIGHT_MAP = {
+    0: "DEFAULT",
+    1: "KEYWORD",
+    2: "METHOD",
+    3: "STR",
+    4: "NUMBER",
+    5: "COMMENT",
+}
 _HIGHLIGHT_PROTO = {
     0: AIRichResponseCodeMetadata.AI_RICH_RESPONSE_CODE_HIGHLIGHT_DEFAULT,
     1: AIRichResponseCodeMetadata.AI_RICH_RESPONSE_CODE_HIGHLIGHT_KEYWORD,
@@ -381,13 +389,21 @@ def _build_table_metadata(table: list[list[str]]):
     if not table:
         raise ValueError("Table must have at least one row (header).")
     header, *data_rows = table
-    max_len = max(len(header), *(len(r) for r in data_rows)) if data_rows else len(header)
+    max_len = (
+        max(len(header), *(len(r) for r in data_rows)) if data_rows else len(header)
+    )
+
     def normalize(r):
         return r + [""] * (max_len - len(r))
 
     rows_proto = [
-        AIRichResponseTableMetadata.AIRichResponseTableRow(items=normalize(header), isHeading=True)
-    ] + [AIRichResponseTableMetadata.AIRichResponseTableRow(items=normalize(r)) for r in data_rows]
+        AIRichResponseTableMetadata.AIRichResponseTableRow(
+            items=normalize(header), isHeading=True
+        )
+    ] + [
+        AIRichResponseTableMetadata.AIRichResponseTableRow(items=normalize(r))
+        for r in data_rows
+    ]
 
     unified_rows = [{"is_header": True, "cells": normalize(header)}] + [
         {"is_header": False, "cells": normalize(r)} for r in data_rows
@@ -674,7 +690,11 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
                 _new_layout(
                     "Single",
                     {
-                        "media": {"url": u, "mime_type": "video/mp4", "duration": duration},
+                        "media": {
+                            "url": u,
+                            "mime_type": "video/mp4",
+                            "duration": duration,
+                        },
                         "imagine_type": "ANIMATE",
                         "status": {"status": "READY"},
                         "__typename": "GenAIImaginePrimitive",
@@ -802,7 +822,9 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         ]
         is_multi = isinstance(product, list)
         layout = "HScroll" if is_multi else "Single"
-        self._sections.append(_new_layout(layout, products if is_multi else products[0]))
+        self._sections.append(
+            _new_layout(layout, products if is_multi else products[0])
+        )
         return self
 
     def add_post(self, post: Union["Post", list["Post"]]) -> Self:
@@ -929,7 +951,9 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         inner_message = Message(richResponseMessage=rich_msg)
         bot_metadata = BotMetadata(
             messageDisclaimerText=self._title,
-            richResponseSourcesMetadata=BotSourcesMetadata(sources=self._rich_response_sources),
+            richResponseSourcesMetadata=BotSourcesMetadata(
+                sources=self._rich_response_sources
+            ),
         )
 
         return Message(

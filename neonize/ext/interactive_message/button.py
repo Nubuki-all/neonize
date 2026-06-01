@@ -32,18 +32,16 @@ Example::
 from __future__ import annotations
 
 import json
-import uuid as _uuid
-from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Self, Union
 
 from ...proto.waE2E.WAWebProtobufsE2E_pb2 import (
     ContextInfo,
+    DocumentMessage,
     ImageMessage,
     InteractiveMessage,
     Message,
     VideoMessage,
-    DocumentMessage,
 )
 from ...utils.iofile import get_bytes_from_name_or_url
 from .base import CustomInteractiveMessage, InteractiveMessageBuilder
@@ -119,7 +117,11 @@ class CopyButton:
     extra: Dict[str, Any] = field(default_factory=dict)
 
     def to_native_flow(self) -> InteractiveMessage.NativeFlowMessage.NativeFlowButton:
-        params = {"display_text": self.display_text, "copy_code": self.copy_code, **self.extra}
+        params = {
+            "display_text": self.display_text,
+            "copy_code": self.copy_code,
+            **self.extra,
+        }
         return InteractiveMessage.NativeFlowMessage.NativeFlowButton(
             name="cta_copy",
             buttonParamsJSON=json.dumps(params),
@@ -262,7 +264,9 @@ class Section:
 
         :returns: ``self`` for fluent chaining.
         """
-        self.rows.append(Row(title=title, description=description, id=id, header=header))
+        self.rows.append(
+            Row(title=title, description=description, id=id, header=header)
+        )
         return self
 
 
@@ -295,7 +299,9 @@ class SelectionButton:
         self.sections: List[Section] = []
         self._current_section_index: int = -1
 
-    def add_section(self, title: str = "", highlight_label: str = "") -> "SelectionButton":
+    def add_section(
+        self, title: str = "", highlight_label: str = ""
+    ) -> "SelectionButton":
         """Add a new section to the selection list.
 
         :param title: Section header text.
@@ -320,7 +326,9 @@ class SelectionButton:
         """
         if self._current_section_index < 0:
             raise RuntimeError("You must create a section before adding rows.")
-        self.sections[self._current_section_index].add_row(title, description, id, header)
+        self.sections[self._current_section_index].add_row(
+            title, description, id, header
+        )
         return self
 
     def to_native_flow(self) -> InteractiveMessage.NativeFlowMessage.NativeFlowButton:
@@ -330,7 +338,12 @@ class SelectionButton:
                 "title": s.title,
                 "highlight_label": s.highlight_label,
                 "rows": [
-                    {"header": r.header, "title": r.title, "description": r.description, "id": r.id}
+                    {
+                        "header": r.header,
+                        "title": r.title,
+                        "description": r.description,
+                        "id": r.id,
+                    }
                     for r in s.rows
                 ],
             }
@@ -438,7 +451,9 @@ class ButtonMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         :param image: URL string or raw bytes of the image.
         :returns: ``self`` for chaining.
         """
-        self._media = get_bytes_from_name_or_url(image) if isinstance(image, str) else image
+        self._media = (
+            get_bytes_from_name_or_url(image) if isinstance(image, str) else image
+        )
         self._media_type = "image"
         return self
 
@@ -448,11 +463,15 @@ class ButtonMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         :param video: URL string or raw bytes of the video.
         :returns: ``self`` for chaining.
         """
-        self._media = get_bytes_from_name_or_url(video) if isinstance(video, str) else video
+        self._media = (
+            get_bytes_from_name_or_url(video) if isinstance(video, str) else video
+        )
         self._media_type = "video"
         return self
 
-    def set_document(self, document: Union[str, bytes], mimetype: str = "application/pdf") -> Self:
+    def set_document(
+        self, document: Union[str, bytes], mimetype: str = "application/pdf"
+    ) -> Self:
         """Attach a document to the message header.
 
         :param document: URL string or raw bytes of the document.
@@ -460,7 +479,9 @@ class ButtonMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         :returns: ``self`` for chaining.
         """
         self._media = (
-            get_bytes_from_name_or_url(document) if isinstance(document, str) else document
+            get_bytes_from_name_or_url(document)
+            if isinstance(document, str)
+            else document
         )
         self._media_type = "document"
         self._media_mimetype = mimetype
@@ -531,7 +552,9 @@ class ButtonMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         :param id: Reminder identifier.
         :returns: ``self`` for chaining.
         """
-        self._buttons.append(ReminderButton(display_text=display_text, id=id, extra=extra))
+        self._buttons.append(
+            ReminderButton(display_text=display_text, id=id, extra=extra)
+        )
         return self
 
     def add_cancel_reminder(self, display_text: str, id: str, **extra: Any) -> Self:
@@ -541,7 +564,9 @@ class ButtonMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         :param id: Reminder identifier to cancel.
         :returns: ``self`` for chaining.
         """
-        self._buttons.append(CancelReminderButton(display_text=display_text, id=id, extra=extra))
+        self._buttons.append(
+            CancelReminderButton(display_text=display_text, id=id, extra=extra)
+        )
         return self
 
     def add_address(self, display_text: str, id: str, **extra: Any) -> Self:
@@ -551,7 +576,9 @@ class ButtonMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         :param id: Address identifier.
         :returns: ``self`` for chaining.
         """
-        self._buttons.append(AddressButton(display_text=display_text, id=id, extra=extra))
+        self._buttons.append(
+            AddressButton(display_text=display_text, id=id, extra=extra)
+        )
         return self
 
     def add_location(self, **extra: Any) -> Self:
@@ -623,7 +650,9 @@ class ButtonMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         for btn in reversed(self._buttons):
             if isinstance(btn, SelectionButton):
                 return btn
-        raise RuntimeError("You must call add_selection() before add_section() / add_row().")
+        raise RuntimeError(
+            "You must call add_selection() before add_section() / add_row()."
+        )
 
     def _build_header(
         self,

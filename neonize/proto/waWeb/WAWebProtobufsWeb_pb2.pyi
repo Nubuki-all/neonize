@@ -14,10 +14,10 @@ import builtins as _builtins
 import sys
 import typing as _typing
 
-if sys.version_info >= (3, 10):
-    from typing import TypeAlias as _TypeAlias
+if sys.version_info >= (3, 11):
+    from typing import TypeAlias as _TypeAlias, Never as _Never
 else:
-    from typing_extensions import TypeAlias as _TypeAlias
+    from typing_extensions import TypeAlias as _TypeAlias, Never as _Never
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
@@ -272,6 +272,8 @@ class WebMessageInfo(_message.Message):
         GROUP_MEMBER_SHARE_GROUP_HISTORY_MODE: WebMessageInfo._StubType.ValueType  # 221
         GROUP_OPEN_BOT_ADDED: WebMessageInfo._StubType.ValueType  # 222
         GROUP_TEE_BOT_ADDED: WebMessageInfo._StubType.ValueType  # 223
+        CONTACT_INFO: WebMessageInfo._StubType.ValueType  # 224
+        SCHEDULED_MESSAGE_CREATED: WebMessageInfo._StubType.ValueType  # 225
 
     class StubType(_StubType, metaclass=_StubTypeEnumTypeWrapper): ...
     UNKNOWN: WebMessageInfo.StubType.ValueType  # 0
@@ -498,6 +500,8 @@ class WebMessageInfo(_message.Message):
     GROUP_MEMBER_SHARE_GROUP_HISTORY_MODE: WebMessageInfo.StubType.ValueType  # 221
     GROUP_OPEN_BOT_ADDED: WebMessageInfo.StubType.ValueType  # 222
     GROUP_TEE_BOT_ADDED: WebMessageInfo.StubType.ValueType  # 223
+    CONTACT_INFO: WebMessageInfo.StubType.ValueType  # 224
+    SCHEDULED_MESSAGE_CREATED: WebMessageInfo.StubType.ValueType  # 225
 
     class _Status:
         ValueType = _typing.NewType("ValueType", _builtins.int)
@@ -588,6 +592,10 @@ class WebMessageInfo(_message.Message):
     QUARANTINEDMESSAGE_FIELD_NUMBER: _builtins.int
     NONJIDMENTIONS_FIELD_NUMBER: _builtins.int
     HSMTAG_FIELD_NUMBER: _builtins.int
+    EPHEMERALEXPIRATIONTIMESTAMP_FIELD_NUMBER: _builtins.int
+    SCHEDULEDMESSAGEMETADATA_FIELD_NUMBER: _builtins.int
+    DECISIONID_FIELD_NUMBER: _builtins.int
+    DECISIONSOURCES_FIELD_NUMBER: _builtins.int
     messageTimestamp: _builtins.int
     status: Global___WebMessageInfo.Status.ValueType
     participant: _builtins.str
@@ -624,6 +632,8 @@ class WebMessageInfo(_message.Message):
     botTargetID: _builtins.str
     nonJIDMentions: _builtins.int
     hsmTag: _builtins.str
+    ephemeralExpirationTimestamp: _builtins.int
+    decisionID: _builtins.str
     @_builtins.property
     def key(self) -> _WACommon_pb2.MessageKey: ...
     @_builtins.property
@@ -688,6 +698,10 @@ class WebMessageInfo(_message.Message):
     def interactiveMessageAdditionalMetadata(self) -> Global___InteractiveMessageAdditionalMetadata: ...
     @_builtins.property
     def quarantinedMessage(self) -> Global___QuarantinedMessage: ...
+    @_builtins.property
+    def scheduledMessageMetadata(self) -> Global___ScheduledMessageMetadata: ...
+    @_builtins.property
+    def decisionSources(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]: ...
     def __init__(
         self,
         *,
@@ -759,11 +773,16 @@ class WebMessageInfo(_message.Message):
         quarantinedMessage: Global___QuarantinedMessage | None = ...,
         nonJIDMentions: _builtins.int | None = ...,
         hsmTag: _builtins.str | None = ...,
+        ephemeralExpirationTimestamp: _builtins.int | None = ...,
+        scheduledMessageMetadata: Global___ScheduledMessageMetadata | None = ...,
+        decisionID: _builtins.str | None = ...,
+        decisionSources: _abc.Iterable[_builtins.str] | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["agentID", b"agentID", "bizPrivacyStatus", b"bizPrivacyStatus", "botMessageInvokerJID", b"botMessageInvokerJID", "botTargetID", b"botTargetID", "broadcast", b"broadcast", "clearMedia", b"clearMedia", "commentMetadata", b"commentMetadata", "duration", b"duration", "ephemeralDuration", b"ephemeralDuration", "ephemeralOffToOn", b"ephemeralOffToOn", "ephemeralOutOfSync", b"ephemeralOutOfSync", "ephemeralStartTimestamp", b"ephemeralStartTimestamp", "eventAdditionalMetadata", b"eventAdditionalMetadata", "finalLiveLocation", b"finalLiveLocation", "futureproofData", b"futureproofData", "groupHistoryBundleInfo", b"groupHistoryBundleInfo", "groupHistoryIndividualMessageInfo", b"groupHistoryIndividualMessageInfo", "hsmTag", b"hsmTag", "ignore", b"ignore", "interactiveMessageAdditionalMetadata", b"interactiveMessageAdditionalMetadata", "is1PBizBotMessage", b"is1PBizBotMessage", "isGroupHistoryMessage", b"isGroupHistoryMessage", "isMentionedInStatus", b"isMentionedInStatus", "isSupportAiMessage", b"isSupportAiMessage", "keepInChat", b"keepInChat", "key", b"key", "mediaCiphertextSHA256", b"mediaCiphertextSHA256", "mediaData", b"mediaData", "message", b"message", "messageC2STimestamp", b"messageC2STimestamp", "messageSecret", b"messageSecret", "messageStubType", b"messageStubType", "messageTimestamp", b"messageTimestamp", "multicast", b"multicast", "newsletterServerID", b"newsletterServerID", "nonJIDMentions", b"nonJIDMentions", "originalSelfAuthorUserJIDString", b"originalSelfAuthorUserJIDString", "participant", b"participant", "paymentInfo", b"paymentInfo", "photoChange", b"photoChange", "pinInChat", b"pinInChat", "pollAdditionalMetadata", b"pollAdditionalMetadata", "premiumMessageInfo", b"premiumMessageInfo", "pushName", b"pushName", "quarantinedMessage", b"quarantinedMessage", "quotedPaymentInfo", b"quotedPaymentInfo", "quotedStickerData", b"quotedStickerData", "reportingTokenInfo", b"reportingTokenInfo", "revokeMessageTimestamp", b"revokeMessageTimestamp", "starred", b"starred", "status", b"status", "statusAlreadyViewed", b"statusAlreadyViewed", "statusMentionMessageInfo", b"statusMentionMessageInfo", "statusPsa", b"statusPsa", "targetMessageID", b"targetMessageID", "urlNumber", b"urlNumber", "urlText", b"urlText", "verifiedBizName", b"verifiedBizName"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["agentID", b"agentID", "bizPrivacyStatus", b"bizPrivacyStatus", "botMessageInvokerJID", b"botMessageInvokerJID", "botTargetID", b"botTargetID", "broadcast", b"broadcast", "clearMedia", b"clearMedia", "commentMetadata", b"commentMetadata", "decisionID", b"decisionID", "duration", b"duration", "ephemeralDuration", b"ephemeralDuration", "ephemeralExpirationTimestamp", b"ephemeralExpirationTimestamp", "ephemeralOffToOn", b"ephemeralOffToOn", "ephemeralOutOfSync", b"ephemeralOutOfSync", "ephemeralStartTimestamp", b"ephemeralStartTimestamp", "eventAdditionalMetadata", b"eventAdditionalMetadata", "finalLiveLocation", b"finalLiveLocation", "futureproofData", b"futureproofData", "groupHistoryBundleInfo", b"groupHistoryBundleInfo", "groupHistoryIndividualMessageInfo", b"groupHistoryIndividualMessageInfo", "hsmTag", b"hsmTag", "ignore", b"ignore", "interactiveMessageAdditionalMetadata", b"interactiveMessageAdditionalMetadata", "is1PBizBotMessage", b"is1PBizBotMessage", "isGroupHistoryMessage", b"isGroupHistoryMessage", "isMentionedInStatus", b"isMentionedInStatus", "isSupportAiMessage", b"isSupportAiMessage", "keepInChat", b"keepInChat", "key", b"key", "mediaCiphertextSHA256", b"mediaCiphertextSHA256", "mediaData", b"mediaData", "message", b"message", "messageC2STimestamp", b"messageC2STimestamp", "messageSecret", b"messageSecret", "messageStubType", b"messageStubType", "messageTimestamp", b"messageTimestamp", "multicast", b"multicast", "newsletterServerID", b"newsletterServerID", "nonJIDMentions", b"nonJIDMentions", "originalSelfAuthorUserJIDString", b"originalSelfAuthorUserJIDString", "participant", b"participant", "paymentInfo", b"paymentInfo", "photoChange", b"photoChange", "pinInChat", b"pinInChat", "pollAdditionalMetadata", b"pollAdditionalMetadata", "premiumMessageInfo", b"premiumMessageInfo", "pushName", b"pushName", "quarantinedMessage", b"quarantinedMessage", "quotedPaymentInfo", b"quotedPaymentInfo", "quotedStickerData", b"quotedStickerData", "reportingTokenInfo", b"reportingTokenInfo", "revokeMessageTimestamp", b"revokeMessageTimestamp", "scheduledMessageMetadata", b"scheduledMessageMetadata", "starred", b"starred", "status", b"status", "statusAlreadyViewed", b"statusAlreadyViewed", "statusMentionMessageInfo", b"statusMentionMessageInfo", "statusPsa", b"statusPsa", "targetMessageID", b"targetMessageID", "urlNumber", b"urlNumber", "urlText", b"urlText", "verifiedBizName", b"verifiedBizName"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["agentID", b"agentID", "bizPrivacyStatus", b"bizPrivacyStatus", "botMessageInvokerJID", b"botMessageInvokerJID", "botTargetID", b"botTargetID", "broadcast", b"broadcast", "clearMedia", b"clearMedia", "commentMetadata", b"commentMetadata", "duration", b"duration", "ephemeralDuration", b"ephemeralDuration", "ephemeralOffToOn", b"ephemeralOffToOn", "ephemeralOutOfSync", b"ephemeralOutOfSync", "ephemeralStartTimestamp", b"ephemeralStartTimestamp", "eventAdditionalMetadata", b"eventAdditionalMetadata", "eventResponses", b"eventResponses", "finalLiveLocation", b"finalLiveLocation", "futureproofData", b"futureproofData", "groupHistoryBundleInfo", b"groupHistoryBundleInfo", "groupHistoryIndividualMessageInfo", b"groupHistoryIndividualMessageInfo", "hsmTag", b"hsmTag", "ignore", b"ignore", "interactiveMessageAdditionalMetadata", b"interactiveMessageAdditionalMetadata", "is1PBizBotMessage", b"is1PBizBotMessage", "isGroupHistoryMessage", b"isGroupHistoryMessage", "isMentionedInStatus", b"isMentionedInStatus", "isSupportAiMessage", b"isSupportAiMessage", "keepInChat", b"keepInChat", "key", b"key", "labels", b"labels", "mediaCiphertextSHA256", b"mediaCiphertextSHA256", "mediaData", b"mediaData", "message", b"message", "messageAddOns", b"messageAddOns", "messageC2STimestamp", b"messageC2STimestamp", "messageSecret", b"messageSecret", "messageStubParameters", b"messageStubParameters", "messageStubType", b"messageStubType", "messageTimestamp", b"messageTimestamp", "multicast", b"multicast", "newsletterServerID", b"newsletterServerID", "nonJIDMentions", b"nonJIDMentions", "originalSelfAuthorUserJIDString", b"originalSelfAuthorUserJIDString", "participant", b"participant", "paymentInfo", b"paymentInfo", "photoChange", b"photoChange", "pinInChat", b"pinInChat", "pollAdditionalMetadata", b"pollAdditionalMetadata", "pollUpdates", b"pollUpdates", "premiumMessageInfo", b"premiumMessageInfo", "pushName", b"pushName", "quarantinedMessage", b"quarantinedMessage", "quotedPaymentInfo", b"quotedPaymentInfo", "quotedStickerData", b"quotedStickerData", "reactions", b"reactions", "reportingTokenInfo", b"reportingTokenInfo", "revokeMessageTimestamp", b"revokeMessageTimestamp", "starred", b"starred", "status", b"status", "statusAlreadyViewed", b"statusAlreadyViewed", "statusMentionMessageInfo", b"statusMentionMessageInfo", "statusMentionSources", b"statusMentionSources", "statusMentions", b"statusMentions", "statusPsa", b"statusPsa", "supportAiCitations", b"supportAiCitations", "targetMessageID", b"targetMessageID", "urlNumber", b"urlNumber", "urlText", b"urlText", "userReceipt", b"userReceipt", "verifiedBizName", b"verifiedBizName"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["agentID", b"agentID", "bizPrivacyStatus", b"bizPrivacyStatus", "botMessageInvokerJID", b"botMessageInvokerJID", "botTargetID", b"botTargetID", "broadcast", b"broadcast", "clearMedia", b"clearMedia", "commentMetadata", b"commentMetadata", "decisionID", b"decisionID", "decisionSources", b"decisionSources", "duration", b"duration", "ephemeralDuration", b"ephemeralDuration", "ephemeralExpirationTimestamp", b"ephemeralExpirationTimestamp", "ephemeralOffToOn", b"ephemeralOffToOn", "ephemeralOutOfSync", b"ephemeralOutOfSync", "ephemeralStartTimestamp", b"ephemeralStartTimestamp", "eventAdditionalMetadata", b"eventAdditionalMetadata", "eventResponses", b"eventResponses", "finalLiveLocation", b"finalLiveLocation", "futureproofData", b"futureproofData", "groupHistoryBundleInfo", b"groupHistoryBundleInfo", "groupHistoryIndividualMessageInfo", b"groupHistoryIndividualMessageInfo", "hsmTag", b"hsmTag", "ignore", b"ignore", "interactiveMessageAdditionalMetadata", b"interactiveMessageAdditionalMetadata", "is1PBizBotMessage", b"is1PBizBotMessage", "isGroupHistoryMessage", b"isGroupHistoryMessage", "isMentionedInStatus", b"isMentionedInStatus", "isSupportAiMessage", b"isSupportAiMessage", "keepInChat", b"keepInChat", "key", b"key", "labels", b"labels", "mediaCiphertextSHA256", b"mediaCiphertextSHA256", "mediaData", b"mediaData", "message", b"message", "messageAddOns", b"messageAddOns", "messageC2STimestamp", b"messageC2STimestamp", "messageSecret", b"messageSecret", "messageStubParameters", b"messageStubParameters", "messageStubType", b"messageStubType", "messageTimestamp", b"messageTimestamp", "multicast", b"multicast", "newsletterServerID", b"newsletterServerID", "nonJIDMentions", b"nonJIDMentions", "originalSelfAuthorUserJIDString", b"originalSelfAuthorUserJIDString", "participant", b"participant", "paymentInfo", b"paymentInfo", "photoChange", b"photoChange", "pinInChat", b"pinInChat", "pollAdditionalMetadata", b"pollAdditionalMetadata", "pollUpdates", b"pollUpdates", "premiumMessageInfo", b"premiumMessageInfo", "pushName", b"pushName", "quarantinedMessage", b"quarantinedMessage", "quotedPaymentInfo", b"quotedPaymentInfo", "quotedStickerData", b"quotedStickerData", "reactions", b"reactions", "reportingTokenInfo", b"reportingTokenInfo", "revokeMessageTimestamp", b"revokeMessageTimestamp", "scheduledMessageMetadata", b"scheduledMessageMetadata", "starred", b"starred", "status", b"status", "statusAlreadyViewed", b"statusAlreadyViewed", "statusMentionMessageInfo", b"statusMentionMessageInfo", "statusMentionSources", b"statusMentionSources", "statusMentions", b"statusMentions", "statusPsa", b"statusPsa", "supportAiCitations", b"supportAiCitations", "targetMessageID", b"targetMessageID", "urlNumber", b"urlNumber", "urlText", b"urlText", "userReceipt", b"userReceipt", "verifiedBizName", b"verifiedBizName"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___WebMessageInfo: _TypeAlias = WebMessageInfo  # noqa: Y015
 
@@ -940,6 +959,7 @@ class PaymentInfo(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["amount1000", b"amount1000", "currency", b"currency", "currencyDeprecated", b"currencyDeprecated", "exchangeAmount", b"exchangeAmount", "expiryTimestamp", b"expiryTimestamp", "futureproofed", b"futureproofed", "primaryAmount", b"primaryAmount", "receiverJID", b"receiverJID", "requestMessageKey", b"requestMessageKey", "status", b"status", "transactionTimestamp", b"transactionTimestamp", "txnStatus", b"txnStatus", "useNoviFiatFormat", b"useNoviFiatFormat"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___PaymentInfo: _TypeAlias = PaymentInfo  # noqa: Y015
 
@@ -1107,6 +1127,7 @@ class WebFeatures(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["archiveV2", b"archiveV2", "catalog", b"catalog", "changeNumberV2", b"changeNumberV2", "disappearingMode", b"disappearingMode", "e2ENotificationSync", b"e2ENotificationSync", "ephemeral24HDuration", b"ephemeral24HDuration", "ephemeralAllowGroupMembers", b"ephemeralAllowGroupMembers", "ephemeralMessages", b"ephemeralMessages", "externalMdOptInAvailable", b"externalMdOptInAvailable", "frequentlyForwardedSetting", b"frequentlyForwardedSetting", "groupDogfoodingInternalOnly", b"groupDogfoodingInternalOnly", "groupUiiCleanup", b"groupUiiCleanup", "groupsV3", b"groupsV3", "groupsV3Create", b"groupsV3Create", "groupsV4JoinPermission", b"groupsV4JoinPermission", "labelsDisplay", b"labelsDisplay", "labelsEdit", b"labelsEdit", "liveLocations", b"liveLocations", "liveLocationsFinal", b"liveLocationsFinal", "mdForceUpgrade", b"mdForceUpgrade", "mediaUpload", b"mediaUpload", "mediaUploadRichQuickReplies", b"mediaUploadRichQuickReplies", "noDeleteMessageTimeLimit", b"noDeleteMessageTimeLimit", "payments", b"payments", "queryStatusV3Thumbnail", b"queryStatusV3Thumbnail", "queryVname", b"queryVname", "quickRepliesQuery", b"quickRepliesQuery", "recentStickers", b"recentStickers", "recentStickersV2", b"recentStickersV2", "recentStickersV3", b"recentStickersV3", "settingsSync", b"settingsSync", "starredStickers", b"starredStickers", "statusRanking", b"statusRanking", "stickerPackQuery", b"stickerPackQuery", "support", b"support", "templateMessage", b"templateMessage", "templateMessageInteractivity", b"templateMessageInteractivity", "thirdPartyStickers", b"thirdPartyStickers", "userNotice", b"userNotice", "videoPlaybackURL", b"videoPlaybackURL", "vnameV2", b"vnameV2", "voipGroupCall", b"voipGroupCall", "voipIndividualIncoming", b"voipIndividualIncoming", "voipIndividualOutgoing", b"voipIndividualOutgoing", "voipIndividualVideo", b"voipIndividualVideo"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___WebFeatures: _TypeAlias = WebFeatures  # noqa: Y015
 
@@ -1154,6 +1175,7 @@ class PinInChat(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "messageAddOnContextInfo", b"messageAddOnContextInfo", "senderTimestampMS", b"senderTimestampMS", "serverTimestampMS", b"serverTimestampMS", "type", b"type"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___PinInChat: _TypeAlias = PinInChat  # noqa: Y015
 
@@ -1216,6 +1238,7 @@ class MessageAddOn(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["addOnContextInfo", b"addOnContextInfo", "legacyMessage", b"legacyMessage", "messageAddOn", b"messageAddOn", "messageAddOnKey", b"messageAddOnKey", "messageAddOnType", b"messageAddOnType", "senderTimestampMS", b"senderTimestampMS", "serverTimestampMS", b"serverTimestampMS", "status", b"status"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___MessageAddOn: _TypeAlias = MessageAddOn  # noqa: Y015
 
@@ -1234,6 +1257,7 @@ class GroupHistoryBundleInfo(_message.Message):
         INJECTED_PARTIAL: GroupHistoryBundleInfo._ProcessState.ValueType  # 2
         INJECTION_FAILED: GroupHistoryBundleInfo._ProcessState.ValueType  # 3
         INJECTION_FAILED_NO_RETRY: GroupHistoryBundleInfo._ProcessState.ValueType  # 4
+        DEDUPED: GroupHistoryBundleInfo._ProcessState.ValueType  # 5
 
     class ProcessState(_ProcessState, metaclass=_ProcessStateEnumTypeWrapper): ...
     NOT_INJECTED: GroupHistoryBundleInfo.ProcessState.ValueType  # 0
@@ -1241,6 +1265,7 @@ class GroupHistoryBundleInfo(_message.Message):
     INJECTED_PARTIAL: GroupHistoryBundleInfo.ProcessState.ValueType  # 2
     INJECTION_FAILED: GroupHistoryBundleInfo.ProcessState.ValueType  # 3
     INJECTION_FAILED_NO_RETRY: GroupHistoryBundleInfo.ProcessState.ValueType  # 4
+    DEDUPED: GroupHistoryBundleInfo.ProcessState.ValueType  # 5
 
     DEPRECATEDMESSAGEHISTORYBUNDLE_FIELD_NUMBER: _builtins.int
     PROCESSSTATE_FIELD_NUMBER: _builtins.int
@@ -1257,6 +1282,7 @@ class GroupHistoryBundleInfo(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["deprecatedMessageHistoryBundle", b"deprecatedMessageHistoryBundle", "processState", b"processState"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___GroupHistoryBundleInfo: _TypeAlias = GroupHistoryBundleInfo  # noqa: Y015
 
@@ -1279,6 +1305,7 @@ class CommentMetadata(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["commentParentKey", b"commentParentKey", "replyCount", b"replyCount"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___CommentMetadata: _TypeAlias = CommentMetadata  # noqa: Y015
 
@@ -1307,6 +1334,7 @@ class WebNotificationsInfo(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["notifyMessageCount", b"notifyMessageCount", "notifyMessages", b"notifyMessages", "timestamp", b"timestamp", "unreadChats", b"unreadChats"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___WebNotificationsInfo: _TypeAlias = WebNotificationsInfo  # noqa: Y015
 
@@ -1336,6 +1364,7 @@ class NotificationMessageInfo(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "message", b"message", "messageTimestamp", b"messageTimestamp", "participant", b"participant"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___NotificationMessageInfo: _TypeAlias = NotificationMessageInfo  # noqa: Y015
 
@@ -1354,6 +1383,7 @@ class ReportingTokenInfo(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["reportingTag", b"reportingTag"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___ReportingTokenInfo: _TypeAlias = ReportingTokenInfo  # noqa: Y015
 
@@ -1372,6 +1402,7 @@ class MediaData(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["localPath", b"localPath"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___MediaData: _TypeAlias = MediaData  # noqa: Y015
 
@@ -1396,6 +1427,7 @@ class PhotoChange(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["newPhoto", b"newPhoto", "newPhotoID", b"newPhotoID", "oldPhoto", b"oldPhoto"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___PhotoChange: _TypeAlias = PhotoChange  # noqa: Y015
 
@@ -1417,6 +1449,7 @@ class StatusPSA(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["campaignExpirationTimestamp", b"campaignExpirationTimestamp", "campaignID", b"campaignID"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___StatusPSA: _TypeAlias = StatusPSA  # noqa: Y015
 
@@ -1452,6 +1485,7 @@ class UserReceipt(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["deliveredDeviceJID", b"deliveredDeviceJID", "pendingDeviceJID", b"pendingDeviceJID", "playedTimestamp", b"playedTimestamp", "readTimestamp", b"readTimestamp", "receiptTimestamp", b"receiptTimestamp", "userJID", b"userJID"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___UserReceipt: _TypeAlias = UserReceipt  # noqa: Y015
 
@@ -1483,6 +1517,7 @@ class Reaction(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["groupingKey", b"groupingKey", "key", b"key", "senderTimestampMS", b"senderTimestampMS", "text", b"text", "unread", b"unread"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___Reaction: _TypeAlias = Reaction  # noqa: Y015
 
@@ -1515,6 +1550,7 @@ class PollUpdate(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["pollUpdateMessageKey", b"pollUpdateMessageKey", "senderTimestampMS", b"senderTimestampMS", "serverTimestampMS", b"serverTimestampMS", "unread", b"unread", "vote", b"vote"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___PollUpdate: _TypeAlias = PollUpdate  # noqa: Y015
 
@@ -1533,6 +1569,7 @@ class PollAdditionalMetadata(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["pollInvalidated", b"pollInvalidated"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___PollAdditionalMetadata: _TypeAlias = PollAdditionalMetadata  # noqa: Y015
 
@@ -1551,6 +1588,7 @@ class InteractiveMessageAdditionalMetadata(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["isGalaxyFlowCompleted", b"isGalaxyFlowCompleted"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___InteractiveMessageAdditionalMetadata: _TypeAlias = InteractiveMessageAdditionalMetadata  # noqa: Y015
 
@@ -1569,6 +1607,7 @@ class EventAdditionalMetadata(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["isStale", b"isStale"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___EventAdditionalMetadata: _TypeAlias = EventAdditionalMetadata  # noqa: Y015
 
@@ -1603,6 +1642,7 @@ class KeepInChat(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["clientTimestampMS", b"clientTimestampMS", "deviceJID", b"deviceJID", "keepType", b"keepType", "key", b"key", "serverTimestamp", b"serverTimestamp", "serverTimestampMS", b"serverTimestampMS"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___KeepInChat: _TypeAlias = KeepInChat  # noqa: Y015
 
@@ -1624,6 +1664,7 @@ class MessageAddOnContextInfo(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["messageAddOnDurationInSecs", b"messageAddOnDurationInSecs", "messageAddOnExpiryType", b"messageAddOnExpiryType"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___MessageAddOnContextInfo: _TypeAlias = MessageAddOnContextInfo  # noqa: Y015
 
@@ -1642,6 +1683,7 @@ class PremiumMessageInfo(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["serverCampaignID", b"serverCampaignID"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___PremiumMessageInfo: _TypeAlias = PremiumMessageInfo  # noqa: Y015
 
@@ -1671,6 +1713,7 @@ class EventResponse(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["eventResponseMessage", b"eventResponseMessage", "eventResponseMessageKey", b"eventResponseMessageKey", "timestampMS", b"timestampMS", "unread", b"unread"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___EventResponse: _TypeAlias = EventResponse  # noqa: Y015
 
@@ -1694,6 +1737,7 @@ class LegacyMessage(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["eventResponseMessage", b"eventResponseMessage", "pollVote", b"pollVote"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___LegacyMessage: _TypeAlias = LegacyMessage  # noqa: Y015
 
@@ -1713,6 +1757,7 @@ class StatusMentionMessage(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["quotedStatus", b"quotedStatus"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___StatusMentionMessage: _TypeAlias = StatusMentionMessage  # noqa: Y015
 
@@ -1740,6 +1785,7 @@ class Citation(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["cmsID", b"cmsID", "imageURL", b"imageURL", "subtitle", b"subtitle", "title", b"title"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___Citation: _TypeAlias = Citation  # noqa: Y015
 
@@ -1762,6 +1808,7 @@ class GroupHistoryIndividualMessageInfo(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["bundleMessageKey", b"bundleMessageKey", "editedAfterReceivedAsHistory", b"editedAfterReceivedAsHistory"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___GroupHistoryIndividualMessageInfo: _TypeAlias = GroupHistoryIndividualMessageInfo  # noqa: Y015
 
@@ -1783,5 +1830,31 @@ class QuarantinedMessage(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["extractedText", b"extractedText", "originalData", b"originalData"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___QuarantinedMessage: _TypeAlias = QuarantinedMessage  # noqa: Y015
+
+@_typing.final
+class ScheduledMessageMetadata(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    REVEALKEYID_FIELD_NUMBER: _builtins.int
+    REVEALKEY_FIELD_NUMBER: _builtins.int
+    SCHEDULEDTIME_FIELD_NUMBER: _builtins.int
+    revealKeyID: _builtins.str
+    revealKey: _builtins.bytes
+    scheduledTime: _builtins.int
+    def __init__(
+        self,
+        *,
+        revealKeyID: _builtins.str | None = ...,
+        revealKey: _builtins.bytes | None = ...,
+        scheduledTime: _builtins.int | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["revealKey", b"revealKey", "revealKeyID", b"revealKeyID", "scheduledTime", b"scheduledTime"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["revealKey", b"revealKey", "revealKeyID", b"revealKeyID", "scheduledTime", b"scheduledTime"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___ScheduledMessageMetadata: _TypeAlias = ScheduledMessageMetadata  # noqa: Y015
