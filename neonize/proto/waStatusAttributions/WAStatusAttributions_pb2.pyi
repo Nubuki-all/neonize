@@ -10,10 +10,10 @@ import builtins as _builtins
 import sys
 import typing as _typing
 
-if sys.version_info >= (3, 10):
-    from typing import TypeAlias as _TypeAlias
+if sys.version_info >= (3, 11):
+    from typing import TypeAlias as _TypeAlias, Never as _Never
 else:
-    from typing_extensions import TypeAlias as _TypeAlias
+    from typing_extensions import TypeAlias as _TypeAlias, Never as _Never
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
@@ -80,6 +80,7 @@ class StatusAttribution(_message.Message):
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
         _ClearFieldArgType: _TypeAlias = _typing.Literal["source", b"source"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
     class RLAttribution(_message.Message):
@@ -113,6 +114,7 @@ class StatusAttribution(_message.Message):
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
         _ClearFieldArgType: _TypeAlias = _typing.Literal["source", b"source"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
     class ExternalShare(_message.Message):
@@ -135,6 +137,7 @@ class StatusAttribution(_message.Message):
             APPLE_MUSIC: StatusAttribution.ExternalShare._Source.ValueType  # 8
             SHARECHAT: StatusAttribution.ExternalShare._Source.ValueType  # 9
             GOOGLE_PHOTOS: StatusAttribution.ExternalShare._Source.ValueType  # 10
+            SOUNDCLOUD: StatusAttribution.ExternalShare._Source.ValueType  # 11
 
         class Source(_Source, metaclass=_SourceEnumTypeWrapper): ...
         UNKNOWN: StatusAttribution.ExternalShare.Source.ValueType  # 0
@@ -148,6 +151,7 @@ class StatusAttribution(_message.Message):
         APPLE_MUSIC: StatusAttribution.ExternalShare.Source.ValueType  # 8
         SHARECHAT: StatusAttribution.ExternalShare.Source.ValueType  # 9
         GOOGLE_PHOTOS: StatusAttribution.ExternalShare.Source.ValueType  # 10
+        SOUNDCLOUD: StatusAttribution.ExternalShare.Source.ValueType  # 11
 
         ACTIONURL_FIELD_NUMBER: _builtins.int
         SOURCE_FIELD_NUMBER: _builtins.int
@@ -169,6 +173,7 @@ class StatusAttribution(_message.Message):
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
         _ClearFieldArgType: _TypeAlias = _typing.Literal["actionFallbackURL", b"actionFallbackURL", "actionURL", b"actionURL", "duration", b"duration", "source", b"source"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
     class StatusReshare(_message.Message):
@@ -217,6 +222,7 @@ class StatusAttribution(_message.Message):
             def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
             _ClearFieldArgType: _TypeAlias = _typing.Literal["channelJID", b"channelJID", "channelMessageID", b"channelMessageID", "duration", b"duration", "hasMultipleReshares", b"hasMultipleReshares"]  # noqa: Y015
             def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+            def WhichOneof(self, oneof_group: _Never) -> None: ...
 
         SOURCE_FIELD_NUMBER: _builtins.int
         METADATA_FIELD_NUMBER: _builtins.int
@@ -233,6 +239,7 @@ class StatusAttribution(_message.Message):
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
         _ClearFieldArgType: _TypeAlias = _typing.Literal["metadata", b"metadata", "source", b"source"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
     class GroupStatus(_message.Message):
@@ -249,6 +256,7 @@ class StatusAttribution(_message.Message):
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
         _ClearFieldArgType: _TypeAlias = _typing.Literal["authorJID", b"authorJID"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
     class Music(_message.Message):
@@ -280,6 +288,7 @@ class StatusAttribution(_message.Message):
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
         _ClearFieldArgType: _TypeAlias = _typing.Literal["artistAttribution", b"artistAttribution", "author", b"author", "authorName", b"authorName", "isExplicit", b"isExplicit", "songID", b"songID", "title", b"title"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     STATUSRESHARE_FIELD_NUMBER: _builtins.int
     EXTERNALSHARE_FIELD_NUMBER: _builtins.int

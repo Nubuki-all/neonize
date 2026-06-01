@@ -3,17 +3,19 @@
 isort:skip_file
 """
 
+from collections import abc as _abc
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 import builtins as _builtins
 import sys
 import typing as _typing
 
-if sys.version_info >= (3, 10):
-    from typing import TypeAlias as _TypeAlias
+if sys.version_info >= (3, 11):
+    from typing import TypeAlias as _TypeAlias, Never as _Never
 else:
-    from typing_extensions import TypeAlias as _TypeAlias
+    from typing_extensions import TypeAlias as _TypeAlias, Never as _Never
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
@@ -106,6 +108,8 @@ class DeviceProps(_message.Message):
         INITIALSYNCMAXMESSAGESPERCHAT_FIELD_NUMBER: _builtins.int
         SUPPORTMANUSHISTORY_FIELD_NUMBER: _builtins.int
         SUPPORTHATCHHISTORY_FIELD_NUMBER: _builtins.int
+        SUPPORTEDBOTCHANNELFBIDS_FIELD_NUMBER: _builtins.int
+        SUPPORTINLINECONTACTS_FIELD_NUMBER: _builtins.int
         fullSyncDaysLimit: _builtins.int
         fullSyncSizeMbLimit: _builtins.int
         storageQuotaMb: _builtins.int
@@ -128,6 +132,9 @@ class DeviceProps(_message.Message):
         initialSyncMaxMessagesPerChat: _builtins.int
         supportManusHistory: _builtins.bool
         supportHatchHistory: _builtins.bool
+        supportInlineContacts: _builtins.bool
+        @_builtins.property
+        def supportedBotChannelFbids(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]: ...
         def __init__(
             self,
             *,
@@ -153,11 +160,14 @@ class DeviceProps(_message.Message):
             initialSyncMaxMessagesPerChat: _builtins.int | None = ...,
             supportManusHistory: _builtins.bool | None = ...,
             supportHatchHistory: _builtins.bool | None = ...,
+            supportedBotChannelFbids: _abc.Iterable[_builtins.str] | None = ...,
+            supportInlineContacts: _builtins.bool | None = ...,
         ) -> None: ...
-        _HasFieldArgType: _TypeAlias = _typing.Literal["completeOnDemandReady", b"completeOnDemandReady", "fullSyncDaysLimit", b"fullSyncDaysLimit", "fullSyncSizeMbLimit", b"fullSyncSizeMbLimit", "initialSyncMaxMessagesPerChat", b"initialSyncMaxMessagesPerChat", "inlineInitialPayloadInE2EeMsg", b"inlineInitialPayloadInE2EeMsg", "onDemandReady", b"onDemandReady", "recentSyncDaysLimit", b"recentSyncDaysLimit", "storageQuotaMb", b"storageQuotaMb", "supportAddOnHistorySyncMigration", b"supportAddOnHistorySyncMigration", "supportBizHostedMsg", b"supportBizHostedMsg", "supportBotUserAgentChatHistory", b"supportBotUserAgentChatHistory", "supportCagReactionsAndPolls", b"supportCagReactionsAndPolls", "supportCallLogHistory", b"supportCallLogHistory", "supportFbidBotChatHistory", b"supportFbidBotChatHistory", "supportGroupHistory", b"supportGroupHistory", "supportGuestChat", b"supportGuestChat", "supportHatchHistory", b"supportHatchHistory", "supportHostedGroupMsg", b"supportHostedGroupMsg", "supportManusHistory", b"supportManusHistory", "supportMessageAssociation", b"supportMessageAssociation", "supportRecentSyncChunkMessageCountTuning", b"supportRecentSyncChunkMessageCountTuning", "thumbnailSyncDaysLimit", b"thumbnailSyncDaysLimit"]  # noqa: Y015
+        _HasFieldArgType: _TypeAlias = _typing.Literal["completeOnDemandReady", b"completeOnDemandReady", "fullSyncDaysLimit", b"fullSyncDaysLimit", "fullSyncSizeMbLimit", b"fullSyncSizeMbLimit", "initialSyncMaxMessagesPerChat", b"initialSyncMaxMessagesPerChat", "inlineInitialPayloadInE2EeMsg", b"inlineInitialPayloadInE2EeMsg", "onDemandReady", b"onDemandReady", "recentSyncDaysLimit", b"recentSyncDaysLimit", "storageQuotaMb", b"storageQuotaMb", "supportAddOnHistorySyncMigration", b"supportAddOnHistorySyncMigration", "supportBizHostedMsg", b"supportBizHostedMsg", "supportBotUserAgentChatHistory", b"supportBotUserAgentChatHistory", "supportCagReactionsAndPolls", b"supportCagReactionsAndPolls", "supportCallLogHistory", b"supportCallLogHistory", "supportFbidBotChatHistory", b"supportFbidBotChatHistory", "supportGroupHistory", b"supportGroupHistory", "supportGuestChat", b"supportGuestChat", "supportHatchHistory", b"supportHatchHistory", "supportHostedGroupMsg", b"supportHostedGroupMsg", "supportInlineContacts", b"supportInlineContacts", "supportManusHistory", b"supportManusHistory", "supportMessageAssociation", b"supportMessageAssociation", "supportRecentSyncChunkMessageCountTuning", b"supportRecentSyncChunkMessageCountTuning", "thumbnailSyncDaysLimit", b"thumbnailSyncDaysLimit"]  # noqa: Y015
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-        _ClearFieldArgType: _TypeAlias = _typing.Literal["completeOnDemandReady", b"completeOnDemandReady", "fullSyncDaysLimit", b"fullSyncDaysLimit", "fullSyncSizeMbLimit", b"fullSyncSizeMbLimit", "initialSyncMaxMessagesPerChat", b"initialSyncMaxMessagesPerChat", "inlineInitialPayloadInE2EeMsg", b"inlineInitialPayloadInE2EeMsg", "onDemandReady", b"onDemandReady", "recentSyncDaysLimit", b"recentSyncDaysLimit", "storageQuotaMb", b"storageQuotaMb", "supportAddOnHistorySyncMigration", b"supportAddOnHistorySyncMigration", "supportBizHostedMsg", b"supportBizHostedMsg", "supportBotUserAgentChatHistory", b"supportBotUserAgentChatHistory", "supportCagReactionsAndPolls", b"supportCagReactionsAndPolls", "supportCallLogHistory", b"supportCallLogHistory", "supportFbidBotChatHistory", b"supportFbidBotChatHistory", "supportGroupHistory", b"supportGroupHistory", "supportGuestChat", b"supportGuestChat", "supportHatchHistory", b"supportHatchHistory", "supportHostedGroupMsg", b"supportHostedGroupMsg", "supportManusHistory", b"supportManusHistory", "supportMessageAssociation", b"supportMessageAssociation", "supportRecentSyncChunkMessageCountTuning", b"supportRecentSyncChunkMessageCountTuning", "thumbnailSyncDaysLimit", b"thumbnailSyncDaysLimit"]  # noqa: Y015
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["completeOnDemandReady", b"completeOnDemandReady", "fullSyncDaysLimit", b"fullSyncDaysLimit", "fullSyncSizeMbLimit", b"fullSyncSizeMbLimit", "initialSyncMaxMessagesPerChat", b"initialSyncMaxMessagesPerChat", "inlineInitialPayloadInE2EeMsg", b"inlineInitialPayloadInE2EeMsg", "onDemandReady", b"onDemandReady", "recentSyncDaysLimit", b"recentSyncDaysLimit", "storageQuotaMb", b"storageQuotaMb", "supportAddOnHistorySyncMigration", b"supportAddOnHistorySyncMigration", "supportBizHostedMsg", b"supportBizHostedMsg", "supportBotUserAgentChatHistory", b"supportBotUserAgentChatHistory", "supportCagReactionsAndPolls", b"supportCagReactionsAndPolls", "supportCallLogHistory", b"supportCallLogHistory", "supportFbidBotChatHistory", b"supportFbidBotChatHistory", "supportGroupHistory", b"supportGroupHistory", "supportGuestChat", b"supportGuestChat", "supportHatchHistory", b"supportHatchHistory", "supportHostedGroupMsg", b"supportHostedGroupMsg", "supportInlineContacts", b"supportInlineContacts", "supportManusHistory", b"supportManusHistory", "supportMessageAssociation", b"supportMessageAssociation", "supportRecentSyncChunkMessageCountTuning", b"supportRecentSyncChunkMessageCountTuning", "supportedBotChannelFbids", b"supportedBotChannelFbids", "thumbnailSyncDaysLimit", b"thumbnailSyncDaysLimit"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
     class AppVersion(_message.Message):
@@ -186,6 +196,7 @@ class DeviceProps(_message.Message):
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
         _ClearFieldArgType: _TypeAlias = _typing.Literal["primary", b"primary", "quaternary", b"quaternary", "quinary", b"quinary", "secondary", b"secondary", "tertiary", b"tertiary"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     OS_FIELD_NUMBER: _builtins.int
     VERSION_FIELD_NUMBER: _builtins.int
@@ -212,6 +223,7 @@ class DeviceProps(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["historySyncConfig", b"historySyncConfig", "os", b"os", "platformType", b"platformType", "requireFullSync", b"requireFullSync", "version", b"version"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___DeviceProps: _TypeAlias = DeviceProps  # noqa: Y015
 
@@ -236,6 +248,7 @@ class CompanionEphemeralIdentity(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["deviceType", b"deviceType", "publicKey", b"publicKey", "ref", b"ref"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___CompanionEphemeralIdentity: _TypeAlias = CompanionEphemeralIdentity  # noqa: Y015
 
@@ -254,6 +267,7 @@ class CompanionCommitment(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["hash", b"hash"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___CompanionCommitment: _TypeAlias = CompanionCommitment  # noqa: Y015
 
@@ -276,6 +290,7 @@ class ProloguePayload(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["commitment", b"commitment", "companionEphemeralIdentity", b"companionEphemeralIdentity"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___ProloguePayload: _TypeAlias = ProloguePayload  # noqa: Y015
 
@@ -297,6 +312,7 @@ class PrimaryEphemeralIdentity(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["nonce", b"nonce", "publicKey", b"publicKey"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___PrimaryEphemeralIdentity: _TypeAlias = PrimaryEphemeralIdentity  # noqa: Y015
 
@@ -321,6 +337,7 @@ class PairingRequest(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["advSecret", b"advSecret", "companionIdentityKey", b"companionIdentityKey", "companionPublicKey", b"companionPublicKey"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___PairingRequest: _TypeAlias = PairingRequest  # noqa: Y015
 
@@ -342,6 +359,7 @@ class EncryptedPairingRequest(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["IV", b"IV", "encryptedPayload", b"encryptedPayload"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___EncryptedPairingRequest: _TypeAlias = EncryptedPairingRequest  # noqa: Y015
 
@@ -353,10 +371,12 @@ class ClientPairingProps(_message.Message):
     ISSYNCDPURELIDSESSION_FIELD_NUMBER: _builtins.int
     ISSYNCDSNAPSHOTRECOVERYENABLED_FIELD_NUMBER: _builtins.int
     ISHSTHUMBNAILSYNCENABLED_FIELD_NUMBER: _builtins.int
+    SUBSCRIPTIONSYNCPAYLOAD_FIELD_NUMBER: _builtins.int
     isChatDbLidMigrated: _builtins.bool
     isSyncdPureLidSession: _builtins.bool
     isSyncdSnapshotRecoveryEnabled: _builtins.bool
     isHsThumbnailSyncEnabled: _builtins.bool
+    subscriptionSyncPayload: _builtins.bytes
     def __init__(
         self,
         *,
@@ -364,10 +384,12 @@ class ClientPairingProps(_message.Message):
         isSyncdPureLidSession: _builtins.bool | None = ...,
         isSyncdSnapshotRecoveryEnabled: _builtins.bool | None = ...,
         isHsThumbnailSyncEnabled: _builtins.bool | None = ...,
+        subscriptionSyncPayload: _builtins.bytes | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["isChatDbLidMigrated", b"isChatDbLidMigrated", "isHsThumbnailSyncEnabled", b"isHsThumbnailSyncEnabled", "isSyncdPureLidSession", b"isSyncdPureLidSession", "isSyncdSnapshotRecoveryEnabled", b"isSyncdSnapshotRecoveryEnabled"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["isChatDbLidMigrated", b"isChatDbLidMigrated", "isHsThumbnailSyncEnabled", b"isHsThumbnailSyncEnabled", "isSyncdPureLidSession", b"isSyncdPureLidSession", "isSyncdSnapshotRecoveryEnabled", b"isSyncdSnapshotRecoveryEnabled", "subscriptionSyncPayload", b"subscriptionSyncPayload"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["isChatDbLidMigrated", b"isChatDbLidMigrated", "isHsThumbnailSyncEnabled", b"isHsThumbnailSyncEnabled", "isSyncdPureLidSession", b"isSyncdPureLidSession", "isSyncdSnapshotRecoveryEnabled", b"isSyncdSnapshotRecoveryEnabled"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["isChatDbLidMigrated", b"isChatDbLidMigrated", "isHsThumbnailSyncEnabled", b"isHsThumbnailSyncEnabled", "isSyncdPureLidSession", b"isSyncdPureLidSession", "isSyncdSnapshotRecoveryEnabled", b"isSyncdSnapshotRecoveryEnabled", "subscriptionSyncPayload", b"subscriptionSyncPayload"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___ClientPairingProps: _TypeAlias = ClientPairingProps  # noqa: Y015

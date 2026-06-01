@@ -12,10 +12,10 @@ import builtins as _builtins
 import sys
 import typing as _typing
 
-if sys.version_info >= (3, 10):
-    from typing import TypeAlias as _TypeAlias
+if sys.version_info >= (3, 11):
+    from typing import TypeAlias as _TypeAlias, Never as _Never
 else:
-    from typing_extensions import TypeAlias as _TypeAlias
+    from typing_extensions import TypeAlias as _TypeAlias, Never as _Never
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
@@ -77,6 +77,7 @@ class HandshakeMessage(_message.Message):
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
         _ClearFieldArgType: _TypeAlias = _typing.Literal["extendedCiphertext", b"extendedCiphertext", "paddedBytes", b"paddedBytes", "payload", b"payload", "simulateXxkemFs", b"simulateXxkemFs", "static", b"static"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
     class ServerHello(_message.Message):
@@ -87,11 +88,13 @@ class HandshakeMessage(_message.Message):
         PAYLOAD_FIELD_NUMBER: _builtins.int
         EXTENDEDSTATIC_FIELD_NUMBER: _builtins.int
         PADDINGBYTES_FIELD_NUMBER: _builtins.int
+        EXTENDEDCIPHERTEXT_FIELD_NUMBER: _builtins.int
         ephemeral: _builtins.bytes
         static: _builtins.bytes
         payload: _builtins.bytes
         extendedStatic: _builtins.bytes
         paddingBytes: _builtins.bytes
+        extendedCiphertext: _builtins.bytes
         def __init__(
             self,
             *,
@@ -100,11 +103,13 @@ class HandshakeMessage(_message.Message):
             payload: _builtins.bytes | None = ...,
             extendedStatic: _builtins.bytes | None = ...,
             paddingBytes: _builtins.bytes | None = ...,
+            extendedCiphertext: _builtins.bytes | None = ...,
         ) -> None: ...
-        _HasFieldArgType: _TypeAlias = _typing.Literal["ephemeral", b"ephemeral", "extendedStatic", b"extendedStatic", "paddingBytes", b"paddingBytes", "payload", b"payload", "static", b"static"]  # noqa: Y015
+        _HasFieldArgType: _TypeAlias = _typing.Literal["ephemeral", b"ephemeral", "extendedCiphertext", b"extendedCiphertext", "extendedStatic", b"extendedStatic", "paddingBytes", b"paddingBytes", "payload", b"payload", "static", b"static"]  # noqa: Y015
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-        _ClearFieldArgType: _TypeAlias = _typing.Literal["ephemeral", b"ephemeral", "extendedStatic", b"extendedStatic", "paddingBytes", b"paddingBytes", "payload", b"payload", "static", b"static"]  # noqa: Y015
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["ephemeral", b"ephemeral", "extendedCiphertext", b"extendedCiphertext", "extendedStatic", b"extendedStatic", "paddingBytes", b"paddingBytes", "payload", b"payload", "static", b"static"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
     class ClientHello(_message.Message):
@@ -119,6 +124,7 @@ class HandshakeMessage(_message.Message):
         SENDSERVERHELLOPADDEDBYTES_FIELD_NUMBER: _builtins.int
         SIMULATEXXKEMFS_FIELD_NUMBER: _builtins.int
         PQMODE_FIELD_NUMBER: _builtins.int
+        EXTENDEDEPHEMERAL_FIELD_NUMBER: _builtins.int
         ephemeral: _builtins.bytes
         static: _builtins.bytes
         payload: _builtins.bytes
@@ -128,6 +134,7 @@ class HandshakeMessage(_message.Message):
         sendServerHelloPaddedBytes: _builtins.bool
         simulateXxkemFs: _builtins.bool
         pqMode: Global___HandshakeMessage.HandshakePqMode.ValueType
+        extendedEphemeral: _builtins.bytes
         def __init__(
             self,
             *,
@@ -140,11 +147,13 @@ class HandshakeMessage(_message.Message):
             sendServerHelloPaddedBytes: _builtins.bool | None = ...,
             simulateXxkemFs: _builtins.bool | None = ...,
             pqMode: Global___HandshakeMessage.HandshakePqMode.ValueType | None = ...,
+            extendedEphemeral: _builtins.bytes | None = ...,
         ) -> None: ...
-        _HasFieldArgType: _TypeAlias = _typing.Literal["ephemeral", b"ephemeral", "extendedCiphertext", b"extendedCiphertext", "paddedBytes", b"paddedBytes", "payload", b"payload", "pqMode", b"pqMode", "sendServerHelloPaddedBytes", b"sendServerHelloPaddedBytes", "simulateXxkemFs", b"simulateXxkemFs", "static", b"static", "useExtended", b"useExtended"]  # noqa: Y015
+        _HasFieldArgType: _TypeAlias = _typing.Literal["ephemeral", b"ephemeral", "extendedCiphertext", b"extendedCiphertext", "extendedEphemeral", b"extendedEphemeral", "paddedBytes", b"paddedBytes", "payload", b"payload", "pqMode", b"pqMode", "sendServerHelloPaddedBytes", b"sendServerHelloPaddedBytes", "simulateXxkemFs", b"simulateXxkemFs", "static", b"static", "useExtended", b"useExtended"]  # noqa: Y015
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-        _ClearFieldArgType: _TypeAlias = _typing.Literal["ephemeral", b"ephemeral", "extendedCiphertext", b"extendedCiphertext", "paddedBytes", b"paddedBytes", "payload", b"payload", "pqMode", b"pqMode", "sendServerHelloPaddedBytes", b"sendServerHelloPaddedBytes", "simulateXxkemFs", b"simulateXxkemFs", "static", b"static", "useExtended", b"useExtended"]  # noqa: Y015
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["ephemeral", b"ephemeral", "extendedCiphertext", b"extendedCiphertext", "extendedEphemeral", b"extendedEphemeral", "paddedBytes", b"paddedBytes", "payload", b"payload", "pqMode", b"pqMode", "sendServerHelloPaddedBytes", b"sendServerHelloPaddedBytes", "simulateXxkemFs", b"simulateXxkemFs", "static", b"static", "useExtended", b"useExtended"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     CLIENTHELLO_FIELD_NUMBER: _builtins.int
     SERVERHELLO_FIELD_NUMBER: _builtins.int
@@ -166,6 +175,7 @@ class HandshakeMessage(_message.Message):
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
     _ClearFieldArgType: _TypeAlias = _typing.Literal["clientFinish", b"clientFinish", "clientHello", b"clientHello", "serverHello", b"serverHello"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___HandshakeMessage: _TypeAlias = HandshakeMessage  # noqa: Y015
 
@@ -338,6 +348,7 @@ class ClientPayload(_message.Message):
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
         _ClearFieldArgType: _TypeAlias = _typing.Literal["appCached", b"appCached", "dnsMethod", b"dnsMethod"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
     class WebInfo(_message.Message):
@@ -409,6 +420,7 @@ class ClientPayload(_message.Message):
             def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
             _ClearFieldArgType: _TypeAlias = _typing.Literal["documentTypes", b"documentTypes", "features", b"features", "supportsDocumentMessages", b"supportsDocumentMessages", "supportsE2EAudio", b"supportsE2EAudio", "supportsE2EDocument", b"supportsE2EDocument", "supportsE2EImage", b"supportsE2EImage", "supportsE2EVideo", b"supportsE2EVideo", "supportsMediaRetry", b"supportsMediaRetry", "supportsStarredMessages", b"supportsStarredMessages", "supportsURLMessages", b"supportsURLMessages", "usesParticipantInKey", b"usesParticipantInKey"]  # noqa: Y015
             def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+            def WhichOneof(self, oneof_group: _Never) -> None: ...
 
         REFTOKEN_FIELD_NUMBER: _builtins.int
         VERSION_FIELD_NUMBER: _builtins.int
@@ -437,6 +449,7 @@ class ClientPayload(_message.Message):
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
         _ClearFieldArgType: _TypeAlias = _typing.Literal["browser", b"browser", "browserVersion", b"browserVersion", "refToken", b"refToken", "version", b"version", "webSubPlatform", b"webSubPlatform", "webdPayload", b"webdPayload"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
     class UserAgent(_message.Message):
@@ -460,6 +473,23 @@ class ClientPayload(_message.Message):
         DESKTOP: ClientPayload.UserAgent.DeviceType.ValueType  # 2
         WEARABLE: ClientPayload.UserAgent.DeviceType.ValueType  # 3
         VR: ClientPayload.UserAgent.DeviceType.ValueType  # 4
+
+        class _DistributionChannel:
+            ValueType = _typing.NewType("ValueType", _builtins.int)
+            V: _TypeAlias = ValueType  # noqa: Y015
+
+        class _DistributionChannelEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[ClientPayload.UserAgent._DistributionChannel.ValueType], _builtins.type):
+            DESCRIPTOR: _descriptor.EnumDescriptor
+            APPSTORE: ClientPayload.UserAgent._DistributionChannel.ValueType  # 0
+            WEBSITE: ClientPayload.UserAgent._DistributionChannel.ValueType  # 1
+            TESTFLIGHT: ClientPayload.UserAgent._DistributionChannel.ValueType  # 2
+            INTERNAL: ClientPayload.UserAgent._DistributionChannel.ValueType  # 3
+
+        class DistributionChannel(_DistributionChannel, metaclass=_DistributionChannelEnumTypeWrapper): ...
+        APPSTORE: ClientPayload.UserAgent.DistributionChannel.ValueType  # 0
+        WEBSITE: ClientPayload.UserAgent.DistributionChannel.ValueType  # 1
+        TESTFLIGHT: ClientPayload.UserAgent.DistributionChannel.ValueType  # 2
+        INTERNAL: ClientPayload.UserAgent.DistributionChannel.ValueType  # 3
 
         class _ReleaseChannel:
             ValueType = _typing.NewType("ValueType", _builtins.int)
@@ -590,6 +620,7 @@ class ClientPayload(_message.Message):
             def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
             _ClearFieldArgType: _TypeAlias = _typing.Literal["primary", b"primary", "quaternary", b"quaternary", "quinary", b"quinary", "secondary", b"secondary", "tertiary", b"tertiary"]  # noqa: Y015
             def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+            def WhichOneof(self, oneof_group: _Never) -> None: ...
 
         PLATFORM_FIELD_NUMBER: _builtins.int
         APPVERSION_FIELD_NUMBER: _builtins.int
@@ -607,6 +638,7 @@ class ClientPayload(_message.Message):
         DEVICEEXPID_FIELD_NUMBER: _builtins.int
         DEVICETYPE_FIELD_NUMBER: _builtins.int
         DEVICEMODELTYPE_FIELD_NUMBER: _builtins.int
+        DISTRIBUTIONCHANNEL_FIELD_NUMBER: _builtins.int
         platform: Global___ClientPayload.UserAgent.Platform.ValueType
         mcc: _builtins.str
         mnc: _builtins.str
@@ -622,6 +654,7 @@ class ClientPayload(_message.Message):
         deviceExpID: _builtins.str
         deviceType: Global___ClientPayload.UserAgent.DeviceType.ValueType
         deviceModelType: _builtins.str
+        distributionChannel: Global___ClientPayload.UserAgent.DistributionChannel.ValueType
         @_builtins.property
         def appVersion(self) -> Global___ClientPayload.UserAgent.AppVersion: ...
         def __init__(
@@ -643,11 +676,13 @@ class ClientPayload(_message.Message):
             deviceExpID: _builtins.str | None = ...,
             deviceType: Global___ClientPayload.UserAgent.DeviceType.ValueType | None = ...,
             deviceModelType: _builtins.str | None = ...,
+            distributionChannel: Global___ClientPayload.UserAgent.DistributionChannel.ValueType | None = ...,
         ) -> None: ...
-        _HasFieldArgType: _TypeAlias = _typing.Literal["appVersion", b"appVersion", "device", b"device", "deviceBoard", b"deviceBoard", "deviceExpID", b"deviceExpID", "deviceModelType", b"deviceModelType", "deviceType", b"deviceType", "localeCountryIso31661Alpha2", b"localeCountryIso31661Alpha2", "localeLanguageIso6391", b"localeLanguageIso6391", "manufacturer", b"manufacturer", "mcc", b"mcc", "mnc", b"mnc", "osBuildNumber", b"osBuildNumber", "osVersion", b"osVersion", "phoneID", b"phoneID", "platform", b"platform", "releaseChannel", b"releaseChannel"]  # noqa: Y015
+        _HasFieldArgType: _TypeAlias = _typing.Literal["appVersion", b"appVersion", "device", b"device", "deviceBoard", b"deviceBoard", "deviceExpID", b"deviceExpID", "deviceModelType", b"deviceModelType", "deviceType", b"deviceType", "distributionChannel", b"distributionChannel", "localeCountryIso31661Alpha2", b"localeCountryIso31661Alpha2", "localeLanguageIso6391", b"localeLanguageIso6391", "manufacturer", b"manufacturer", "mcc", b"mcc", "mnc", b"mnc", "osBuildNumber", b"osBuildNumber", "osVersion", b"osVersion", "phoneID", b"phoneID", "platform", b"platform", "releaseChannel", b"releaseChannel"]  # noqa: Y015
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-        _ClearFieldArgType: _TypeAlias = _typing.Literal["appVersion", b"appVersion", "device", b"device", "deviceBoard", b"deviceBoard", "deviceExpID", b"deviceExpID", "deviceModelType", b"deviceModelType", "deviceType", b"deviceType", "localeCountryIso31661Alpha2", b"localeCountryIso31661Alpha2", "localeLanguageIso6391", b"localeLanguageIso6391", "manufacturer", b"manufacturer", "mcc", b"mcc", "mnc", b"mnc", "osBuildNumber", b"osBuildNumber", "osVersion", b"osVersion", "phoneID", b"phoneID", "platform", b"platform", "releaseChannel", b"releaseChannel"]  # noqa: Y015
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["appVersion", b"appVersion", "device", b"device", "deviceBoard", b"deviceBoard", "deviceExpID", b"deviceExpID", "deviceModelType", b"deviceModelType", "deviceType", b"deviceType", "distributionChannel", b"distributionChannel", "localeCountryIso31661Alpha2", b"localeCountryIso31661Alpha2", "localeLanguageIso6391", b"localeLanguageIso6391", "manufacturer", b"manufacturer", "mcc", b"mcc", "mnc", b"mnc", "osBuildNumber", b"osBuildNumber", "osVersion", b"osVersion", "phoneID", b"phoneID", "platform", b"platform", "releaseChannel", b"releaseChannel"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
     class InteropData(_message.Message):
@@ -670,6 +705,7 @@ class ClientPayload(_message.Message):
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
         _ClearFieldArgType: _TypeAlias = _typing.Literal["accountID", b"accountID", "enableReadReceipts", b"enableReadReceipts", "token", b"token"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
     class DevicePairingRegistrationData(_message.Message):
@@ -707,6 +743,7 @@ class ClientPayload(_message.Message):
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
         _ClearFieldArgType: _TypeAlias = _typing.Literal["buildHash", b"buildHash", "deviceProps", b"deviceProps", "eIdent", b"eIdent", "eKeytype", b"eKeytype", "eRegid", b"eRegid", "eSkeyID", b"eSkeyID", "eSkeySig", b"eSkeySig", "eSkeyVal", b"eSkeyVal"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     USERNAME_FIELD_NUMBER: _builtins.int
     PASSIVE_FIELD_NUMBER: _builtins.int
@@ -743,6 +780,7 @@ class ClientPayload(_message.Message):
     PREACKSCOUNT_FIELD_NUMBER: _builtins.int
     PROCESSINGQUEUESIZE_FIELD_NUMBER: _builtins.int
     PAIREDPERIPHERALS_FIELD_NUMBER: _builtins.int
+    TESTISOLATIONID_FIELD_NUMBER: _builtins.int
     username: _builtins.int
     passive: _builtins.bool
     pushName: _builtins.str
@@ -771,6 +809,7 @@ class ClientPayload(_message.Message):
     paaLink: _builtins.bool
     preacksCount: _builtins.int
     processingQueueSize: _builtins.int
+    testIsolationID: _builtins.bytes
     @_builtins.property
     def userAgent(self) -> Global___ClientPayload.UserAgent: ...
     @_builtins.property
@@ -823,10 +862,12 @@ class ClientPayload(_message.Message):
         preacksCount: _builtins.int | None = ...,
         processingQueueSize: _builtins.int | None = ...,
         pairedPeripherals: _abc.Iterable[_builtins.str] | None = ...,
+        testIsolationID: _builtins.bytes | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["accountType", b"accountType", "connectAttemptCount", b"connectAttemptCount", "connectReason", b"connectReason", "connectType", b"connectType", "connectionSequenceInfo", b"connectionSequenceInfo", "device", b"device", "devicePairingData", b"devicePairingData", "dnsSource", b"dnsSource", "fbAppID", b"fbAppID", "fbCat", b"fbCat", "fbDeviceID", b"fbDeviceID", "fbUserAgent", b"fbUserAgent", "interopData", b"interopData", "iosAppExtension", b"iosAppExtension", "lc", b"lc", "lidDbMigrated", b"lidDbMigrated", "memClass", b"memClass", "oc", b"oc", "paaLink", b"paaLink", "paddingBytes", b"paddingBytes", "passive", b"passive", "preacksCount", b"preacksCount", "processingQueueSize", b"processingQueueSize", "product", b"product", "pull", b"pull", "pushName", b"pushName", "sessionID", b"sessionID", "shortConnect", b"shortConnect", "trafficAnonymization", b"trafficAnonymization", "userAgent", b"userAgent", "username", b"username", "webInfo", b"webInfo", "yearClass", b"yearClass"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["accountType", b"accountType", "connectAttemptCount", b"connectAttemptCount", "connectReason", b"connectReason", "connectType", b"connectType", "connectionSequenceInfo", b"connectionSequenceInfo", "device", b"device", "devicePairingData", b"devicePairingData", "dnsSource", b"dnsSource", "fbAppID", b"fbAppID", "fbCat", b"fbCat", "fbDeviceID", b"fbDeviceID", "fbUserAgent", b"fbUserAgent", "interopData", b"interopData", "iosAppExtension", b"iosAppExtension", "lc", b"lc", "lidDbMigrated", b"lidDbMigrated", "memClass", b"memClass", "oc", b"oc", "paaLink", b"paaLink", "paddingBytes", b"paddingBytes", "passive", b"passive", "preacksCount", b"preacksCount", "processingQueueSize", b"processingQueueSize", "product", b"product", "pull", b"pull", "pushName", b"pushName", "sessionID", b"sessionID", "shortConnect", b"shortConnect", "testIsolationID", b"testIsolationID", "trafficAnonymization", b"trafficAnonymization", "userAgent", b"userAgent", "username", b"username", "webInfo", b"webInfo", "yearClass", b"yearClass"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["accountType", b"accountType", "connectAttemptCount", b"connectAttemptCount", "connectReason", b"connectReason", "connectType", b"connectType", "connectionSequenceInfo", b"connectionSequenceInfo", "device", b"device", "devicePairingData", b"devicePairingData", "dnsSource", b"dnsSource", "fbAppID", b"fbAppID", "fbCat", b"fbCat", "fbDeviceID", b"fbDeviceID", "fbUserAgent", b"fbUserAgent", "interopData", b"interopData", "iosAppExtension", b"iosAppExtension", "lc", b"lc", "lidDbMigrated", b"lidDbMigrated", "memClass", b"memClass", "oc", b"oc", "paaLink", b"paaLink", "paddingBytes", b"paddingBytes", "pairedPeripherals", b"pairedPeripherals", "passive", b"passive", "preacksCount", b"preacksCount", "processingQueueSize", b"processingQueueSize", "product", b"product", "pull", b"pull", "pushName", b"pushName", "sessionID", b"sessionID", "shards", b"shards", "shortConnect", b"shortConnect", "trafficAnonymization", b"trafficAnonymization", "userAgent", b"userAgent", "username", b"username", "webInfo", b"webInfo", "yearClass", b"yearClass"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["accountType", b"accountType", "connectAttemptCount", b"connectAttemptCount", "connectReason", b"connectReason", "connectType", b"connectType", "connectionSequenceInfo", b"connectionSequenceInfo", "device", b"device", "devicePairingData", b"devicePairingData", "dnsSource", b"dnsSource", "fbAppID", b"fbAppID", "fbCat", b"fbCat", "fbDeviceID", b"fbDeviceID", "fbUserAgent", b"fbUserAgent", "interopData", b"interopData", "iosAppExtension", b"iosAppExtension", "lc", b"lc", "lidDbMigrated", b"lidDbMigrated", "memClass", b"memClass", "oc", b"oc", "paaLink", b"paaLink", "paddingBytes", b"paddingBytes", "pairedPeripherals", b"pairedPeripherals", "passive", b"passive", "preacksCount", b"preacksCount", "processingQueueSize", b"processingQueueSize", "product", b"product", "pull", b"pull", "pushName", b"pushName", "sessionID", b"sessionID", "shards", b"shards", "shortConnect", b"shortConnect", "testIsolationID", b"testIsolationID", "trafficAnonymization", b"trafficAnonymization", "userAgent", b"userAgent", "username", b"username", "webInfo", b"webInfo", "yearClass", b"yearClass"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___ClientPayload: _TypeAlias = ClientPayload  # noqa: Y015

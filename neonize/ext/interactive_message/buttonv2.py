@@ -24,9 +24,9 @@ Example::
 from __future__ import annotations
 
 import uuid as _uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from io import BytesIO
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Self, Union
+from typing import TYPE_CHECKING, List, Optional, Self, Union
 
 from ...proto.waE2E.WAWebProtobufsE2E_pb2 import (
     ButtonsMessage,
@@ -150,7 +150,11 @@ class ButtonV2Message(CustomInteractiveMessage, InteractiveMessageBuilder):
         :param thumbnail: URL string or raw image bytes.
         :returns: ``self`` for chaining.
         """
-        raw = get_bytes_from_name_or_url(thumbnail) if isinstance(thumbnail, str) else thumbnail
+        raw = (
+            get_bytes_from_name_or_url(thumbnail)
+            if isinstance(thumbnail, str)
+            else thumbnail
+        )
         self._thumbnail = _resize_thumbnail(raw)
         return self
 

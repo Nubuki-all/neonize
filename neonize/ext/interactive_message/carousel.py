@@ -37,7 +37,7 @@ Example::
 
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, List, Optional, Self, Sequence, Union
+from typing import TYPE_CHECKING, List, Self, Sequence, Union
 
 from ...proto.waE2E.WAWebProtobufsE2E_pb2 import (
     ContextInfo,
@@ -94,7 +94,9 @@ class CarouselMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
 
     # -- Card management -----------------------------------------------------
 
-    def add_card(self, card: Union[InteractiveMessage, Sequence[InteractiveMessage]]) -> Self:
+    def add_card(
+        self, card: Union[InteractiveMessage, Sequence[InteractiveMessage]]
+    ) -> Self:
         """Append one or more cards to the carousel.
 
         Each card must have ``header.hasMediaAttachment`` set to ``True``.
