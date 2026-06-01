@@ -382,7 +382,8 @@ def _build_table_metadata(table: list[list[str]]):
         raise ValueError("Table must have at least one row (header).")
     header, *data_rows = table
     max_len = max(len(header), *(len(r) for r in data_rows)) if data_rows else len(header)
-    normalize = lambda r: r + [""] * (max_len - len(r))
+    def normalize(r):
+        return r + [""] * (max_len - len(r))
 
     rows_proto = [
         AIRichResponseTableMetadata.AIRichResponseTableRow(items=normalize(header), isHeading=True)
