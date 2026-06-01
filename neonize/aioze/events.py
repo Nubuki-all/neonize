@@ -49,7 +49,16 @@ from ..proto.Neonize_pb2 import TemporaryBan as TemporaryBanEv
 from ..proto.Neonize_pb2 import UnknownCallEvent as UnknownCallEventEv
 from ..proto.Neonize_pb2 import privacySettingsEvent as PrivacySettingsEv
 
-event_global_loop = asyncio.new_event_loop()
+event_global_loop: asyncio.AbstractEventLoop | None = None
+
+
+def set_event_loop(loop: asyncio.AbstractEventLoop) -> None:
+    """Set the global event loop used for dispatching events from Go callbacks.
+    Called automatically when connect() is invoked."""
+    global event_global_loop
+    if event_global_loop is None:
+        event_global_loop = loop
+
 
 if TYPE_CHECKING:
     from .client import ClientFactory, NewAClient
@@ -109,9 +118,7 @@ class Event:
         """
         self.client = client
         self.blocking_func = self.paircode(self.default_paircode_cb)
-        self.list_func: Dict[
-            int, Callable[[NewAClient, Message], Coroutine[None, None, None]]
-        ] = {}
+        self.list_func: Dict[int, Callable[[NewAClient, Message], Coroutine[None, None, None]]] = {}
         self._qr = self.__onqr
 
     def execute(self, uuid: int, binary: int, size: int, code: int):
@@ -189,9 +196,7 @@ class Event:
         return paircodecb
 
     @staticmethod
-    async def default_paircode_cb(
-        client: NewAClient, data: str, connected: bool = True
-    ):
+    async def default_paircode_cb(client: NewAClient, data: str, connected: bool = True):
         """
         A default callback function that handles the pair code event.
         This function is called when the pair code event occurs, and it blocks the execution until the event is processed.
@@ -244,9 +249,3 @@ class EventsManager:
             self.list_func.update({EVENT_TO_INT[event]: func})
 
         return callback
-
-
-# threading.Thread(
-#    target=event_global_loop.run_forever,
-#    daemon=True,
-# ).start()

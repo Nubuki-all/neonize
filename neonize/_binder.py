@@ -10,16 +10,12 @@ from .utils.platform import generated_name
 
 func_string = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p)  # qr
 func = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_bool)  # blocking
-func_bytes = ctypes.CFUNCTYPE(
-    None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int
-)  # status
+func_bytes = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int)  # status
 func_callback_bytes = ctypes.CFUNCTYPE(
     None, ctypes.c_char_p, ctypes.c_void_p, ctypes.c_int, ctypes.c_int
 )  # callback_bytes
 
-func_callback_bytes2 = ctypes.CFUNCTYPE(
-    None, ctypes.c_void_p, ctypes.c_int
-)  # callback_bytes
+func_callback_bytes2 = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_int)  # callback_bytes
 
 
 def load_goneonize():
@@ -70,6 +66,7 @@ if not os.environ.get("SPHINX"):
         ctypes.c_char_p,
         ctypes.c_int,
     ]
+    gocode.Neonize.restype = ctypes.c_char_p
     gocode.GetLIDFromPN.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int]
     gocode.GetLIDFromPN.restype = ctypes.POINTER(Bytes)
     gocode.GetPNFromLID.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int]
@@ -93,6 +90,13 @@ if not os.environ.get("SPHINX"):
     gocode.TestStruct.argtypes = []
     gocode.TestStruct.restype = ctypes.POINTER(Bytes)
     gocode.Upload.restype = ctypes.POINTER(Bytes)
+    gocode.UploadNewsletter.argtypes = [
+        ctypes.c_char_p,
+        ctypes.c_char_p,
+        ctypes.c_int,
+        ctypes.c_int,
+    ]
+    gocode.UploadNewsletter.restype = ctypes.POINTER(Bytes)
     gocode.DownloadAny.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int]
     gocode.DownloadAny.restype = ctypes.POINTER(Bytes)
     gocode.DownloadMediaWithPath.argtypes = [
@@ -347,6 +351,8 @@ if not os.environ.get("SPHINX"):
     gocode.ResolveContactQRLink.restype = ctypes.POINTER(Bytes)
     gocode.ResolveBusinessMessageLink.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
     gocode.ResolveBusinessMessageLink.restype = ctypes.POINTER(Bytes)
+    gocode.PairPhone.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int]
+    gocode.PairPhone.restype = ctypes.POINTER(Bytes)
     gocode.SendAppState.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int]
     gocode.SendAppState.restype = ctypes.c_char_p
     gocode.SetDefaultDisappearingTimer.argtypes = [ctypes.c_char_p, ctypes.c_int64]
@@ -449,7 +455,7 @@ if not os.environ.get("SPHINX"):
         ctypes.c_char_p,
         ctypes.c_char_p,
     ]
-    gocode.PutPushName.restype = ctypes.c_char_p
+    gocode.PutContactName.restype = ctypes.c_char_p
     gocode.PutAllContactNames.argtypes = [
         ctypes.c_char_p,
         ctypes.c_char_p,
@@ -507,6 +513,8 @@ if not os.environ.get("SPHINX"):
     gocode.StopAll.restype = ctypes.c_void_p
     gocode.FreeBytesStruct.argtypes = [ctypes.POINTER(Bytes)]
     gocode.FreeBytesStruct.restype = None
+    gocode.SetPushName.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    gocode.SetPushName.restype = ctypes.c_char_p
 else:
     gocode: Any = object()
 

@@ -3,7 +3,7 @@ import logging
 import os
 import sys
 from datetime import timedelta
-from neonize.aioze.client import NewAClient, ClientFactory
+from neonize.aioze.client import NewAClient
 from neonize.aioze.events import ConnectedEv, MessageEv, PairStatusEv, ReceiptEv, CallOfferEv, event
 from neonize.proto.waE2E.WAWebProtobufsE2E_pb2 import (
     Message,
@@ -16,14 +16,21 @@ from neonize.types import MessageServerID
 from neonize.utils import log
 from neonize.utils.enum import ReceiptType, VoteType
 import signal
+from neonize.ext.interactive_message.button import ButtonMessage
 
+btn = (
+    ButtonMessage()
+    .set_title("Button Title")
+    .set_body("Button Body")
+    .add_reply("Reply 1", ".reply1")
+    .add_reply("Reply 2", ".reply2")
+)
 
 sys.path.insert(0, os.getcwd())
 
 
 def interrupted(*_):
-    loop = asyncio.get_event_loop()
-    asyncio.run_coroutine_threadsafe(ClientFactory.stop(), loop)
+    event.set()
 
 
 log.setLevel(logging.DEBUG)
@@ -57,6 +64,8 @@ async def handler(client: NewAClient, message: MessageEv):
     text = message.Message.conversation or message.Message.extendedTextMessage.text
     chat = message.Info.MessageSource.Chat
     match text:
+        case "test_button":
+            await client.send_interactive_message(chat, btn)
         case "ping":
             result = await client.reply_message("pong", message)
         case "stop":
@@ -257,13 +266,11 @@ async def handler(client: NewAClient, message: MessageEv):
             for i in range(1, len(text) + 1):
                 if id_msg is None:
                     msg = await client.send_message(
-                        message.Info.MessageSource.Chat, Message(
-                            conversation=text[:i])
+                        message.Info.MessageSource.Chat, Message(conversation=text[:i])
                     )
                     id_msg = msg.ID
                 await client.edit_message(
-                    message.Info.MessageSource.Chat, id_msg, Message(
-                        conversation=text[:i])
+                    message.Info.MessageSource.Chat, id_msg, Message(conversation=text[:i])
                 )
         case "button":
             await client.send_message(
@@ -276,10 +283,8 @@ async def handler(client: NewAClient, message: MessageEv):
                                 deviceListMetadataVersion=2,
                             ),
                             interactiveMessage=InteractiveMessage(
-                                body=InteractiveMessage.Body(
-                                    text="Body Message"),
-                                footer=InteractiveMessage.Footer(
-                                    text="@krypton-byte"),
+                                body=InteractiveMessage.Body(text="Body Message"),
+                                footer=InteractiveMessage.Footer(text="@krypton-byte"),
                                 header=InteractiveMessage.Header(
                                     title="Title Message",
                                     subtitle="Subtitle Message",
@@ -339,4 +344,4 @@ async def connect():
 
 
 if __name__ == "__main__":
-    client.loop.run_until_complete(connect())
+    asyncio.run(connect())

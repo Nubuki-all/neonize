@@ -24,6 +24,8 @@ import (
 	"github.com/krypton-byte/neonize/utils"
 	_ "github.com/mattn/go-sqlite3"
 	"go.mau.fi/whatsmeow"
+	"go.mau.fi/whatsmeow/appstate"
+	waBinary "go.mau.fi/whatsmeow/binary"
 	"go.mau.fi/whatsmeow/proto/waCompanionReg"
 	"go.mau.fi/whatsmeow/proto/waConsumerApplication"
 	waE2E "go.mau.fi/whatsmeow/proto/waE2E"
@@ -71,51 +73,221 @@ func getByteByAddr(addr *C.uchar, size C.int) []byte {
 	// return result
 }
 
+// Get button type
+func getButtonTypeFromMessage(msg *waE2E.Message) string {
+	switch {
+	case msg.ViewOnceMessage != nil:
+		return getButtonTypeFromMessage(msg.ViewOnceMessage.Message)
+	case msg.ViewOnceMessageV2 != nil:
+		return getButtonTypeFromMessage(msg.ViewOnceMessageV2.Message)
+	case msg.EphemeralMessage != nil:
+		return getButtonTypeFromMessage(msg.EphemeralMessage.Message)
+	case msg.ButtonsMessage != nil:
+		return "buttons"
+	case msg.ListMessage != nil:
+		return "list"
+	case msg.InteractiveMessage != nil:
+		return "interactive"
+	default:
+		return ""
+	}
+}
+
+// GenerateWABinary for create button
+func GenerateWABinary(ctx context.Context, to types.JID, msg *waE2E.Message) *[]waBinary.Node {
+	isPrivate := to.Server == types.DefaultUserServer
+	nodes := make([]waBinary.Node, 0)
+
+	switch getButtonTypeFromMessage(msg) {
+	case "interactive":
+		im := msg.InteractiveMessage
+		if im != nil {
+			if nfWrap, ok := im.InteractiveMessage.(*waE2E.InteractiveMessage_NativeFlowMessage_); ok {
+				nf := nfWrap.NativeFlowMessage
+				if nf != nil && len(nf.Buttons) > 0 {
+					for _, b := range nf.Buttons {
+						if b == nil || b.Name == nil {
+							continue
+						}
+
+						name := *b.Name
+
+						switch name {
+						case "review_and_pay", "payment_info":
+							nativeFlowName := "order_details"
+							if name == "payment_info" {
+								nativeFlowName = "payment_info"
+							}
+
+							bizNode := waBinary.Node{
+								Tag: "biz",
+								Attrs: waBinary.Attrs{
+									"native_flow_name": nativeFlowName,
+								},
+							}
+							nodes = append(nodes, bizNode)
+
+						case "mpm",
+							"cta_catalog",
+							"send_location",
+							"call_permission_request",
+							"wa_payment_transaction_details",
+							"automated_greeting_message_view_catalog":
+							bizNode := waBinary.Node{
+								Tag:   "biz",
+								Attrs: waBinary.Attrs{},
+								Content: []waBinary.Node{
+									{
+										Tag:   "interactive",
+										Attrs: waBinary.Attrs{"type": "native_flow", "v": "1"},
+										Content: []waBinary.Node{
+											{
+												Tag:   "native_flow",
+												Attrs: waBinary.Attrs{"v": "2", "name": name},
+											},
+										},
+									},
+								},
+							}
+							nodes = append(nodes, bizNode)
+
+						default:
+							bizNode := waBinary.Node{
+								Tag:   "biz",
+								Attrs: waBinary.Attrs{},
+								Content: []waBinary.Node{
+									{
+										Tag:   "interactive",
+										Attrs: waBinary.Attrs{"type": "native_flow", "v": "1"},
+										Content: []waBinary.Node{
+											{
+												Tag:   "native_flow",
+												Attrs: waBinary.Attrs{"v": "9", "name": "mixed"},
+											},
+										},
+									},
+								},
+							}
+							nodes = append(nodes, bizNode)
+						}
+
+						break
+					}
+				}
+			}
+		}
+
+		if isPrivate {
+			botNode := waBinary.Node{
+				Tag:   "bot",
+				Attrs: waBinary.Attrs{"biz_bot": "1"},
+			}
+			nodes = append(nodes, botNode)
+		}
+
+	case "list":
+		bizNode := waBinary.Node{
+			Tag:   "biz",
+			Attrs: waBinary.Attrs{},
+			Content: []waBinary.Node{
+				{
+					Tag:   "list",
+					Attrs: waBinary.Attrs{"v": "2", "type": "product_list"},
+				},
+			},
+		}
+		nodes = append(nodes, bizNode)
+
+	case "buttons":
+		bizNode := waBinary.Node{
+			Tag:   "biz",
+			Attrs: waBinary.Attrs{},
+			Content: []waBinary.Node{
+				{
+					Tag:   "interactive",
+					Attrs: waBinary.Attrs{"type": "native_flow", "v": "1"},
+					Content: []waBinary.Node{
+						{
+							Tag:   "native_flow",
+							Attrs: waBinary.Attrs{"v": "9", "name": "mixed"},
+						},
+					},
+				},
+			},
+		}
+		nodes = append(nodes, bizNode)
+
+		if isPrivate {
+			botNode := waBinary.Node{
+				Tag:   "bot",
+				Attrs: waBinary.Attrs{"biz_bot": "1"},
+			}
+			nodes = append(nodes, botNode)
+		}
+
+	default:
+		if isPrivate {
+			botNode := waBinary.Node{
+				Tag:   "bot",
+				Attrs: waBinary.Attrs{"biz_bot": "1"},
+			}
+			nodes = append(nodes, botNode)
+		}
+	}
+
+	return &nodes
+}
+
+//export SetPushName
+func SetPushName(id *C.char, name *C.char) *C.char {
+	client, exists := clients[C.GoString(id)]
+	if !exists {
+		return C.CString("client not found")
+	}
+	err := client.SendAppState(context.Background(), appstate.BuildSettingPushName(C.GoString(name)))
+	if err != nil {
+		return C.CString(err.Error())
+	}
+	return C.CString("")
+}
+
 //export GetPNFromLID
 func GetPNFromLID(id *C.char, JIDByte *C.uchar, JIDSize C.int) *C.struct_BytesReturn {
 	var neoJIDProto defproto.JID
+	return_ := defproto.GetJIDFromStoreReturnFunction{}
 	jidbyte := getByteByAddr(JIDByte, JIDSize)
 	err := proto.Unmarshal(jidbyte, &neoJIDProto)
 	if err != nil {
-		panic(err)
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
 	}
 	lid := utils.DecodeJidProto(&neoJIDProto)
 	cli := clients[C.GoString(id)].Store
 	pn, err := cli.LIDs.GetPNForLID(context.Background(), lid)
-
-	neojid := utils.EncodeJidProto(pn)
-
-	return_ := defproto.GetJIDFromStoreReturnFunction{
-		Jid: neojid,
-	}
+	return_.Jid = utils.EncodeJidProto(pn)
 	if err != nil {
 		return_.Error = proto.String(err.Error())
 	}
-
 	return ProtoReturnV3(&return_)
 }
 
 //export GetLIDFromPN
 func GetLIDFromPN(id *C.char, JIDByte *C.uchar, JIDSize C.int) *C.struct_BytesReturn {
 	var neoJIDProto defproto.JID
+	return_ := defproto.GetJIDFromStoreReturnFunction{}
 	jidbyte := getByteByAddr(JIDByte, JIDSize)
 	err := proto.Unmarshal(jidbyte, &neoJIDProto)
 	if err != nil {
-		panic(err)
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
 	}
 	pn := utils.DecodeJidProto(&neoJIDProto)
 	cli := clients[C.GoString(id)].Store
 	lid, err := cli.LIDs.GetLIDForPN(context.Background(), pn)
-
-	neojid := utils.EncodeJidProto(lid)
-
-	return_ := defproto.GetJIDFromStoreReturnFunction{
-		Jid: neojid,
-	}
+	return_.Jid = utils.EncodeJidProto(lid)
 	if err != nil {
 		return_.Error = proto.String(err.Error())
 	}
-
 	return ProtoReturnV3(&return_)
 }
 
@@ -156,8 +328,12 @@ func ProtoReturnV3(data proto.Message) *C.struct_BytesReturn {
 	}
 	result := (*C.struct_BytesReturn)(C.malloc(C.size_t(unsafe.Sizeof(C.struct_BytesReturn{}))))
 	result.size = C.size_t(len(data_buf))
-	result.data = (*C.char)(C.malloc(result.size))
-	C.memcpy(unsafe.Pointer(result.data), unsafe.Pointer(&data_buf[0]), result.size)
+	if len(data_buf) > 0 {
+		result.data = (*C.char)(C.malloc(result.size))
+		C.memcpy(unsafe.Pointer(result.data), unsafe.Pointer(&data_buf[0]), result.size)
+	} else {
+		result.data = nil
+	}
 	return result
 }
 
@@ -252,8 +428,11 @@ func SendMessage(id *C.char, JIDByte *C.uchar, JIDSize C.int, messageByte *C.uch
 		return_.Error = proto.String(err_message.Error())
 		return ProtoReturnV3(&return_)
 	}
+	// extra params
+	extra := whatsmeow.SendRequestExtra{}
+	extra.AdditionalNodes = GenerateWABinary(context.Background(), utils.DecodeJidProto(&neonize_jid), &message)
 	// fmt.Println("SendMessage: Sending message to WhatsApp")
-	sendresponse, err := client.SendMessage(context.Background(), utils.DecodeJidProto(&neonize_jid), &message)
+	sendresponse, err := client.SendMessage(context.Background(), utils.DecodeJidProto(&neonize_jid), &message, extra)
 	if err != nil {
 		fmt.Println("SendMessage: Error sending message:", err.Error())
 		return_.Error = proto.String(err.Error())
@@ -323,8 +502,14 @@ func PinMessage(id *C.char, ChatJIDByte *C.uchar, ChatJIDSize C.int, SenderJIDBy
 
 //export StopAll
 func StopAll() {
+	keys := make([]string, 0, len(clients))
 	for key := range clients {
-		Stop(C.CString(key))
+		keys = append(keys, key)
+	}
+	for _, key := range keys {
+		cKey := C.CString(key)
+		Stop(cKey)
+		C.free(unsafe.Pointer(cKey))
 	}
 }
 
@@ -346,7 +531,7 @@ func Stop(id *C.char) {
 }
 
 //export Neonize
-func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *C.char, qrCb C.ptr_to_python_function_string, logStatus C.ptr_to_python_function_string, event C.ptr_to_python_function_bytes, logCb C.ptr_to_python_function_callback_bytes2, subscribes *C.uchar, lenSubscriber C.int, devicePropsBuf *C.uchar, devicePropsSize C.int, pairphone *C.uchar, pairphoneSize C.int) { // ,
+func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *C.char, qrCb C.ptr_to_python_function_string, logStatus C.ptr_to_python_function_string, event C.ptr_to_python_function_bytes, logCb C.ptr_to_python_function_callback_bytes2, subscribes *C.uchar, lenSubscriber C.int, devicePropsBuf *C.uchar, devicePropsSize C.int, pairphone *C.uchar, pairphoneSize C.int) *C.char { // ,
 	subscribers := map[int]bool{}
 	var deviceProps waCompanionReg.DeviceProps
 	loginStateChan := make(chan bool)
@@ -354,7 +539,7 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 	ctx, cancel := context.WithCancel(context.Background())
 	StopSignal[C.GoString(id)] = cancel
 	if err_proto != nil {
-		panic(err_proto)
+		return C.CString(err_proto.Error())
 	}
 	for _, s := range getByteByAddr(subscribes, lenSubscriber) {
 		subscribers[int(s)] = true
@@ -366,7 +551,7 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 	eventChan := make(chan *MessageEvent, 100)
 	eventChannel[uuid] = eventChan
 	if err != nil {
-		panic(err)
+		return C.CString(err.Error())
 	}
 	// If you want multiple sessions, remember their JIDs and use .GetDevice(jid) or .GetAllDevices() instead.
 	var deviceStore *store.Device
@@ -375,14 +560,14 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 	if int(JIDSize) > 0 {
 		jidbyte_err := proto.Unmarshal(getByteByAddr(JIDByte, JIDSize), &JID)
 		if jidbyte_err != nil {
-			panic(jidbyte_err)
+			return C.CString(jidbyte_err.Error())
 		}
 		deviceStore, err_device = container.GetDevice(context.TODO(), utils.DecodeJidProto(&JID))
 	} else {
 		deviceStore, err_device = container.GetFirstDevice(context.TODO())
 	}
 	if err_device != nil {
-		panic(err_device)
+		return C.CString(err_device.Error())
 	}
 	proto.Merge(store.DeviceProps, &deviceProps)
 	clientLog := utils.NewLogger("Client", C.GoString(logLevel), utils.Callback(logCb))
@@ -831,12 +1016,16 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 	qrFuncCb := func(data string) {
 		cstr := C.CString(data)
 		defer C.free(unsafe.Pointer(cstr))
-		C.call_c_func_string(qrCb, C.CString(uuid), cstr)
+		cUUID := C.CString(uuid)
+		defer C.free(unsafe.Pointer(cUUID))
+		C.call_c_func_string(qrCb, cUUID, cstr)
 	}
 	logStatusCb := func(eventName string) {
 		cstr := C.CString(eventName)
 		defer C.free(unsafe.Pointer(cstr))
-		C.call_c_func_string(logStatus, C.CString(uuid), cstr)
+		cUUID := C.CString(uuid)
+		defer C.free(unsafe.Pointer(cUUID))
+		C.call_c_func_string(logStatus, cUUID, cstr)
 	}
 	if client.Store.ID == nil {
 		// No ID stored, new login
@@ -845,7 +1034,7 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 			var PairPhone defproto.PairPhoneParams
 			err_pairparams := proto.Unmarshal(phone_number, &PairPhone)
 			if err_pairparams != nil {
-				panic(err_pairparams)
+				return C.CString(err_pairparams.Error())
 			}
 			phone := *PairPhone.Phone
 			notif := *PairPhone.ShowPushNotification
@@ -854,7 +1043,7 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 			client.Connect()
 			code_, code_err := client.PairPhone(context.Background(), phone, notif, whatsmeow.PairClientType(int(clientType)), displayname)
 			if code_err != nil {
-				panic(code_err)
+				return C.CString(code_err.Error())
 			}
 			fmt.Println("Pair Code: ", code_)
 			// for stat := range loginStateChan {
@@ -867,7 +1056,7 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 			qrChan, _ := client.GetQRChannel(context.Background())
 			err = client.Connect()
 			if err != nil {
-				panic(err)
+				return C.CString(err.Error())
 			}
 			for evt := range qrChan {
 				if evt.Event == "code" {
@@ -886,7 +1075,7 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 		// Already logged in, just connect
 		err = client.Connect()
 		if err != nil {
-			panic(err)
+			return C.CString(err.Error())
 		}
 	}
 
@@ -900,7 +1089,10 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 
 	// Listen to Ctrl+C (you can also do something else that prevents the program from exiting)
 	println("Press Ctrl+C to exit")
-	CallbackFunction(ctx, event, uuid)
+	if cbErr := CallbackFunction(ctx, event, uuid); cbErr != nil {
+		return C.CString(cbErr.Error())
+	}
+	return C.CString("")
 }
 
 //export Disconnect
@@ -970,7 +1162,7 @@ func IsConnected(id *C.char) C.bool {
 
 //export IsLoggedIn
 func IsLoggedIn(id *C.char) C.bool {
-	check := clients[C.GoString(id)].IsConnected()
+	check := clients[C.GoString(id)].IsLoggedIn()
 	return C.bool(check)
 }
 
@@ -1323,11 +1515,12 @@ func BuildPollVoteCreation(id *C.char, name *C.char, options *C.uchar, optionsSi
 func CreateNewsletter(id *C.char, createNewsletterParams *C.uchar, size C.int) *C.struct_BytesReturn {
 	var neonizeParams defproto.CreateNewsletterParams
 	params_byte := getByteByAddr(createNewsletterParams, size)
+	return_ := defproto.CreateNewsLetterReturnFunction{}
 	err := proto.Unmarshal(params_byte, &neonizeParams)
 	if err != nil {
-		panic(err)
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
 	}
-	return_ := defproto.CreateNewsLetterReturnFunction{}
 	metadata, err_metadata := clients[C.GoString(id)].CreateNewsletter(context.Background(), utils.DecodeCreateNewsletterParams(&neonizeParams))
 	if err_metadata != nil {
 		return_.Error = proto.String(err_metadata.Error())
@@ -1344,7 +1537,7 @@ func FollowNewsletter(id *C.char, jid *C.uchar, size C.int) *C.char {
 	jid_byte := getByteByAddr(jid, size)
 	unmarshal_err := proto.Unmarshal(jid_byte, &JID)
 	if unmarshal_err != nil {
-		panic(unmarshal_err)
+		return C.CString(unmarshal_err.Error())
 	}
 	err := clients[C.GoString(id)].FollowNewsletter(context.Background(), utils.DecodeJidProto(&JID))
 	if err != nil {
@@ -1356,11 +1549,12 @@ func FollowNewsletter(id *C.char, jid *C.uchar, size C.int) *C.char {
 //export GetNewsletterInfo
 func GetNewsletterInfo(id *C.char, JIDByte *C.uchar, JIDSize C.int) *C.struct_BytesReturn {
 	var JID defproto.JID
+	metadata_proto := defproto.CreateNewsLetterReturnFunction{}
 	err := proto.Unmarshal(getByteByAddr(JIDByte, JIDSize), &JID)
 	if err != nil {
-		panic(err)
+		metadata_proto.Error = proto.String(err.Error())
+		return ProtoReturnV3(&metadata_proto)
 	}
-	metadata_proto := defproto.CreateNewsLetterReturnFunction{}
 	metadata, err_metadata := clients[C.GoString(id)].GetNewsletterInfo(context.Background(), utils.DecodeJidProto(&JID))
 	if metadata != nil {
 		metadata_proto.NewsletterMetadata = utils.EncodeNewsLetterMessageMetadata(*metadata)
@@ -1389,7 +1583,9 @@ func GetNewsletterMessageUpdate(id *C.char, JIDByte *C.uchar, JIDSize C.int, Cou
 	var JID defproto.JID
 	err := proto.Unmarshal(getByteByAddr(JIDByte, JIDSize), &JID)
 	if err != nil {
-		panic(err)
+		return_ := defproto.GetNewsletterMessageUpdateReturnFunction{}
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
 	}
 	newsletterMessage, errnewsletter := clients[C.GoString(id)].GetNewsletterMessageUpdates(context.Background(), utils.DecodeJidProto(&JID), &whatsmeow.GetNewsletterUpdatesParams{
 		Count: int(Count),
@@ -1415,7 +1611,9 @@ func GetNewsletterMessages(id *C.char, JIDByte *C.uchar, JIDSize C.int, Count C.
 	var JID defproto.JID
 	err := proto.Unmarshal(getByteByAddr(JIDByte, JIDSize), &JID)
 	if err != nil {
-		panic(err)
+		return_ := defproto.GetNewsletterMessageUpdateReturnFunction{}
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
 	}
 	newsletterMessage, errnewsletter := clients[C.GoString(id)].GetNewsletterMessages(context.Background(), utils.DecodeJidProto(&JID), &whatsmeow.GetNewsletterMessagesParams{
 		Count:  int(Count),
@@ -1465,13 +1663,14 @@ func MarkRead(id *C.char, ids *C.char, timestamp C.int, chatByte *C.uchar, chatS
 //export NewsletterMarkViewed
 func NewsletterMarkViewed(id *C.char, JIDByte *C.uchar, JIDSize C.int, MessageServerID *C.uchar, MessageServerIDSize C.int) *C.char {
 	var JID defproto.JID
-	serverIDs := make([]int, int(MessageServerIDSize))
-	for _, msid := range getByteByAddr(MessageServerID, MessageServerIDSize) {
+	raw := getByteByAddr(MessageServerID, MessageServerIDSize)
+	serverIDs := make([]int, 0, len(raw))
+	for _, msid := range raw {
 		serverIDs = append(serverIDs, int(msid))
 	}
 	err := proto.Unmarshal(getByteByAddr(JIDByte, JIDSize), &JID)
 	if err != nil {
-		panic(err)
+		return C.CString(err.Error())
 	}
 	err_return := clients[C.GoString(id)].NewsletterMarkViewed(context.Background(), utils.DecodeJidProto(&JID), serverIDs)
 	if err_return != nil {
@@ -1499,7 +1698,9 @@ func NewsletterSubscribeLiveUpdates(id *C.char, JIDByte *C.uchar, JIDSize C.int)
 	var JID defproto.JID
 	err := proto.Unmarshal(getByteByAddr(JIDByte, JIDSize), &JID)
 	if err != nil {
-		panic(err)
+		return_ := defproto.NewsletterSubscribeLiveUpdatesReturnFunction{}
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
 	}
 	duration, err_subs := clients[C.GoString(id)].NewsletterSubscribeLiveUpdates(context.Background(), utils.DecodeJidProto(&JID))
 	return_ := defproto.NewsletterSubscribeLiveUpdatesReturnFunction{
@@ -1516,7 +1717,7 @@ func NewsletterToggleMute(id *C.char, JIDByte *C.uchar, JIDSize C.int, mute C.bo
 	var JID defproto.JID
 	err := proto.Unmarshal(getByteByAddr(JIDByte, JIDSize), &JID)
 	if err != nil {
-		panic(err)
+		return C.CString(err.Error())
 	}
 	err_togglemute := clients[C.GoString(id)].NewsletterToggleMute(context.Background(), utils.DecodeJidProto(&JID), bool(mute))
 	if err_togglemute != nil {
@@ -1551,6 +1752,35 @@ func ResolveContactQRLink(id *C.char, code *C.char) *C.struct_BytesReturn {
 	return ProtoReturnV3(&return_)
 }
 
+//export PairPhone
+func PairPhone(id *C.char, pairPhoneByte *C.uchar, pairPhoneSize C.int) *C.struct_BytesReturn {
+	return_ := defproto.PairPhoneReturnFunction{}
+
+	var pairPhoneParams defproto.PairPhoneParams
+	err_unmarshal := proto.Unmarshal(getByteByAddr(pairPhoneByte, pairPhoneSize), &pairPhoneParams)
+	if err_unmarshal != nil {
+		return_.Error = proto.String(err_unmarshal.Error())
+		return ProtoReturnV3(&return_)
+	}
+
+	client := clients[C.GoString(id)]
+	code, err := client.PairPhone(
+		context.Background(),
+		*pairPhoneParams.Phone,
+		*pairPhoneParams.ShowPushNotification,
+		whatsmeow.PairClientType(int(*pairPhoneParams.ClientType)),
+		*pairPhoneParams.ClientDisplayName,
+	)
+
+	if err != nil {
+		return_.Error = proto.String(err.Error())
+	} else {
+		return_.Code = proto.String(code)
+	}
+
+	return ProtoReturnV3(&return_)
+}
+
 //export SendAppState
 func SendAppState(id *C.char, patchByte *C.uchar, patchSize C.int) *C.char {
 	var patchInfo defproto.PatchInfo
@@ -1579,7 +1809,7 @@ func SetDisappearingTimer(id *C.char, JIDByte *C.uchar, JIDSize C.int, timer C.i
 	var JID defproto.JID
 	err_ := proto.Unmarshal(getByteByAddr(JIDByte, JIDSize), &JID)
 	if err_ != nil {
-		panic(err_)
+		return C.CString(err_.Error())
 	}
 	err := clients[C.GoString(id)].SetDisappearingTimer(context.Background(), utils.DecodeJidProto(&JID), time.Duration(timer), time.UnixMilli(int64(settingTS)))
 	if err != nil {
@@ -2048,12 +2278,12 @@ func GetAllDevices(db *C.char, logCb C.ptr_to_python_function_callback_bytes2) *
 	dbLog := utils.NewLogger("Database", "ERROR", utils.Callback(logCb))
 	container, err := getDB(db, dbLog)
 	if err != nil {
-		panic(err)
+		return C.CString("error: " + err.Error())
 	}
 
 	deviceStore, err := container.GetAllDevices(context.TODO())
 	if err != nil {
-		panic(err)
+		return C.CString("error: " + err.Error())
 	}
 
 	var result strings.Builder
@@ -2193,23 +2423,23 @@ func FetchMe(id string) *defproto.Device {
 }
 
 // comment
-func CallbackFunction(ctx context.Context, callback C.ptr_to_python_function_bytes, id string) {
+func CallbackFunction(ctx context.Context, callback C.ptr_to_python_function_bytes, id string) error {
 	uuid := C.CString(id)
 	channel := eventChannel[id]
 	buff, err := proto.Marshal(FetchMe(id))
 	if err != nil {
-		panic(err)
+		return err
 	}
 	uchars, size := getBytesAndSize(buff)
 	C.call_c_func_callback_bytes(callback, uuid, uchars, size, C.int(0))
 	for {
 		select {
 		case <-ctx.Done():
-			return
+			return nil
 		case message := <-channel:
 			buff, err := proto.Marshal(message.message)
 			if err != nil {
-				panic(err)
+				return err
 			}
 			uchars, size := getBytesAndSize(buff)
 			C.call_c_func_callback_bytes(callback, uuid, uchars, size, C.int(message.eventType))
@@ -2220,6 +2450,11 @@ func CallbackFunction(ctx context.Context, callback C.ptr_to_python_function_byt
 
 //export FreeBytesStruct
 func FreeBytesStruct(bytesReturn *C.struct_BytesReturn) {
-	C.free(unsafe.Pointer(bytesReturn.data))
+	if bytesReturn == nil {
+		return
+	}
+	if bytesReturn.data != nil {
+		C.free(unsafe.Pointer(bytesReturn.data))
+	}
 	C.free(unsafe.Pointer(bytesReturn))
 }

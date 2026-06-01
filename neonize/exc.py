@@ -2,6 +2,10 @@
 #     pass
 
 
+class NeonizeError(Exception):
+    pass
+
+
 class UploadError(Exception):
     pass
 
@@ -142,6 +146,10 @@ class NewsletterToggleMuteError(Exception):
     pass
 
 
+class PairPhoneError(Exception):
+    pass
+
+
 class ResolveContactQRLinkError(Exception):
     pass
 
@@ -191,10 +199,6 @@ class SubscribePresenceError(Exception):
 
 
 class UnfollowNewsletterError(Exception):
-    pass
-
-
-class UnlinkGroupErro(Exception):
     pass
 
 
