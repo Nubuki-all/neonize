@@ -118,9 +118,7 @@ class Event:
         """
         self.client = client
         self.blocking_func = self.paircode(self.default_paircode_cb)
-        self.list_func: Dict[
-            int, Callable[[NewAClient, Message], Coroutine[None, None, None]]
-        ] = {}
+        self.list_func: Dict[int, Callable[[NewAClient, Message], Coroutine[None, None, None]]] = {}
         self._qr = self.__onqr
 
     def execute(self, uuid: int, binary: int, size: int, code: int):
@@ -144,14 +142,11 @@ class Event:
             return
         elif code == 3:
             self.client.connected = True
-        # loop = asyncio.new_event_loop()
-        # loop.run_until_complete(
-        #     self.list_func[code](self.client, message)
-        # )
-        # loop.close()
-        asyncio.run_coroutine_threadsafe(
-            self.list_func[code](self.client, message), event_global_loop
-        )
+        handler = self.list_func.get(code)
+        if handler is not None:
+            asyncio.run_coroutine_threadsafe(
+                handler(self.client, message), event_global_loop
+            )
 
     async def __onqr(self, _: NewAClient, data_qr: bytes):
         """
@@ -198,9 +193,7 @@ class Event:
         return paircodecb
 
     @staticmethod
-    async def default_paircode_cb(
-        client: NewAClient, data: str, connected: bool = True
-    ):
+    async def default_paircode_cb(client: NewAClient, data: str, connected: bool = True):
         """
         A default callback function that handles the pair code event.
         This function is called when the pair code event occurs, and it blocks the execution until the event is processed.

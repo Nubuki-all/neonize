@@ -141,9 +141,7 @@ class Event:
         self.list_func: Dict[int, Callable[[NewClient, Message], None]] = {}
         self._qr = self.__onqr
 
-    def execute(
-        self, uuid: int, binary: int, size: int, code: int
-    ):  # Demands Attention
+    def execute(self, uuid: int, binary: int, size: int, code: int):  # Demands Attention
         """Executes a function from the list of functions based on the given code.
 
         :param binary: The binary data to be processed by the function.
@@ -161,7 +159,9 @@ class Event:
             return
         elif code == 3:
             self.client.connected = True
-        self.list_func[code](self.client, message)
+        handler = self.list_func.get(code)
+        if handler is not None:
+            handler(self.client, message)
 
     def __onqr(self, _: NewClient, data_qr: bytes):
         """

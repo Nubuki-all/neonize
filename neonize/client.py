@@ -24,6 +24,7 @@ from linkpreview import link_preview
 from PIL import Image, ImageSequence
 
 from ._binder import (
+    ProxySettings,
     free_bytes,
     func_callback_bytes,
     func_callback_bytes2,
@@ -88,6 +89,7 @@ from .exc import (
     SetGroupTopicError,
     SetPassiveError,
     SetPrivacySettingError,
+    SetProxyAddressError,
     SetStatusMessageError,
     SubscribePresenceError,
     UnfollowNewsletterError,
@@ -3350,6 +3352,38 @@ class NewClient:
             raise DecryptPollVoteError(model.Error)
         return model.PollVoteMessage
 
+    def set_proxy_address(
+        self,
+        proxy_address: str | None,
+        no_websocket: bool = False,
+        only_login: bool = False,
+        no_media: bool = False,
+    ) -> None:
+        """Configure proxy settings on an already-connected client.
+
+        :param proxy_address: Proxy URL (e.g. ``socks5://host:port``), or None to clear.
+        :type proxy_address: str | None
+        :param no_websocket: If True, don't proxy WebSocket traffic.
+        :type no_websocket: bool
+        :param only_login: If True, only use proxy during login.
+        :type only_login: bool
+        :param no_media: If True, don't proxy media downloads/uploads.
+        :type no_media: bool
+        :raises SetProxyAddressError: If the proxy configuration fails.
+        """
+        c_settings = ProxySettings(
+            proxy_address=proxy_address or "",
+            no_websocket=no_websocket,
+            only_login=only_login,
+            no_media=no_media,
+        )._to_c_struct()
+        response = self.__client.SetProxyAddress(
+            self.uuid,
+            ctypes.byref(c_settings),
+        )
+        if response:
+            raise SetProxyAddressError(response.decode())
+
     def prepare_pair_phone_payload(
         self,
         phone: str,
@@ -3387,8 +3421,15 @@ class NewClient:
         )
         return pl.SerializeToString()
 
-    def connect(self, payload: Optional[bytes] = b""):
-        """Establishes a connection to the WhatsApp servers."""
+    def connect(self, payload: Optional[bytes] = b"", proxy_settings: ProxySettings | None = None):
+        """Establishes a connection to the WhatsApp servers.
+        
+        :param payload: Optional payload to establish connection via pairphone get with ``prepare_pair_phone_payload``.
+        :type payload: bytes 
+        :param proxy_settings: Optional proxy configuration. Pass ``None`` to connect without a proxy.
+        :type proxy_settings: ProxySettings | None
+        :raises NeonizeError: If connection setup fails.
+        """
         # Convert the list of functions to a bytearray
         d = bytearray(list(self.event.list_func))
         _log_.debug("🔒 Attempting to connect to the WhatsApp servers.")
@@ -3404,6 +3445,10 @@ class NewClient:
         if self.jid:
             jidbuf = self.jid.SerializeToString()
             jidbuf_size = len(jidbuf)
+        proxy_ref = None
+        if proxy_settings is not None:
+            c_settings = proxy_settings._to_c_struct()
+            proxy_ref = ctypes.byref(c_settings)
 
         # Initiate connection to the server
         err = self.__client.Neonize(
@@ -3422,6 +3467,7 @@ class NewClient:
             len(deviceprops),
             payload,
             len(payload),
+            proxy_ref,
         )
         if err:
             raise NeonizeError(err.decode())
