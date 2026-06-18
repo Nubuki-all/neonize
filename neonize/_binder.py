@@ -106,6 +106,29 @@ if not os.environ.get("SPHINX"):
     file_ext = "dll" if system() == "Windows" else "so"
     root_dir = os.path.abspath(os.path.dirname(__file__))
     gocode = load_goneonize()
+    
+    def consume_cstring(result, func, arguments):
+        """ctypes errcheck for FFI functions returning a Go-allocated ``*C.char``.
+
+        Copies the string into ``bytes`` -- exactly what a ``c_char_p`` restype
+        used to yield, so callers are unaffected -- then frees the C allocation
+        via ``FreeString``. Without this the Go ``C.CString`` is leaked on every
+        call: a ``c_char_p`` restype copies the bytes and discards the pointer,
+        leaving the allocation unreachable.
+        """
+        if not result:
+            return b""
+        try:
+            return ctypes.string_at(result)
+        finally:
+            gocode.FreeString(result)
+
+    # FFI functions that return a Go-allocated C string. Each is declared
+    # ``restype = ctypes.c_void_p`` above so the raw pointer survives the call;
+    # ``consume_cstring`` then reads and frees it. Keep this list in sync with
+    # those declarations. (GetVersion is intentionally excluded: it is called
+    # once during bootstrap, so its one-off leak is negligible and freeing it
+    # is kept out of the binary-loading path.)
 
     gocode.Neonize.argtypes = [
         ctypes.c_char_p,
@@ -582,28 +605,6 @@ if not os.environ.get("SPHINX"):
     gocode.FreeString.argtypes = [ctypes.c_void_p]
     gocode.FreeString.restype = None
 
-    def consume_cstring(result, func, arguments):
-        """ctypes errcheck for FFI functions returning a Go-allocated ``*C.char``.
-
-        Copies the string into ``bytes`` -- exactly what a ``c_char_p`` restype
-        used to yield, so callers are unaffected -- then frees the C allocation
-        via ``FreeString``. Without this the Go ``C.CString`` is leaked on every
-        call: a ``c_char_p`` restype copies the bytes and discards the pointer,
-        leaving the allocation unreachable.
-        """
-        if not result:
-            return b""
-        try:
-            return ctypes.string_at(result)
-        finally:
-            gocode.FreeString(result)
-
-    # FFI functions that return a Go-allocated C string. Each is declared
-    # ``restype = ctypes.c_void_p`` above so the raw pointer survives the call;
-    # ``consume_cstring`` then reads and frees it. Keep this list in sync with
-    # those declarations. (GetVersion is intentionally excluded: it is called
-    # once during bootstrap, so its one-off leak is negligible and freeing it
-    # is kept out of the binary-loading path.)
     for _string_returning_func in (
         "Neonize",
         "LeaveGroup",
