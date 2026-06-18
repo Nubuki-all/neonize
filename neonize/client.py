@@ -3417,11 +3417,15 @@ class NewClient:
         )
         return pl.SerializeToString()
 
-    def connect(self, payload: Optional[bytes] = b"", proxy_settings: ProxySettings | None = None):
+    def connect(
+        self,
+        payload: Optional[bytes] = b"",
+        proxy_settings: ProxySettings | None = None,
+    ):
         """Establishes a connection to the WhatsApp servers.
-        
+
         :param payload: Optional payload to establish connection via pairphone get with ``prepare_pair_phone_payload``.
-        :type payload: bytes 
+        :type payload: bytes
         :param proxy_settings: Optional proxy configuration. Pass ``None`` to connect without a proxy.
         :type proxy_settings: ProxySettings | None
         :raises NeonizeError: If connection setup fails.

@@ -4,19 +4,23 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 from platform import system
-from typing import Any, Optional
+from typing import Any
 
 from .download import __GONEONIZE_VERSION__, download
 from .utils.platform import generated_name
 
 func_string = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p)  # qr
 func = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_bool)  # blocking
-func_bytes = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int)  # status
+func_bytes = ctypes.CFUNCTYPE(
+    None, ctypes.c_void_p, ctypes.c_void_p, ctypes.c_int
+)  # status
 func_callback_bytes = ctypes.CFUNCTYPE(
     None, ctypes.c_char_p, ctypes.c_void_p, ctypes.c_int, ctypes.c_int
 )  # callback_bytes
 
-func_callback_bytes2 = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_int)  # callback_bytes
+func_callback_bytes2 = ctypes.CFUNCTYPE(
+    None, ctypes.c_void_p, ctypes.c_int
+)  # callback_bytes
 
 
 def load_goneonize():
@@ -106,7 +110,7 @@ if not os.environ.get("SPHINX"):
     file_ext = "dll" if system() == "Windows" else "so"
     root_dir = os.path.abspath(os.path.dirname(__file__))
     gocode = load_goneonize()
-    
+
     def consume_cstring(result, func, arguments):
         """ctypes errcheck for FFI functions returning a Go-allocated ``*C.char``.
 
