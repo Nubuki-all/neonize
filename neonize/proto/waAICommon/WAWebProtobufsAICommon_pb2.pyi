@@ -337,11 +337,13 @@ class BotSignatureVerificationUseCaseProof(_message.Message):
         UNSPECIFIED: BotSignatureVerificationUseCaseProof._BotSignatureUseCase.ValueType  # 0
         WA_BOT_MSG: BotSignatureVerificationUseCaseProof._BotSignatureUseCase.ValueType  # 1
         WA_TEE_BOT_MSG: BotSignatureVerificationUseCaseProof._BotSignatureUseCase.ValueType  # 2
+        P2P_PILLS: BotSignatureVerificationUseCaseProof._BotSignatureUseCase.ValueType  # 3
 
     class BotSignatureUseCase(_BotSignatureUseCase, metaclass=_BotSignatureUseCaseEnumTypeWrapper): ...
     UNSPECIFIED: BotSignatureVerificationUseCaseProof.BotSignatureUseCase.ValueType  # 0
     WA_BOT_MSG: BotSignatureVerificationUseCaseProof.BotSignatureUseCase.ValueType  # 1
     WA_TEE_BOT_MSG: BotSignatureVerificationUseCaseProof.BotSignatureUseCase.ValueType  # 2
+    P2P_PILLS: BotSignatureVerificationUseCaseProof.BotSignatureUseCase.ValueType  # 3
 
     VERSION_FIELD_NUMBER: _builtins.int
     USECASE_FIELD_NUMBER: _builtins.int
