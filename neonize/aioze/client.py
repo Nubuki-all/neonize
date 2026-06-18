@@ -1986,7 +1986,6 @@ class NewAClient:
         enc_file_hash: bytes,
         file_hash: bytes,
         media_key: bytes,
-        file_length: int,
         media_type: MediaType,
         mms_type: MediaTypeToMMS,
     ) -> bytes:
@@ -2001,8 +2000,6 @@ class NewAClient:
         :type file_hash: bytes
         :param media_key: The key of the media to be downloaded.
         :type media_key: bytes
-        :param file_length: The length of the file to be downloaded.
-        :type file_length: int
         :param media_type: The type of the media to be downloaded.
         :type media_type: MediaType
         :param mms_type: The type of the MMS to be downloaded.
@@ -2020,7 +2017,6 @@ class NewAClient:
             len(file_hash),
             media_key,
             len(media_key),
-            file_length,
             media_type.value,
             mms_type.value.encode(),
         )

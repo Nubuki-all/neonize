@@ -191,7 +191,6 @@ if not os.environ.get("SPHINX"):
         ctypes.c_char_p,
         ctypes.c_int,
         ctypes.c_int,
-        ctypes.c_int,
         ctypes.c_char_p,
     ]
     gocode.DownloadMediaWithPath.restype = ctypes.POINTER(Bytes)
