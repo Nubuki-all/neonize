@@ -11,36 +11,30 @@ from typing import Tuple
 
 from PIL import Image
 
-def prepare_media(plaintext: bytes, media_type: str = "Video"):
-    media_key = os.urandom(32)
+MEDIA_KEY_INFO = {
+    "video":    b"WhatsApp Video Keys",
+    "image":    b"WhatsApp Image Keys",
+    "audio":    b"WhatsApp Audio Keys",
+    "document": b"WhatsApp Document Keys",
+}
 
+def derive_media_keys(media_key: bytes, media_type: str):
     expanded = HKDF(
         algorithm=hashes.SHA256(),
         length=112,
         salt=b"",
-        info=f"WhatsApp {media_type} Keys".encode(),
+        info=MEDIA_KEY_INFO[media_type],
     ).derive(media_key)
+    return expanded[0:16], expanded[16:48], expanded[48:80]  # iv, aes_key, mac_key
 
-    iv      = expanded[0:16]
-    aes_key = expanded[16:48]
-    mac_key = expanded[48:80]
+def get_sidecar_from_upload(plaintext: bytes, media_key: bytes, media_type: str = "video") -> bytes:
+    iv, aes_key, mac_key = derive_media_keys(media_key, media_type)
 
-    # Encrypt
+    # Reproduce exactly what whatsmeow encrypted
     cipher     = AES.new(aes_key, AES.MODE_CBC, iv)
     ciphertext = cipher.encrypt(pad(plaintext, 16))
 
-    mac      = hmac.new(mac_key, iv + ciphertext, hashlib.sha256).digest()[:10]
-    # enc_data = iv + ciphertext + mac
-
-    sidecar = generate_streaming_sidecar(ciphertext, iv, mac_key)
-
-    return {
-        "media_key":  media_key,
-        # "enc_data":   enc_data,
-        "sidecar":    sidecar,
-        # "file_sha256":     hashlib.sha256(plaintext).digest(),
-        # "file_enc_sha256": hashlib.sha256(enc_data).digest(),
-    }
+    return generate_streaming_sidecar(ciphertext, iv, mac_key)
 
 def generate_streaming_sidecar(ciphertext: bytes, iv: bytes, mac_key: bytes) -> bytes:
     CHUNK_SIZE  = 64 * 1024  # 65536 bytes

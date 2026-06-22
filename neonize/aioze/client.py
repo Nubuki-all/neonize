@@ -174,7 +174,7 @@ from ..proto.waE2E.WAWebProtobufsE2E_pb2 import (
 from ..proto.waMsgApplication.WAMsgApplication_pb2 import MessageApplication
 from ..types import MessageServerID, MessageWithContextInfo
 from ..utils import add_exif, gen_vcard, get_message_type, validate_link
-from ..utils.calc import AspectRatioMethod, auto_sticker, original_sticker, prepare_media
+from ..utils.calc import AspectRatioMethod, auto_sticker, get_sidecar_from_upload, original_sticker
 from ..utils.enum import (
     BlocklistAction,
     ChatPresence,
@@ -1383,7 +1383,7 @@ class NewAClient:
             img.save(thumbnail, format="jpeg")
             thumbnail = thumbnail.getvalue()
         upload = await self.upload(buff)
-        media = prepare_media(buff)
+        sidecar = get_sidecar_from_upload(buff, upload.MediaKey)
         message = Message(
             videoMessage=VideoMessage(
                 URL=upload.url,
@@ -1400,7 +1400,7 @@ class NewAClient:
                 thumbnailDirectPath=upload.DirectPath,
                 thumbnailEncSHA256=upload.FileEncSHA256,
                 thumbnailSHA256=upload.FileSHA256,
-                streamingSidecar=media["sidecar"],
+                streamingSidecar=sidecar,
                 viewOnce=viewonce,
                 contextInfo=ContextInfo(
                     mentionedJID=self._parse_mention(
