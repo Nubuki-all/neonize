@@ -18,47 +18,48 @@ MEDIA_KEY_INFO = {
     "document": b"WhatsApp Document Keys",
 }
 
-def derive_media_keys(media_key: bytes, media_type: str):
+def get_media_keys(media_key: bytes, app_info: bytes):
+    """Direct port of whatsmeow's getMediaKeys()"""
     expanded = HKDF(
         algorithm=hashes.SHA256(),
         length=112,
-        salt=b"",
-        info=MEDIA_KEY_INFO[media_type],
+        salt=None,
+        info=app_info,
     ).derive(media_key)
-    return expanded[0:16], expanded[16:48], expanded[48:80]  # iv, aes_key, mac_key
+
+    return (
+        expanded[0:16],   # iv
+        expanded[16:48],  # cipher_key
+        expanded[48:80],  # mac_key
+        expanded[80:],    # ref_key (unused in upload)
+    )
 
 def get_sidecar_from_upload(plaintext: bytes, media_key: bytes, media_type: str = "video") -> bytes:
-    iv, aes_key, mac_key = derive_media_keys(media_key, media_type)
+    iv, cipher_key, mac_key, _ = get_media_keys(media_key, MEDIA_KEY_INFO[media_type])
 
-    # Reproduce exactly what whatsmeow encrypted
-    cipher     = AES.new(aes_key, AES.MODE_CBC, iv)
+    cipher     = AES.new(cipher_key, AES.MODE_CBC, iv)
     ciphertext = cipher.encrypt(pad(plaintext, 16))
 
     return generate_streaming_sidecar(ciphertext, iv, mac_key)
 
 def generate_streaming_sidecar(ciphertext: bytes, iv: bytes, mac_key: bytes) -> bytes:
-    CHUNK_SIZE  = 64 * 1024  # 65536 bytes
+    CHUNK_SIZE  = 64 * 1024
     IV_LENGTH   = 16
     HMAC_LENGTH = 10
 
-    # Prepend IV so chunk windows slide correctly
-    full_data = iv + ciphertext
-    data_size = len(full_data)
+    full_data  = iv + ciphertext
+    data_size  = len(full_data)
+    num_chunks = math.ceil((data_size - IV_LENGTH) / CHUNK_SIZE)
 
-    # ceil((total - IV) / chunk) — matches WhatsApp Web's Math.ceil((e - h) / j)
-    adjusted_size = data_size - IV_LENGTH
-    num_chunks = math.ceil(adjusted_size / CHUNK_SIZE) if adjusted_size > 0 else 0
+    sidecar = bytearray(num_chunks * HMAC_LENGTH)
 
-    sidecar = bytearray()
-
-    for i in range(num_chunks):
-        start = i * CHUNK_SIZE
+    for c in range(num_chunks):
+        start = c * CHUNK_SIZE
         end   = min(start + IV_LENGTH + CHUNK_SIZE, data_size)
-
         chunk = full_data[start:end]
 
-        digest = hmac.new(mac_key, chunk, hashlib.sha256).digest()
-        sidecar.extend(digest[:HMAC_LENGTH])
+        sig = hmac.new(mac_key, chunk, hashlib.sha256).digest()[:HMAC_LENGTH]
+        sidecar[c * HMAC_LENGTH:(c + 1) * HMAC_LENGTH] = sig
 
     return bytes(sidecar)
 
