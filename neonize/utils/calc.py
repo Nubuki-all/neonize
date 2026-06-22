@@ -36,10 +36,10 @@ def prepare_media(plaintext: bytes, media_type: str = "Video"):
 
     return {
         "media_key":  media_key,
-       # "enc_data":   enc_data,
+        # "enc_data":   enc_data,
         "sidecar":    sidecar,
-        "file_sha256":     hashlib.sha256(plaintext).digest(),
-        "file_enc_sha256": hashlib.sha256(enc_data).digest(),
+        # "file_sha256":     hashlib.sha256(plaintext).digest(),
+        # "file_enc_sha256": hashlib.sha256(enc_data).digest(),
     }
 
 def generate_streaming_sidecar(ciphertext: bytes, iv: bytes, mac_key: bytes) -> bytes:
