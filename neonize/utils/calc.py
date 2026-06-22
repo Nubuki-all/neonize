@@ -1,8 +1,72 @@
+import hmac
+import hashlib
+import math
+import os
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
+from cryptography.hazmat.primitives import hashes
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad
 from io import BytesIO
 from typing import Tuple
 
 from PIL import Image
 
+def prepare_media(plaintext: bytes, media_type: str = "Video"):
+    media_key = os.urandom(32)
+
+    expanded = HKDF(
+        algorithm=hashes.SHA256(),
+        length=112,
+        salt=b"",
+        info=f"WhatsApp {media_type} Keys".encode(),
+    ).derive(media_key)
+
+    iv      = expanded[0:16]
+    aes_key = expanded[16:48]
+    mac_key = expanded[48:80]
+
+    # Encrypt
+    cipher     = AES.new(aes_key, AES.MODE_CBC, iv)
+    ciphertext = cipher.encrypt(pad(plaintext, 16))
+
+    mac      = hmac.new(mac_key, iv + ciphertext, hashlib.sha256).digest()[:10]
+    # enc_data = iv + ciphertext + mac
+
+    sidecar = generate_streaming_sidecar(ciphertext, iv, mac_key)
+
+    return {
+        "media_key":  media_key,
+       # "enc_data":   enc_data,
+        "sidecar":    sidecar,
+        "file_sha256":     hashlib.sha256(plaintext).digest(),
+        "file_enc_sha256": hashlib.sha256(enc_data).digest(),
+    }
+
+def generate_streaming_sidecar(ciphertext: bytes, iv: bytes, mac_key: bytes) -> bytes:
+    CHUNK_SIZE  = 64 * 1024  # 65536 bytes
+    IV_LENGTH   = 16
+    HMAC_LENGTH = 10
+
+    # Prepend IV so chunk windows slide correctly
+    full_data = iv + ciphertext
+    data_size = len(full_data)
+
+    # ceil((total - IV) / chunk) — matches WhatsApp Web's Math.ceil((e - h) / j)
+    adjusted_size = data_size - IV_LENGTH
+    num_chunks = math.ceil(adjusted_size / CHUNK_SIZE) if adjusted_size > 0 else 0
+
+    sidecar = bytearray()
+
+    for i in range(num_chunks):
+        start = i * CHUNK_SIZE
+        end   = min(start + IV_LENGTH + CHUNK_SIZE, data_size)
+
+        chunk = full_data[start:end]
+
+        digest = hmac.new(mac_key, chunk, hashlib.sha256).digest()
+        sidecar.extend(digest[:HMAC_LENGTH])
+
+    return bytes(sidecar)
 
 def crop_image(image: Image.Image) -> Image.Image:
     """
