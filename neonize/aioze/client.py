@@ -1374,7 +1374,10 @@ class NewAClient:
         async with AFFmpeg(file) as ffmpeg:
             duration = int((await ffmpeg.extract_info()).format.duration)
             streams =  (await ffmpeg.extract_info()).streams
-            thumbnail = await ffmpeg.extract_thumbnail()
+            try:
+                thumbnail = await ffmpeg.extract_thumbnail()
+            except Exception:
+                thumbnail = await get_bytes_from_name_or_url_async("https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png")
         if spoiler:
             img = Image.open(BytesIO(thumbnail))
             if img.mode != "RGB":
