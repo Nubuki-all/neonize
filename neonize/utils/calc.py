@@ -39,8 +39,9 @@ def get_sidecar_from_upload(plaintext: bytes, media_key: bytes, media_type: str 
 
     cipher     = AES.new(cipher_key, AES.MODE_CBC, iv)
     ciphertext = cipher.encrypt(pad(plaintext, 16))
+    mac = hmac.new(mac_key, iv + ciphertext, hashlib.sha256).digest()[:10]
 
-    return generate_streaming_sidecar(ciphertext, iv, mac_key)
+    return generate_streaming_sidecar(ciphertext + mac, iv, mac_key)
 
 def generate_streaming_sidecar(ciphertext: bytes, iv: bytes, mac_key: bytes) -> bytes:
     CHUNK_SIZE  = 64 * 1024
