@@ -1373,6 +1373,7 @@ class NewAClient:
                 buff = file = await ffmpeg.gif_to_mp4()
         async with AFFmpeg(file) as ffmpeg:
             duration = int((await ffmpeg.extract_info()).format.duration)
+            streams =  (await ffmpeg.extract_info()).streams
             thumbnail = await ffmpeg.extract_thumbnail()
         if spoiler:
             img = Image.open(BytesIO(thumbnail))
@@ -1382,8 +1383,12 @@ class NewAClient:
             thumbnail = BytesIO()
             img.save(thumbnail, format="jpeg")
             thumbnail = thumbnail.getvalue()
+        is_avc = False
+        try:
+            is_avc = any(s.is_avc for s in streams)
+        except Exception:
+            pass
         upload = await self.upload(buff)
-        sidecar = get_sidecar_from_upload(buff, upload.MediaKey)
         message = Message(
             videoMessage=VideoMessage(
                 URL=upload.url,
@@ -1400,7 +1405,6 @@ class NewAClient:
                 thumbnailDirectPath=upload.DirectPath,
                 thumbnailEncSHA256=upload.FileEncSHA256,
                 thumbnailSHA256=upload.FileSHA256,
-                streamingSidecar=sidecar,
                 viewOnce=viewonce,
                 contextInfo=ContextInfo(
                     mentionedJID=self._parse_mention(
@@ -1410,6 +1414,8 @@ class NewAClient:
                 ),
             )
         )
+        if is_avc:
+            message.videoMessage.streamingSidecar = get_sidecar_from_upload(buff, upload.MediaKey)
         if quoted:
             message.videoMessage.contextInfo.MergeFrom(
                 self._make_quoted_message(quoted)
