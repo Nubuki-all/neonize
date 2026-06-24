@@ -5,6 +5,7 @@ readme = "README.md"
 requires-python = ">=3.10"
 dynamic = ["version"]
 dependencies = [
+    "cryptography==48.0.0",
     "httpx>=0.28.1",
     "linkpreview>=0.11.0",
     "phonenumbers>=8.13.52",
