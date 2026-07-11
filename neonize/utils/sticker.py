@@ -56,7 +56,7 @@ def webpmux_is_installed():
 MAX_STICKER_SIZE = 512000
 WEBPMUX_IS_AVAILABLE = False
 if webpmux_is_installed():
-    MAX_STICKER_SIZE = 1000000
+    MAX_STICKER_SIZE = 900000
     WEBPMUX_IS_AVAILABLE = True
 
 
