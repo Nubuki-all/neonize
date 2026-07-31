@@ -7,7 +7,7 @@ import re
 import struct
 import time
 import traceback
-import typing
+from collections.abc import Sequence
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 from datetime import timedelta
 from functools import partial
@@ -15,7 +15,7 @@ from io import BytesIO
 from os import urandom
 from threading import Thread
 from types import NoneType
-from typing import List, Optional, Sequence, overload
+from typing import overload
 from uuid import uuid4
 
 import magic
@@ -253,7 +253,7 @@ class ContactStore:
         if err:
             return ContactStoreError(err)
 
-    def put_all_contact_name(self, contact_entry: List[ContactEntry]):
+    def put_all_contact_name(self, contact_entry: list[ContactEntry]):
         """
         This method serializes a list of ContactEntry objects and sends them to a
         remote service using the client's PutAllContactNames method. If the service
@@ -391,9 +391,9 @@ class NewClient:
     def __init__(
         self,
         name: str,
-        jid: Optional[JID] = None,
-        props: Optional[DeviceProps] = None,
-        uuid: Optional[str] = None,
+        jid: JID | None = None,
+        props: DeviceProps | None = None,
+        uuid: str | None = None,
     ):
         """Initializes a new client instance.
 
@@ -433,7 +433,7 @@ class NewClient:
         self.event._qr(self, ctypes.string_at(qr_protoaddr))
 
     def _parse_mention(
-        self, text: Optional[str] = None, are_lids: bool = False
+        self, text: str | None = None, are_lids: bool = False
     ) -> list[str]:
         """
         This function parses a given text and returns a list of 'mentions' in the format of 'mention@s.whatsapp.net'.
@@ -453,7 +453,7 @@ class NewClient:
         server = "@s.whatsapp.net" if not are_lids else "@lid"
         return [jid.group(1) + server for jid in re.finditer(r"@([0-9]{5,16}|0)", text)]
 
-    def _parse_group_mention(self, text: Optional[str] = None) -> list[GroupMention]:
+    def _parse_group_mention(self, text: str | None = None) -> list[GroupMention]:
         """
         This function parses a given text and returns a list of 'mentions' in the format of 'GroupMention(…'
         A 'mention' is defined as a sequence of numbers (11 to 26 digits long) (might also include an hypen) that is prefixed by '@' and suffixed by @g.us in the text.
@@ -556,7 +556,7 @@ class NewClient:
         to: JID,
         interactive_message: CustomInteractiveMessage,
         link_preview: bool = False,
-        ghost_mentions: Optional[str] = None,
+        ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
     ) -> SendResponse:
@@ -591,9 +591,9 @@ class NewClient:
     def send_message(
         self,
         to: JID,
-        message: typing.Union[Message, str],
+        message: Message | str,
         link_preview: bool = False,
-        ghost_mentions: Optional[str] = None,
+        ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
     ) -> SendResponse:
@@ -655,11 +655,11 @@ class NewClient:
 
     def build_reply_message(
         self,
-        message: typing.Union[str, MessageWithContextInfo],
+        message: str | MessageWithContextInfo,
         quoted: neonize_proto.Message,
         link_preview: bool = False,
         reply_privately: bool = False,
-        ghost_mentions: Optional[str] = None,
+        ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
     ) -> Message:
         """Send a reply message to a specified JID.
@@ -708,12 +708,12 @@ class NewClient:
 
     def reply_message(
         self,
-        message: typing.Union[str, MessageWithContextInfo],
+        message: str | MessageWithContextInfo,
         quoted: neonize_proto.Message,
-        to: Optional[JID] = None,
+        to: JID | None = None,
         link_preview: bool = False,
         reply_privately: bool = False,
-        ghost_mentions: Optional[str] = None,
+        ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
     ) -> SendResponse:
@@ -793,9 +793,9 @@ class NewClient:
     def build_poll_vote_creation(
         self,
         name: str,
-        options: List[str],
+        options: list[str],
         selectable_count: int,
-        quoted: Optional[neonize_proto.Message] = None,
+        quoted: neonize_proto.Message | None = None,
     ) -> Message:
         """Build a poll vote creation message.
 
@@ -832,7 +832,7 @@ class NewClient:
         return message
 
     def build_poll_vote(
-        self, poll_info: MessageInfo, option_names: List[str]
+        self, poll_info: MessageInfo, option_names: list[str]
     ) -> Message:
         """Builds a poll vote.
 
@@ -935,8 +935,8 @@ class NewClient:
 
     def build_sticker_message(
         self,
-        file: typing.Union[str, bytes],
-        quoted: Optional[neonize_proto.Message] = None,
+        file: str | bytes,
+        quoted: neonize_proto.Message | None = None,
         name: str = "",
         packname: str = "",
         crop: bool = False,
@@ -1032,8 +1032,8 @@ class NewClient:
     def send_sticker(
         self,
         to: JID,
-        file: typing.Union[str, bytes],
-        quoted: Optional[neonize_proto.Message] = None,
+        file: str | bytes,
+        quoted: neonize_proto.Message | None = None,
         name: str = "",
         packname: str = "",
         crop: bool = False,
@@ -1085,10 +1085,10 @@ class NewClient:
 
     def _process_single_pack(
         self,
-        stickers: List[List[bytes, bool]],
+        stickers: list[list[bytes, bool]],
         pack_name: str,
         publisher: str = "",
-        quoted: Optional[neonize_proto.Message] = None,
+        quoted: neonize_proto.Message | None = None,
     ) -> Message:
         """
         Helper function to process a single sticker pack chunk
@@ -1182,13 +1182,13 @@ class NewClient:
     def build_stickerpack_message(
         self,
         files: list,
-        quoted: Optional[neonize_proto.Message] = None,
+        quoted: neonize_proto.Message | None = None,
         packname: str = "Sticker pack",
         publisher: str = "",
         crop: bool = False,
         animated_gif: bool = False,
         passthrough: bool = False,
-    ) -> List[Message]:
+    ) -> list[Message]:
         p_func = partial(
             convert_to_webp,
             name=packname,
@@ -1232,14 +1232,14 @@ class NewClient:
         self,
         to: JID,
         files: list,
-        quoted: Optional[neonize_proto.Message] = None,
+        quoted: neonize_proto.Message | None = None,
         packname: str = "Sticker pack",
         publisher: str = "",
         crop: bool = False,
         animated_gif: bool = False,
         passthrough: bool = False,
         add_msg_secret: bool = False,
-    ) -> List[SendResponse]:
+    ) -> list[SendResponse]:
         """
         Send a sticker pack to a specific JID.
 
@@ -1276,12 +1276,12 @@ class NewClient:
     def build_video_message(
         self,
         file: str | bytes,
-        caption: Optional[str] = None,
-        quoted: Optional[neonize_proto.Message] = None,
+        caption: str | None = None,
+        quoted: neonize_proto.Message | None = None,
         viewonce: bool = False,
         gifplayback: bool = False,
         is_gif: bool = False,
-        ghost_mentions: Optional[str] = None,
+        ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
     ) -> Message:
         """
@@ -1352,12 +1352,12 @@ class NewClient:
         self,
         to: JID,
         file: str | bytes,
-        caption: Optional[str] = None,
-        quoted: Optional[neonize_proto.Message] = None,
+        caption: str | None = None,
+        quoted: neonize_proto.Message | None = None,
         viewonce: bool = False,
         gifplayback: bool = False,
         is_gif: bool = False,
-        ghost_mentions: Optional[str] = None,
+        ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
     ) -> SendResponse:
@@ -1404,10 +1404,10 @@ class NewClient:
     def build_image_message(
         self,
         file: str | bytes,
-        caption: Optional[str] = None,
-        quoted: Optional[neonize_proto.Message] = None,
+        caption: str | None = None,
+        quoted: neonize_proto.Message | None = None,
         viewonce: bool = False,
-        ghost_mentions: Optional[str] = None,
+        ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
     ) -> Message:
         """
@@ -1472,10 +1472,10 @@ class NewClient:
         self,
         to: JID,
         file: str | bytes,
-        caption: Optional[str] = None,
-        quoted: Optional[neonize_proto.Message] = None,
+        caption: str | None = None,
+        quoted: neonize_proto.Message | None = None,
         viewonce: bool = False,
-        ghost_mentions: Optional[str] = None,
+        ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
     ) -> SendResponse:
@@ -1535,12 +1535,12 @@ class NewClient:
         self,
         to: JID,
         files: list,
-        caption: Optional[str] = None,
-        quoted: Optional[neonize_proto.Message] = None,
-        ghost_mentions: Optional[str] = None,
+        caption: str | None = None,
+        quoted: neonize_proto.Message | None = None,
+        ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
-    ) -> List[SendResponse, List[SendResponse]]:
+    ) -> list[SendResponse, list[SendResponse]]:
         """Sends an album containing images, videos or both to the specified recipient.
 
         :param to: The JID (Jabber Identifier) of the recipient.
@@ -1642,7 +1642,7 @@ class NewClient:
         self,
         file: str | bytes,
         ptt: bool = False,
-        quoted: Optional[neonize_proto.Message] = None,
+        quoted: neonize_proto.Message | None = None,
     ) -> Message:
         """
         This method builds an audio message from a given file or bytes.
@@ -1686,7 +1686,7 @@ class NewClient:
         to: JID,
         file: str | bytes,
         ptt: bool = False,
-        quoted: Optional[neonize_proto.Message] = None,
+        quoted: neonize_proto.Message | None = None,
         add_msg_secret: bool = False,
     ) -> SendResponse:
         """Sends an audio to the specified recipient.
@@ -1714,12 +1714,12 @@ class NewClient:
     def build_document_message(
         self,
         file: str | bytes,
-        caption: Optional[str] = None,
-        title: Optional[str] = None,
-        filename: Optional[str] = None,
-        mimetype: Optional[str] = None,
-        quoted: Optional[neonize_proto.Message] = None,
-        ghost_mentions: Optional[str] = None,
+        caption: str | None = None,
+        title: str | None = None,
+        filename: str | None = None,
+        mimetype: str | None = None,
+        quoted: neonize_proto.Message | None = None,
+        ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
     ):
         io = BytesIO(get_bytes_from_name_or_url(file))
@@ -1756,12 +1756,12 @@ class NewClient:
         self,
         to: JID,
         file: str | bytes,
-        caption: Optional[str] = None,
-        title: Optional[str] = None,
-        filename: Optional[str] = None,
-        mimetype: Optional[str] = None,
-        quoted: Optional[neonize_proto.Message] = None,
-        ghost_mentions: Optional[str] = None,
+        caption: str | None = None,
+        title: str | None = None,
+        filename: str | None = None,
+        mimetype: str | None = None,
+        quoted: neonize_proto.Message | None = None,
+        ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
     ) -> SendResponse:
@@ -1808,7 +1808,7 @@ class NewClient:
         to: JID,
         contact_name: str,
         contact_number: str,
-        quoted: Optional[neonize_proto.Message] = None,
+        quoted: neonize_proto.Message | None = None,
     ) -> SendResponse:
         """Sends a contact to the specified recipient.
 
@@ -1836,7 +1836,7 @@ class NewClient:
         return self.send_message(to, message)
 
     def upload(
-        self, binary: bytes, media_type: Optional[MediaType] = None
+        self, binary: bytes, media_type: MediaType | None = None
     ) -> UploadResponse:
         """Uploads media content.
 
@@ -1866,9 +1866,7 @@ class NewClient:
     @overload
     def download_any(self, message: Message, path: str) -> NoneType: ...
 
-    def download_any(
-        self, message: Message, path: Optional[str] = None
-    ) -> typing.Union[None, bytes]:
+    def download_any(self, message: Message, path: str | None = None) -> None | bytes:
         """Downloads content from a message.
 
         :param message: The message containing the content to download.
@@ -2124,7 +2122,7 @@ class NewClient:
             self.uuid, jidbuf, len(jidbuf), ctypes.create_string_buffer(name.encode())
         ).decode()
 
-    def set_group_photo(self, jid: JID, file_or_bytes: typing.Union[str, bytes]) -> str:
+    def set_group_photo(self, jid: JID, file_or_bytes: str | bytes) -> str:
         """Sets the photo of a group.
 
         :param jid: The JID (Jabber Identifier) of the group.
@@ -2147,7 +2145,7 @@ class NewClient:
             raise SetGroupPhotoError(model.Error)
         return model.PictureID
 
-    def set_profile_photo(self, file_or_bytes: typing.Union[str, bytes]) -> str:
+    def set_profile_photo(self, file_or_bytes: str | bytes) -> str:
         """Sets profile photo.
 
         :param file_or_bytes: Either a file path (str) or binary data (bytes) representing the group photo.
@@ -2346,7 +2344,7 @@ class NewClient:
         chat: JID,
         sender: JID,
         receipt: ReceiptType,
-        timestamp: Optional[int] = None,
+        timestamp: int | None = None,
     ):
         """Marks the specified messages as read.
 
@@ -2379,7 +2377,7 @@ class NewClient:
             raise MarkReadError(err.decode())
 
     def newsletter_mark_viewed(
-        self, jid: JID, message_server_ids: List[MessageServerID]
+        self, jid: JID, message_server_ids: list[MessageServerID]
     ):
         """
         Marks the specified newsletters as viewed by the user with the given JID.
@@ -2429,7 +2427,6 @@ class NewClient:
         )
         if err:
             raise NewsletterSendReactionError(err)
-        return
 
     def newsletter_subscribe_live_updates(self, jid: JID) -> int:
         """Subscribes a user to live updates of a newsletter.
@@ -2521,7 +2518,7 @@ class NewClient:
         if err:
             raise SendAppStateError(err)
 
-    def set_default_disappearing_timer(self, timer: typing.Union[timedelta, int]):
+    def set_default_disappearing_timer(self, timer: timedelta | int):
         """
         Sets a default disappearing timer for messages. The timer can be specified as a timedelta or an integer.
         If a timedelta is provided, it is converted to nanoseconds. If an integer is provided, it is used directly as the timer.
@@ -2542,8 +2539,8 @@ class NewClient:
     def set_disappearing_timer(
         self,
         jid: JID,
-        timer: typing.Union[timedelta, int],
-        setting_ts: Optional[timedelta] = None,
+        timer: timedelta | int,
+        setting_ts: timedelta | None = None,
     ):
         """
         Set a disappearing timer for a specific JID. The timer can be set as either a timedelta object or an integer.
@@ -2751,7 +2748,7 @@ class NewClient:
         return model.Blocklist
 
     def update_group_participants(
-        self, jid: JID, participants_changes: List[JID], action: ParticipantChange
+        self, jid: JID, participants_changes: list[JID], action: ParticipantChange
     ) -> RepeatedCompositeFieldContainer[GroupParticipant]:
         """
         This method is used to update the list of participants in a group.
@@ -2812,9 +2809,9 @@ class NewClient:
     def create_group(
         self,
         name: str,
-        participants: List[JID] = [],
-        linked_parent: Optional[GroupLinkedParent] = None,
-        group_parent: Optional[GroupParent] = None,
+        participants: list[JID] = [],
+        linked_parent: GroupLinkedParent | None = None,
+        group_parent: GroupParent | None = None,
     ) -> GroupInfo:
         """Create a new group.
 
@@ -2887,7 +2884,7 @@ class NewClient:
         return model.Group
 
     def create_newsletter(
-        self, name: str, description: str, picture: typing.Union[str, bytes]
+        self, name: str, description: str, picture: str | bytes
     ) -> NewsletterMetadata:
         """Create a newsletter with the given name, description, and picture.
 
@@ -3221,7 +3218,7 @@ class NewClient:
         phone: str,
         show_push_notification: bool,
         client_name: ClientName = ClientName.LINUX,
-        client_type: Optional[ClientType] = None,
+        client_type: ClientType | None = None,
     ) -> str:
         """Pair a phone with the client and return the pairing code.
 
@@ -3272,7 +3269,7 @@ class NewClient:
 
     def get_message_for_retry(
         self, requester: JID, to: JID, message_id: str
-    ) -> typing.Union[None, Message]:
+    ) -> None | Message:
         """
         This function retrieves a specific message for retrying transmission.
         It communicates with a client to get the message using provided requester, recipient, and message ID.
@@ -3385,7 +3382,7 @@ class NewClient:
         phone: str,
         show_push_notification: bool,
         client_name: ClientName = ClientName.LINUX,
-        client_type: Optional[ClientType] = None,
+        client_type: ClientType | None = None,
     ):
         """
         Prepares payload for pairing a phone with the client.
@@ -3419,7 +3416,7 @@ class NewClient:
 
     def connect(
         self,
-        payload: Optional[bytes] = b"",
+        payload: bytes | None = b"",
         proxy_settings: ProxySettings | None = None,
     ):
         """Establishes a connection to the WhatsApp servers.
@@ -3489,7 +3486,7 @@ class ClientFactory:
         self.event = EventsManager(self)
 
     @staticmethod
-    def get_all_devices_from_db(db: str) -> List[Device]:
+    def get_all_devices_from_db(db: str) -> list[Device]:
         """
         Retrieves all devices associated with the current account.
         :param db: The name of the database to retrieve the devices from.
@@ -3519,15 +3516,15 @@ class ClientFactory:
 
         return devices
 
-    def get_all_devices(self) -> List["Device"]:
+    def get_all_devices(self) -> list[Device]:
         """Retrieves all devices associated with the current account from the database."""
         return self.get_all_devices_from_db(self.database_name)
 
     def new_client(
         self,
-        jid: Optional[JID] = None,
-        uuid: Optional[str] = None,
-        props: Optional[DeviceProps] = None,
+        jid: JID | None = None,
+        uuid: str | None = None,
+        props: DeviceProps | None = None,
     ) -> NewClient:
         """
         This function creates a new instance of the client. If the jid parameter is not provided, a new client will be created.

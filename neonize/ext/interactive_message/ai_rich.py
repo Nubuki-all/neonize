@@ -11,7 +11,7 @@ from __future__ import annotations
 import json
 import uuid as _uuid
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any, Dict, Self, Union
+from typing import TYPE_CHECKING, Any, Self
 
 from ...proto.waAICommon.WAWebProtobufsAICommon_pb2 import (
     AIRichResponseUnifiedResponse,
@@ -56,7 +56,7 @@ if TYPE_CHECKING:
 class _InlineEntity:
     key: str
     type: str  # "hyperlink", "citation", "latex"
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 def _extract_inline_entities(
@@ -590,7 +590,7 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
                 messageText=extracted,
             )
         )
-        primitive: Dict[str, Any] = {
+        primitive: dict[str, Any] = {
             "text": extracted,
             "__typename": "GenAIMarkdownTextUXPrimitive",
         }
@@ -643,7 +643,7 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         )
         return self
 
-    def add_image(self, image_url: Union[str, list[str]]) -> Self:
+    def add_image(self, image_url: str | list[str]) -> Self:
         """Add one or more images by URL."""
         urls = image_url if isinstance(image_url, list) else [image_url]
         image_urls_proto = [
@@ -672,7 +672,7 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
             )
         return self
 
-    def add_video(self, url: Union[str, list[str]], *, duration: int = 0) -> Self:
+    def add_video(self, url: str | list[str], *, duration: int = 0) -> Self:
         """Add one or more videos by URL.
 
         :param url: A single video URL or a list of video URLs.
@@ -703,7 +703,7 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
             )
         return self
 
-    def add_source(self, source: Union["Source", list["Source"]]) -> Self:
+    def add_source(self, source: Source | list[Source]) -> Self:
         """Add search result sources.
 
         :param source: A single :class:`Source` or a list of them.
@@ -735,7 +735,7 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         )
         return self
 
-    def add_reels(self, reel: Union["Reel", list["Reel"]]) -> Self:
+    def add_reels(self, reel: Reel | list[Reel]) -> Self:
         """Add reel/short-video item(s).
 
         :param reel: A single :class:`Reel` or a list of them.
@@ -794,7 +794,7 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
 
     def add_product(
         self,
-        product: Union["Product", list["Product"]],
+        product: Product | list[Product],
     ) -> Self:
         """Add product card(s).
 
@@ -827,7 +827,7 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         )
         return self
 
-    def add_post(self, post: Union["Post", list["Post"]]) -> Self:
+    def add_post(self, post: Post | list[Post]) -> Self:
         """Add social-media post card(s).
 
         :param post: A single :class:`Post` or a list of them.
@@ -885,7 +885,7 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         )
         return self
 
-    def add_suggest(self, suggestions: Union[str, list[str]]) -> Self:
+    def add_suggest(self, suggestions: str | list[str]) -> Self:
         """Add follow-up suggestion pill(s)."""
         items = suggestions if isinstance(suggestions, list) else [suggestions]
         pills = [
@@ -964,10 +964,10 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
             botForwardedMessage=FutureProofMessage(message=inner_message),
         )
 
-    def prepare_send(self, client: "NewClient") -> Message:
+    def prepare_send(self, client: NewClient) -> Message:
         """Build the full ``Message`` protobuf (synchronous)."""
         return self._build_message()
 
-    async def prepare_asend(self, client: "NewAClient") -> Message:
+    async def prepare_asend(self, client: NewAClient) -> Message:
         """Build the full ``Message`` protobuf (asynchronous)."""
         return self._build_message()
