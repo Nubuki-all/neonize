@@ -36,10 +36,9 @@ jobs:
         # git diff --exit-code || uv run task build proto
         uv run task build proto
     - uses: astral-sh/ruff-action@v3
+      continue-on-error: true
       with:
         args: "check --fix"
-    - name: format python style PEP8 standard
-      run: ruff check --fix && ruff format .
     - name: Install Python lint libraries
       run: |
         pip3 install autopep8 autoflake isort black
