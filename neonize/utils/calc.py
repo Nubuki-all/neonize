@@ -1,22 +1,21 @@
-import hmac
 import hashlib
+import hmac
 import math
-import os
-from cryptography.hazmat.primitives.kdf.hkdf import HKDF
-from cryptography.hazmat.primitives import hashes
+from io import BytesIO
+
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
-from io import BytesIO
-from typing import Tuple
-
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from PIL import Image
 
 MEDIA_KEY_INFO = {
-    "video":    b"WhatsApp Video Keys",
-    "image":    b"WhatsApp Image Keys",
-    "audio":    b"WhatsApp Audio Keys",
+    "video": b"WhatsApp Video Keys",
+    "image": b"WhatsApp Image Keys",
+    "audio": b"WhatsApp Audio Keys",
     "document": b"WhatsApp Document Keys",
 }
+
 
 def get_media_keys(media_key: bytes, app_info: bytes):
     """Direct port of whatsmeow's getMediaKeys()"""
@@ -28,41 +27,46 @@ def get_media_keys(media_key: bytes, app_info: bytes):
     ).derive(media_key)
 
     return (
-        expanded[0:16],   # iv
+        expanded[0:16],  # iv
         expanded[16:48],  # cipher_key
         expanded[48:80],  # mac_key
-        expanded[80:],    # ref_key (unused in upload)
+        expanded[80:],  # ref_key (unused in upload)
     )
 
-def get_sidecar_from_upload(plaintext: bytes, media_key: bytes, media_type: str = "video") -> bytes:
+
+def get_sidecar_from_upload(
+    plaintext: bytes, media_key: bytes, media_type: str = "video"
+) -> bytes:
     iv, cipher_key, mac_key, _ = get_media_keys(media_key, MEDIA_KEY_INFO[media_type])
 
-    cipher     = AES.new(cipher_key, AES.MODE_CBC, iv)
+    cipher = AES.new(cipher_key, AES.MODE_CBC, iv)
     ciphertext = cipher.encrypt(pad(plaintext, 16))
     mac = hmac.new(mac_key, iv + ciphertext, hashlib.sha256).digest()[:10]
 
     return generate_streaming_sidecar(ciphertext + mac, iv, mac_key)
 
+
 def generate_streaming_sidecar(ciphertext: bytes, iv: bytes, mac_key: bytes) -> bytes:
-    CHUNK_SIZE  = 64 * 1024
-    IV_LENGTH   = 16
+    CHUNK_SIZE = 64 * 1024
+    IV_LENGTH = 16
     HMAC_LENGTH = 10
 
-    full_data  = iv + ciphertext
-    data_size  = len(full_data)
+    full_data = iv + ciphertext
+    data_size = len(full_data)
     num_chunks = math.ceil((data_size - IV_LENGTH) / CHUNK_SIZE)
 
     sidecar = bytearray(num_chunks * HMAC_LENGTH)
 
     for c in range(num_chunks):
         start = c * CHUNK_SIZE
-        end   = min(start + IV_LENGTH + CHUNK_SIZE, data_size)
+        end = min(start + IV_LENGTH + CHUNK_SIZE, data_size)
         chunk = full_data[start:end]
 
         sig = hmac.new(mac_key, chunk, hashlib.sha256).digest()[:HMAC_LENGTH]
-        sidecar[c * HMAC_LENGTH:(c + 1) * HMAC_LENGTH] = sig
+        sidecar[c * HMAC_LENGTH : (c + 1) * HMAC_LENGTH] = sig
 
     return bytes(sidecar)
+
 
 def crop_image(image: Image.Image) -> Image.Image:
     """
@@ -85,9 +89,7 @@ def crop_image(image: Image.Image) -> Image.Image:
     return image
 
 
-def AspectRatioMethod(
-    width: int | float, height: int | float, res: int = 1280
-) -> Tuple[int, int]:
+def AspectRatioMethod(width: float, height: float, res: int = 1280) -> tuple[int, int]:
     """Calculate the aspect ratio of a given width and height with respect to a resolution.
 
     :param width: The width of the given area.

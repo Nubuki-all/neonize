@@ -1,12 +1,11 @@
+import argparse
+import glob
 import os
 import platform
 import shlex
-import argparse
-import subprocess
 import shutil
+import subprocess
 from pathlib import Path
-from typing import Dict
-import glob
 
 cwd = (Path(__file__).parent.parent / "goneonize/").__str__()
 # shell = [
@@ -26,7 +25,7 @@ shell = [
 
 
 def arch_normalizer(arch_: str) -> str:
-    arch: Dict[str, str] = {
+    arch: dict[str, str] = {
         "aarch64": "arm64",
         "x86_64": "amd64",
     }

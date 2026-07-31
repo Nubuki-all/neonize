@@ -11,7 +11,7 @@ protobuf and relay them transparently.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING, Optional
+from typing import TYPE_CHECKING
 
 from ...proto.waE2E.WAWebProtobufsE2E_pb2 import ContextInfo, Message
 
@@ -30,7 +30,7 @@ class CustomInteractiveMessage(ABC):
     """
 
     @abstractmethod
-    def prepare_send(self, client: "NewClient") -> Message:
+    def prepare_send(self, client: NewClient) -> Message:
         """Build the protobuf ``Message`` synchronously.
 
         :param client: The synchronous neonize client instance.
@@ -39,7 +39,7 @@ class CustomInteractiveMessage(ABC):
         ...
 
     @abstractmethod
-    async def prepare_asend(self, client: "NewAClient") -> Message:
+    async def prepare_asend(self, client: NewAClient) -> Message:
         """Build the protobuf ``Message`` asynchronously.
 
         :param client: The asynchronous neonize client instance.
@@ -61,4 +61,4 @@ class InteractiveMessageBuilder(ABC):
         self._subtitle: str = ""
         self._body: str = ""
         self._footer: str = ""
-        self._context_info: Optional[ContextInfo] = None
+        self._context_info: ContextInfo | None = None
