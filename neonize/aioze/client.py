@@ -983,7 +983,9 @@ class NewAClient:
         :return: The constructed Message object for revoking the specified message.
         :rtype: Message
         """
-        return build_revoke(chat, sender, message_id, (await self.get_me()).JID)
+        me = await self.get_me()
+        from_me = sender.User in {me.JID, me.LID}
+        return build_revoke(chat, sender, message_id, from_me)
 
     async def build_sticker_message(
         self,

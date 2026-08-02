@@ -45,7 +45,7 @@ def build_edit(chat: neonize.JID, message_id: str, new_message: Message) -> Mess
 
 
 def build_revoke(
-    chat: neonize.JID, sender: neonize.JID, id: str, myJID: neonize.JID
+    chat: neonize.JID, sender: neonize.JID, id: str, from_me: bool
 ) -> Message:
     """
     This function builds and returns a protocol message of type 'REVOKE' with given parameters.
@@ -56,13 +56,13 @@ def build_revoke(
     :type sender: neonize.JID
     :param id: The ID of the message to be revoked
     :type id: str
-    :param myJID: The ID of the user using the application
-    :type myJID: neonize.JID
+    :param from_me: if the application user's message is to be deleted
+    :type from_me: bool
     :return: A protocol message of type 'REVOKE'
     :rtype: waProto.Message
     """
     msgKey = MessageKey(
-        fromMe=myJID.User == sender.User,
+        fromMe=from_me,
         ID=id,
         remoteJID=Jid2String(chat),
     )

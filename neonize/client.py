@@ -931,7 +931,9 @@ class NewClient:
             result = Message.FromString(protobytes)
             return result
         else:
-            return build_revoke(chat, sender, message_id, self.get_me().JID)
+            me = self.get_me()
+            from_me = sender.User in {me.JID, me.LID}
+            return build_revoke(chat, sender, message_id, from_me)
 
     def build_sticker_message(
         self,
