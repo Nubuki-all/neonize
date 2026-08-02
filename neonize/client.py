@@ -932,7 +932,7 @@ class NewClient:
             return result
         else:
             me = self.get_me()
-            from_me = sender.User in {me.JID, me.LID}
+            from_me = sender.User in {me.JID.User, me.LID.User}
             return build_revoke(chat, sender, message_id, from_me)
 
     def build_sticker_message(

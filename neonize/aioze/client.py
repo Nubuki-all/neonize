@@ -984,7 +984,7 @@ class NewAClient:
         :rtype: Message
         """
         me = await self.get_me()
-        from_me = sender.User in {me.JID, me.LID}
+        from_me = sender.User in {me.JID.User, me.LID.User}
         return build_revoke(chat, sender, message_id, from_me)
 
     async def build_sticker_message(
