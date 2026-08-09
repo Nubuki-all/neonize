@@ -2328,13 +2328,11 @@ class PeerDataOperationRequestResponseMessage(_message.Message):
 
             COVEREDREQUESTIDS_FIELD_NUMBER: _builtins.int
             COLLECTIONVERSION_FIELD_NUMBER: _builtins.int
-            PRIMARYPROCESSSTARTTIMESTAMPMS_FIELD_NUMBER: _builtins.int
-            PRIMARYPROCESSENDTIMESTAMPMS_FIELD_NUMBER: _builtins.int
-            UPLOADEDCONTACTCOUNT_FIELD_NUMBER: _builtins.int
+            PRIMARYDURATIONMS_FIELD_NUMBER: _builtins.int
+            UNIQUECONTACTCOUNT_FIELD_NUMBER: _builtins.int
             collectionVersion: _builtins.int
-            primaryProcessStartTimestampMS: _builtins.int
-            primaryProcessEndTimestampMS: _builtins.int
-            uploadedContactCount: _builtins.int
+            primaryDurationMS: _builtins.int
+            uniqueContactCount: _builtins.int
             @_builtins.property
             def coveredRequestIDs(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]: ...
             def __init__(
@@ -2342,13 +2340,12 @@ class PeerDataOperationRequestResponseMessage(_message.Message):
                 *,
                 coveredRequestIDs: _abc.Iterable[_builtins.str] | None = ...,
                 collectionVersion: _builtins.int | None = ...,
-                primaryProcessStartTimestampMS: _builtins.int | None = ...,
-                primaryProcessEndTimestampMS: _builtins.int | None = ...,
-                uploadedContactCount: _builtins.int | None = ...,
+                primaryDurationMS: _builtins.int | None = ...,
+                uniqueContactCount: _builtins.int | None = ...,
             ) -> None: ...
-            _HasFieldArgType: _TypeAlias = _typing.Literal["collectionVersion", b"collectionVersion", "primaryProcessEndTimestampMS", b"primaryProcessEndTimestampMS", "primaryProcessStartTimestampMS", b"primaryProcessStartTimestampMS", "uploadedContactCount", b"uploadedContactCount"]  # noqa: Y015
+            _HasFieldArgType: _TypeAlias = _typing.Literal["collectionVersion", b"collectionVersion", "primaryDurationMS", b"primaryDurationMS", "uniqueContactCount", b"uniqueContactCount"]  # noqa: Y015
             def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-            _ClearFieldArgType: _TypeAlias = _typing.Literal["collectionVersion", b"collectionVersion", "coveredRequestIDs", b"coveredRequestIDs", "primaryProcessEndTimestampMS", b"primaryProcessEndTimestampMS", "primaryProcessStartTimestampMS", b"primaryProcessStartTimestampMS", "uploadedContactCount", b"uploadedContactCount"]  # noqa: Y015
+            _ClearFieldArgType: _TypeAlias = _typing.Literal["collectionVersion", b"collectionVersion", "coveredRequestIDs", b"coveredRequestIDs", "primaryDurationMS", b"primaryDurationMS", "uniqueContactCount", b"uniqueContactCount"]  # noqa: Y015
             def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
             def WhichOneof(self, oneof_group: _Never) -> None: ...
 
