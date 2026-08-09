@@ -23,6 +23,7 @@ import (
 	"github.com/krypton-byte/neonize/defproto"
 	"github.com/krypton-byte/neonize/utils"
 	_ "github.com/mattn/go-sqlite3"
+	"go.mau.fi/util/jsontime"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/appstate"
 	waBinary "go.mau.fi/whatsmeow/binary"
@@ -1973,8 +1974,16 @@ func SetPassive(id *C.char, passive C.bool) *C.char {
 }
 
 //export SetStatusMessage
-func SetStatusMessage(id *C.char, msg *C.char) *C.char {
-	err := clients[C.GoString(id)].SetStatusMessage(context.Background(), C.GoString(msg))
+func SetStatusMessage(id *C.char, msg, emoji *C.char, seconds C.int) *C.char {
+	txt := C.GoString(msg)
+	status := types.SetStatusInput{
+		Text: &txt,
+		Emoji: &types.SetStatusEmoji{
+			Content: C.GoString(emoji),
+		},
+		Duration: jsontime.S(time.Duration(seconds) * time.Second),
+	}
+	err := clients[C.GoString(id)].SetStatusMessage(context.Background(), status)
 	if err != nil {
 		return C.CString(err.Error())
 	}

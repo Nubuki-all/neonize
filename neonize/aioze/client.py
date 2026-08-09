@@ -2805,15 +2805,19 @@ class NewAClient:
         if err:
             raise SetPassiveError(err)
 
-    async def set_status_message(self, msg: str):
+    async def set_status_message(self, msg: str, emoji: str, seconds: int):
         """
         Sets a status message for a client using the client's UUID.
 
         :param msg: The status message to be set.
         :type msg: str
+        :param emoji: The status emoji to be set.
+        :type emoji: str
+        :param seconds: Duration of the status message to be set.
+        :type seconds: int
         :raises SetStatusMessageError: If there is an error while setting the status message.
         """
-        err = (await self.__client.SetStatusMessage(self.uuid, msg.encode())).decode()
+        err = (await self.__client.SetStatusMessage(self.uuid, msg.encode(), emoji.encode(), seconds)).decode()
         if err:
             raise SetStatusMessageError(err)
 
