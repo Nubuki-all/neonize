@@ -773,6 +773,24 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 			}
 		case *events.Message:
 			if _, ok := subscribers[17]; ok {
+				if encMessage := v.Message.GetSecretEncryptedMessage(); encMessage != nil && encMessage.GetSecretEncType() != waE2E.SecretEncryptedMessage_MESSAGE_EDIT {
+					decrypted, err := client.DecryptSecretEncryptedMessage(ctx, v)
+					if err != nil {
+						clientLog.Errorf("failed to decrypt secret encrypted message edit: %w", err)
+					}
+					if decrypted.GetProtocolMessage().GetType() != waE2E.ProtocolMessage_MESSAGE_EDIT {
+						decrypted = &waE2E.Message{
+							ProtocolMessage: &waE2E.ProtocolMessage{
+								Key:           encMessage.GetTargetMessageKey(),
+								Type:          waE2E.ProtocolMessage_MESSAGE_EDIT.Enum(),
+								EditedMessage: decrypted,
+								TimestampMS:   proto.Int64(v.Info.Timestamp.UnixMilli()),
+							},
+						}
+					}
+					v.Message = decrypted
+					v.IsEdit = true
+				}
 				messageSource := utils.EncodeEventTypesMessage(v)
 				messageEvent := MessageEvent{
 					eventType: 17,
