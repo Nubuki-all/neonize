@@ -774,7 +774,7 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 			}
 		case *events.Message:
 			if _, ok := subscribers[17]; ok {
-				if encMessage := v.Message.GetSecretEncryptedMessage(); encMessage != nil && encMessage.GetSecretEncType() != waE2E.SecretEncryptedMessage_MESSAGE_EDIT {
+				if encMessage := v.Message.GetSecretEncryptedMessage(); encMessage != nil && encMessage.GetSecretEncType() == waE2E.SecretEncryptedMessage_MESSAGE_EDIT {
 					decrypted, err := client.DecryptSecretEncryptedMessage(ctx, v)
 					if err != nil {
 						clientLog.Errorf("failed to decrypt secret encrypted message edit: %w", err)
