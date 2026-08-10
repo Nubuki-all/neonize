@@ -1289,6 +1289,7 @@ class NewClient:
         is_gif: bool = False,
         ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
+        skip_sidecar: bool = False,
     ) -> Message:
         """
         This function is used to build a video message. It uploads a video file, extracts necessary information,
@@ -1311,6 +1312,8 @@ class NewClient:
         :type ghost_mentions: str, optional
         :param mentions_are_lids: whether mentions contained in message or ghost_mentions are lids, defaults to False.
         :type mentions_are_lids: bool, optional
+        :param skip_sidecar: Optional. Whether to skip generation of sidecar, defaults to False
+        :type skip_sidecar: bool, optional
         :rtype: Message
         """
         io = BytesIO(get_bytes_from_name_or_url(file))
@@ -1365,6 +1368,7 @@ class NewClient:
         is_gif: bool = False,
         ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
+        skip_sidecar: bool = False,
         add_msg_secret: bool = False,
     ) -> SendResponse:
         """Sends a video to the specified recipient.
@@ -1387,6 +1391,8 @@ class NewClient:
         :type ghost_mentions: str, optional
         :param mentions_are_lids: whether mentions contained in message or ghost_mentions are lids, defaults to False.
         :type mentions_are_lids: bool, optional
+        :param skip_sidecar: Optional. Whether to skip generation of sidecar, defaults to False
+        :type skip_sidecar: bool, optional
         :param add_msg_secret: Optional. Whether to generate 32 random bytes for messageSecret inside MessageContextInfo before sending, defaults to False
         :type add_msg_secret: bool, optional
         :return: A function for handling the result of the video sending process.
@@ -1403,6 +1409,7 @@ class NewClient:
                 is_gif,
                 ghost_mentions,
                 mentions_are_lids,
+                skip_sidecar,
             ),
             add_msg_secret=add_msg_secret,
         )
