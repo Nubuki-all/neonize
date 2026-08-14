@@ -1373,6 +1373,7 @@ class NewAClient:
         if is_gif:
             async with AFFmpeg(file) as ffmpeg:
                 buff = file = await ffmpeg.gif_to_mp4()
+        is_avc = False
         async with AFFmpeg(file) as ffmpeg:
             duration = int((await ffmpeg.extract_info()).format.duration)
             streams = (await ffmpeg.extract_info()).streams
@@ -1382,6 +1383,12 @@ class NewAClient:
                 thumbnail = await get_bytes_from_name_or_url_async(
                     "https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png"
                 )
+            try:
+                is_avc = any(s.is_avc for s in streams)
+            except Exception:
+                pass
+            if is_avc:
+                buff = await ffmpeg.to_mp4_copy()
         if spoiler:
             img = Image.open(BytesIO(thumbnail))
             if img.mode != "RGB":
@@ -1390,11 +1397,6 @@ class NewAClient:
             thumbnail = BytesIO()
             img.save(thumbnail, format="jpeg")
             thumbnail = thumbnail.getvalue()
-        is_avc = False
-        try:
-            is_avc = any(s.is_avc for s in streams)
-        except Exception:
-            pass
         upload = await self.upload(buff)
         message = Message(
             videoMessage=VideoMessage(
