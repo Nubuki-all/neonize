@@ -1035,6 +1035,11 @@ class NewAClient:
             img = Image.open(io_save)
             if len(ImageSequence.all_frames(img)) < 2:
                 is_image = True
+        if mime == "image/gif":
+            io_save = BytesIO(sticker)
+            img = Image.open(io_save)
+            if len(ImageSequence.all_frames(img)) < 2:
+                is_image = True
         elif mime == "video/webm":
             is_webm = True
         elif (mime := mime.split("/"))[0] == "image":
