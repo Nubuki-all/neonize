@@ -67,6 +67,8 @@ async def aio_convert_to_sticker(
     enforce_not_broken=False,
     animated_gif=False,
     is_webm=False,
+    quality=75,
+    compression_level=4,
 ):
     async with AFFmpeg(file) as ffmpeg:
         sticker = await ffmpeg.cv_to_webp(
@@ -74,6 +76,8 @@ async def aio_convert_to_sticker(
             animated_gif=animated_gif,
             max_sticker_size=MAX_STICKER_SIZE,
             is_webm=is_webm,
+            quality=quality,
+            compression_level=compression_level,
         )
     if not WEBPMUX_IS_AVAILABLE:
         return sticker, False
