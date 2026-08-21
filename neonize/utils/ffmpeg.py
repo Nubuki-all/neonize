@@ -295,9 +295,9 @@ class AFFmpeg:
                     "-b:v",
                     bitrate,
                     "-q:v",
-                    quality,
+                    str(quality),
                     "-compression_level",
-                    compression_level,
+                    str(compression_level),
                 ]
             )
         ffmpeg_command.append(temp)
