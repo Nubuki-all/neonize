@@ -1269,11 +1269,13 @@ class NewAClient:
         publisher: str = "",
         crop: bool = False,
         animated_gif: bool = False,
+        quality: int = 75,
+        compression_level: int = 4,
         passthrough: bool = False,
     ) -> list[Message]:
         funcs = [
             aio_convert_to_webp(
-                file, packname, publisher, crop, passthrough, animated_gif
+                file, packname, publisher, crop, passthrough, animated_gif, quality, compression_level,
             )
             for file in files
         ]
@@ -1312,6 +1314,8 @@ class NewAClient:
         publisher: str = "",
         crop: bool = False,
         animated_gif: bool = False,
+        quality: int = 75,
+        compression_level: int = 4,
         passthrough: bool = False,
         add_msg_secret: bool = False,
     ) -> list[SendResponse]:
@@ -1330,6 +1334,12 @@ class NewAClient:
         :type publisher: str, optional
         :param crop: Whether to crop-center the image, defaults to False
         :type crop: bool, optional
+        :param animated_gif: Ensure transparent media are properly processed, defaults to False
+        :type animated_gif: bool, optional
+        :param quality: Directly set sticker quality, ranges from 0-100, defaults to 75
+        :type quality: int, optional
+        :param compression_level: Directly set sticker processor compression_level, ranges from 1-6, defaults to 4
+        :type compression_level: int, optional
         :param add_msg_secret: Whether to generate 32 random bytes for messageSecret inside MessageContextInfo before sending, defaults to False
         :type add_msg_secret: bool, optional
         :return: A list of response(s) from the send message function.
@@ -1337,7 +1347,7 @@ class NewAClient:
         """
         responses = []
         msgs = await self.build_stickerpack_message(
-            files, quoted, packname, publisher, crop, animated_gif, passthrough
+            files, quoted, packname, publisher, crop, animated_gif, quality, compression_level, passthrough
         )
         for msg in msgs:
             response = await self.send_message(
