@@ -1061,7 +1061,14 @@ class NewAClient:
         elif not passthrough:
             animated = True
             sticker, saved_exif = await aio_convert_to_sticker(
-                sticker, name, packname, enforce_not_broken, animated_gif, is_webm, quality, compression_level,
+                sticker,
+                name,
+                packname,
+                enforce_not_broken,
+                animated_gif,
+                is_webm,
+                quality,
+                compression_level,
             )
             if saved_exif:
                 io_save = BytesIO(sticker)
@@ -1275,7 +1282,14 @@ class NewAClient:
     ) -> list[Message]:
         funcs = [
             aio_convert_to_webp(
-                file, packname, publisher, crop, passthrough, animated_gif, quality, compression_level,
+                file,
+                packname,
+                publisher,
+                crop,
+                passthrough,
+                animated_gif,
+                quality,
+                compression_level,
             )
             for file in files
         ]
@@ -1347,7 +1361,15 @@ class NewAClient:
         """
         responses = []
         msgs = await self.build_stickerpack_message(
-            files, quoted, packname, publisher, crop, animated_gif, quality, compression_level, passthrough
+            files,
+            quoted,
+            packname,
+            publisher,
+            crop,
+            animated_gif,
+            quality,
+            compression_level,
+            passthrough,
         )
         for msg in msgs:
             response = await self.send_message(
@@ -2857,7 +2879,11 @@ class NewAClient:
         :type seconds: int
         :raises SetStatusMessageError: If there is an error while setting the status message.
         """
-        err = (await self.__client.SetStatusMessage(self.uuid, msg.encode(), emoji.encode(), seconds)).decode()
+        err = (
+            await self.__client.SetStatusMessage(
+                self.uuid, msg.encode(), emoji.encode(), seconds
+            )
+        ).decode()
         if err:
             raise SetStatusMessageError(err)
 
