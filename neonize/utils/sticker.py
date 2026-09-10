@@ -173,7 +173,14 @@ astick_sem = asyncio.Semaphore(20)
 
 
 async def aio_convert_to_webp(
-    sticker, name, packname, crop=False, passthrough=True, transparent=False, quality=75, compression_level=4,
+    sticker,
+    name,
+    packname,
+    crop=False,
+    passthrough=True,
+    transparent=False,
+    quality=75,
+    compression_level=4,
 ):
     sticker = await get_bytes_from_name_or_url_async(sticker)
     animated = is_webm = is_image = saved_exif = stk = False
