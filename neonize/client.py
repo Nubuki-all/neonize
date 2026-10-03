@@ -2689,7 +2689,9 @@ class NewClient:
         :type seconds: int
         :raises SetStatusMessageError: If there is an error while setting the status message.
         """
-        err = self.__client.SetStatusMessage(self.uuid, msg.encode(), emoji.encode(), seconds).decode()
+        err = self.__client.SetStatusMessage(
+            self.uuid, msg.encode(), emoji.encode(), seconds
+        ).decode()
         if err:
             raise SetStatusMessageError(err)
 
