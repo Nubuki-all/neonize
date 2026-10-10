@@ -3,8 +3,10 @@
 isort:skip_file
 """
 
+from collections import abc as _abc
 from google.protobuf import descriptor as _descriptor
 from google.protobuf import message as _message
+from google.protobuf.internal import containers as _containers
 from google.protobuf.internal import enum_type_wrapper as _enum_type_wrapper
 import builtins as _builtins
 import sys
@@ -52,6 +54,37 @@ class DeviceCapabilities(_message.Message):
     FULL: DeviceCapabilities.ChatLockSupportLevel.ValueType  # 2
 
     @_typing.final
+    class ReverseHistorySync(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
+
+        class _Product:
+            ValueType = _typing.NewType("ValueType", _builtins.int)
+            V: _TypeAlias = ValueType  # noqa: Y015
+
+        class _ProductEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[DeviceCapabilities.ReverseHistorySync._Product.ValueType], _builtins.type):
+            DESCRIPTOR: _descriptor.EnumDescriptor
+            PRODUCT_UNSPECIFIED: DeviceCapabilities.ReverseHistorySync._Product.ValueType  # 0
+            HATCH: DeviceCapabilities.ReverseHistorySync._Product.ValueType  # 1
+
+        class Product(_Product, metaclass=_ProductEnumTypeWrapper): ...
+        PRODUCT_UNSPECIFIED: DeviceCapabilities.ReverseHistorySync.Product.ValueType  # 0
+        HATCH: DeviceCapabilities.ReverseHistorySync.Product.ValueType  # 1
+
+        ENABLEDPRODUCTS_FIELD_NUMBER: _builtins.int
+        @_builtins.property
+        def enabledProducts(self) -> _containers.RepeatedScalarFieldContainer[Global___DeviceCapabilities.ReverseHistorySync.Product.ValueType]: ...
+        def __init__(
+            self,
+            *,
+            enabledProducts: _abc.Iterable[Global___DeviceCapabilities.ReverseHistorySync.Product.ValueType] | None = ...,
+        ) -> None: ...
+        _HasFieldArgType: _TypeAlias = _Never  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["enabledProducts", b"enabledProducts"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+    @_typing.final
     class AiThread(_message.Message):
         DESCRIPTOR: _descriptor.Descriptor
 
@@ -84,19 +117,79 @@ class DeviceCapabilities(_message.Message):
         def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
+    class NewsletterChatsMigration(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
+
+        EFFECTIVEMIGRATED_FIELD_NUMBER: _builtins.int
+        COUNTDOWNENDSAT_FIELD_NUMBER: _builtins.int
+        ROLLEDBACK_FIELD_NUMBER: _builtins.int
+        effectiveMigrated: _builtins.bool
+        countdownEndsAt: _builtins.int
+        rolledBack: _builtins.bool
+        def __init__(
+            self,
+            *,
+            effectiveMigrated: _builtins.bool | None = ...,
+            countdownEndsAt: _builtins.int | None = ...,
+            rolledBack: _builtins.bool | None = ...,
+        ) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["countdownEndsAt", b"countdownEndsAt", "effectiveMigrated", b"effectiveMigrated", "rolledBack", b"rolledBack"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["countdownEndsAt", b"countdownEndsAt", "effectiveMigrated", b"effectiveMigrated", "rolledBack", b"rolledBack"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+    @_typing.final
+    class ContactRefresh(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
+
+        REFRESHSUPPORTED_FIELD_NUMBER: _builtins.int
+        refreshSupported: _builtins.bool
+        def __init__(
+            self,
+            *,
+            refreshSupported: _builtins.bool | None = ...,
+        ) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["refreshSupported", b"refreshSupported"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["refreshSupported", b"refreshSupported"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+    @_typing.final
+    class BizAiSettingsSync(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
+
+        HANDOFFREMOVALTIMINGENABLED_FIELD_NUMBER: _builtins.int
+        handoffRemovalTimingEnabled: _builtins.bool
+        def __init__(
+            self,
+            *,
+            handoffRemovalTimingEnabled: _builtins.bool | None = ...,
+        ) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["handoffRemovalTimingEnabled", b"handoffRemovalTimingEnabled"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["handoffRemovalTimingEnabled", b"handoffRemovalTimingEnabled"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+    @_typing.final
     class AiFbidMigration(_message.Message):
         DESCRIPTOR: _descriptor.Descriptor
 
         CHATDBMIGRATIONTIMESTAMP_FIELD_NUMBER: _builtins.int
+        SUPPORTVERSION_FIELD_NUMBER: _builtins.int
         chatDbMigrationTimestamp: _builtins.int
+        supportVersion: _builtins.int
         def __init__(
             self,
             *,
             chatDbMigrationTimestamp: _builtins.int | None = ...,
+            supportVersion: _builtins.int | None = ...,
         ) -> None: ...
-        _HasFieldArgType: _TypeAlias = _typing.Literal["chatDbMigrationTimestamp", b"chatDbMigrationTimestamp"]  # noqa: Y015
+        _HasFieldArgType: _TypeAlias = _typing.Literal["chatDbMigrationTimestamp", b"chatDbMigrationTimestamp", "supportVersion", b"supportVersion"]  # noqa: Y015
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-        _ClearFieldArgType: _TypeAlias = _typing.Literal["chatDbMigrationTimestamp", b"chatDbMigrationTimestamp"]  # noqa: Y015
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["chatDbMigrationTimestamp", b"chatDbMigrationTimestamp", "supportVersion", b"supportVersion"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
         def WhichOneof(self, oneof_group: _Never) -> None: ...
 
@@ -126,11 +219,13 @@ class DeviceCapabilities(_message.Message):
         CAMPAIGNSYNCENABLED_FIELD_NUMBER: _builtins.int
         INSIGHTSSYNCENABLED_FIELD_NUMBER: _builtins.int
         RECIPIENTLIMIT_FIELD_NUMBER: _builtins.int
+        PROCOMPANIONSUPPORTENABLED_FIELD_NUMBER: _builtins.int
         importListEnabled: _builtins.bool
         companionSupportEnabled: _builtins.bool
         campaignSyncEnabled: _builtins.bool
         insightsSyncEnabled: _builtins.bool
         recipientLimit: _builtins.int
+        proCompanionSupportEnabled: _builtins.bool
         def __init__(
             self,
             *,
@@ -139,10 +234,11 @@ class DeviceCapabilities(_message.Message):
             campaignSyncEnabled: _builtins.bool | None = ...,
             insightsSyncEnabled: _builtins.bool | None = ...,
             recipientLimit: _builtins.int | None = ...,
+            proCompanionSupportEnabled: _builtins.bool | None = ...,
         ) -> None: ...
-        _HasFieldArgType: _TypeAlias = _typing.Literal["campaignSyncEnabled", b"campaignSyncEnabled", "companionSupportEnabled", b"companionSupportEnabled", "importListEnabled", b"importListEnabled", "insightsSyncEnabled", b"insightsSyncEnabled", "recipientLimit", b"recipientLimit"]  # noqa: Y015
+        _HasFieldArgType: _TypeAlias = _typing.Literal["campaignSyncEnabled", b"campaignSyncEnabled", "companionSupportEnabled", b"companionSupportEnabled", "importListEnabled", b"importListEnabled", "insightsSyncEnabled", b"insightsSyncEnabled", "proCompanionSupportEnabled", b"proCompanionSupportEnabled", "recipientLimit", b"recipientLimit"]  # noqa: Y015
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-        _ClearFieldArgType: _TypeAlias = _typing.Literal["campaignSyncEnabled", b"campaignSyncEnabled", "companionSupportEnabled", b"companionSupportEnabled", "importListEnabled", b"importListEnabled", "insightsSyncEnabled", b"insightsSyncEnabled", "recipientLimit", b"recipientLimit"]  # noqa: Y015
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["campaignSyncEnabled", b"campaignSyncEnabled", "companionSupportEnabled", b"companionSupportEnabled", "importListEnabled", b"importListEnabled", "insightsSyncEnabled", b"insightsSyncEnabled", "proCompanionSupportEnabled", b"proCompanionSupportEnabled", "recipientLimit", b"recipientLimit"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
         def WhichOneof(self, oneof_group: _Never) -> None: ...
 
@@ -170,6 +266,10 @@ class DeviceCapabilities(_message.Message):
     MEMBERNAMETAGPRIMARYSUPPORT_FIELD_NUMBER: _builtins.int
     AITHREAD_FIELD_NUMBER: _builtins.int
     AIFBIDMIGRATION_FIELD_NUMBER: _builtins.int
+    BIZAISETTINGSSYNC_FIELD_NUMBER: _builtins.int
+    CONTACTREFRESH_FIELD_NUMBER: _builtins.int
+    REVERSEHISTORYSYNC_FIELD_NUMBER: _builtins.int
+    NEWSLETTERCHATSMIGRATION_FIELD_NUMBER: _builtins.int
     chatLockSupportLevel: Global___DeviceCapabilities.ChatLockSupportLevel.ValueType
     memberNameTagPrimarySupport: Global___DeviceCapabilities.MemberNameTagPrimarySupport.ValueType
     @_builtins.property
@@ -182,6 +282,14 @@ class DeviceCapabilities(_message.Message):
     def aiThread(self) -> Global___DeviceCapabilities.AiThread: ...
     @_builtins.property
     def aiFbidMigration(self) -> Global___DeviceCapabilities.AiFbidMigration: ...
+    @_builtins.property
+    def bizAiSettingsSync(self) -> Global___DeviceCapabilities.BizAiSettingsSync: ...
+    @_builtins.property
+    def contactRefresh(self) -> Global___DeviceCapabilities.ContactRefresh: ...
+    @_builtins.property
+    def reverseHistorySync(self) -> Global___DeviceCapabilities.ReverseHistorySync: ...
+    @_builtins.property
+    def newsletterChatsMigration(self) -> Global___DeviceCapabilities.NewsletterChatsMigration: ...
     def __init__(
         self,
         *,
@@ -192,10 +300,14 @@ class DeviceCapabilities(_message.Message):
         memberNameTagPrimarySupport: Global___DeviceCapabilities.MemberNameTagPrimarySupport.ValueType | None = ...,
         aiThread: Global___DeviceCapabilities.AiThread | None = ...,
         aiFbidMigration: Global___DeviceCapabilities.AiFbidMigration | None = ...,
+        bizAiSettingsSync: Global___DeviceCapabilities.BizAiSettingsSync | None = ...,
+        contactRefresh: Global___DeviceCapabilities.ContactRefresh | None = ...,
+        reverseHistorySync: Global___DeviceCapabilities.ReverseHistorySync | None = ...,
+        newsletterChatsMigration: Global___DeviceCapabilities.NewsletterChatsMigration | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["aiFbidMigration", b"aiFbidMigration", "aiThread", b"aiThread", "businessBroadcast", b"businessBroadcast", "chatLockSupportLevel", b"chatLockSupportLevel", "lidMigration", b"lidMigration", "memberNameTagPrimarySupport", b"memberNameTagPrimarySupport", "userHasAvatar", b"userHasAvatar"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["aiFbidMigration", b"aiFbidMigration", "aiThread", b"aiThread", "bizAiSettingsSync", b"bizAiSettingsSync", "businessBroadcast", b"businessBroadcast", "chatLockSupportLevel", b"chatLockSupportLevel", "contactRefresh", b"contactRefresh", "lidMigration", b"lidMigration", "memberNameTagPrimarySupport", b"memberNameTagPrimarySupport", "newsletterChatsMigration", b"newsletterChatsMigration", "reverseHistorySync", b"reverseHistorySync", "userHasAvatar", b"userHasAvatar"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["aiFbidMigration", b"aiFbidMigration", "aiThread", b"aiThread", "businessBroadcast", b"businessBroadcast", "chatLockSupportLevel", b"chatLockSupportLevel", "lidMigration", b"lidMigration", "memberNameTagPrimarySupport", b"memberNameTagPrimarySupport", "userHasAvatar", b"userHasAvatar"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["aiFbidMigration", b"aiFbidMigration", "aiThread", b"aiThread", "bizAiSettingsSync", b"bizAiSettingsSync", "businessBroadcast", b"businessBroadcast", "chatLockSupportLevel", b"chatLockSupportLevel", "contactRefresh", b"contactRefresh", "lidMigration", b"lidMigration", "memberNameTagPrimarySupport", b"memberNameTagPrimarySupport", "newsletterChatsMigration", b"newsletterChatsMigration", "reverseHistorySync", b"reverseHistorySync", "userHasAvatar", b"userHasAvatar"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
