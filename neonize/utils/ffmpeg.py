@@ -267,7 +267,7 @@ class AFFmpeg:
                     "-ss",
                     "00:00:00.0",
                     "-t",
-                    "00:00:07.0",
+                    "00:00:06.0",
                 ]
             )
         ffmpeg_command.extend(
