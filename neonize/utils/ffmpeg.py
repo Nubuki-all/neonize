@@ -378,15 +378,24 @@ class AFFmpeg:
         await self.call(
             [
                 "ffmpeg",
-                "-fflags", "+genpts+igndts",
-                "-err_detect", "ignore_err",
-                "-max_error_rate", "1.0",
-                "-i", self.filepath,
-                "-map", "0:v",
-                "-map", "0:a?",
-                "-c:v", "libx264",
-                "-c:a", "copy",
-                "-movflags", "+faststart",
+                "-fflags",
+                "+genpts+igndts",
+                "-err_detect",
+                "ignore_err",
+                "-max_error_rate",
+                "1.0",
+                "-i",
+                self.filepath,
+                "-map",
+                "0:v",
+                "-map",
+                "0:a?",
+                "-c:v",
+                "libx264",
+                "-c:a",
+                "copy",
+                "-movflags",
+                "+faststart",
                 temp,
                 "-y",
             ]
@@ -399,22 +408,30 @@ class AFFmpeg:
                 os.remove(temp)
         return buf
 
-
     async def to_mp4_copy(self) -> bytes:
         """Remuxes video to MP4 container using stream copy and faststart (no re-encoding)."""
         temp = os.path.join(tempfile.gettempdir(), f"{uuid.uuid4()}.mp4")
         await self.call(
             [
                 "ffmpeg",
-                "-fflags", "+genpts+igndts",
-                "-err_detect", "ignore_err",
-                "-max_error_rate", "1.0",
-                "-i", self.filepath,
-                "-map", "0:v",
-                "-map", "0:a?",
-                "-c:v", "copy",
-                "-c:a", "copy",
-                "-movflags", "+faststart",
+                "-fflags",
+                "+genpts+igndts",
+                "-err_detect",
+                "ignore_err",
+                "-max_error_rate",
+                "1.0",
+                "-i",
+                self.filepath,
+                "-map",
+                "0:v",
+                "-map",
+                "0:a?",
+                "-c:v",
+                "copy",
+                "-c:a",
+                "copy",
+                "-movflags",
+                "+faststart",
                 temp,
                 "-y",
             ]
