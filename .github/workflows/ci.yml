@@ -29,6 +29,8 @@ jobs:
         uses: astral-sh/ruff-action@v3
         with:
           args: "format --check"
+      - name: neonize and goneonize versions match
+        run: python3 tools/check_versions.py
 
   go:
     runs-on: ubuntu-latest
