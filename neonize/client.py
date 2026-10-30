@@ -195,7 +195,7 @@ from .utils.enum import (
 from .utils.ffmpeg import FFmpeg
 from .utils.iofile import get_bytes_from_name_or_url, prepare_zip_file_content
 from .utils.jid import Jid2String, JIDToNonAD, build_jid, jid_is_lid
-from .utils.sticker import convert_to_sticker, convert_to_webp
+from .utils.sticker import add_exif_to_sticker, convert_to_sticker, convert_to_webp
 
 _log_ = logging.getLogger(__name__)
 
@@ -1098,6 +1098,8 @@ class NewClient:
         crop: bool = False,
         enforce_not_broken: bool = False,
         animated_gif: bool = False,
+        quality: int = 75,
+        compression_level: int = 4,
         passthrough: bool = False,
     ) -> Message:
         """
@@ -1119,6 +1121,10 @@ class NewClient:
         :type enforce_not_broken: bool, optional
         :param animated_gif: Ensure transparent media are properly processed, defaults to False
         :type animated_gif: bool, optional
+        :param quality: Directly set sticker quality, ranges from 0-100, defaults to 75
+        :type quality: int, optional
+        :param compression_level: Directly set sticker processor compression_level, ranges from 1-6, defaults to 4
+        :type compression_level: int, optional
         :param passthrough: Don't process sticker, send as is, defaults to False.
         :type passthrough: bool, optional
         :return: The constructed sticker message
@@ -1133,6 +1139,13 @@ class NewClient:
             img = Image.open(io_save)
             if len(ImageSequence.all_frames(img)) < 2:
                 is_image = True
+        elif mime == "image/gif":
+            io_save = BytesIO(sticker)
+            img = Image.open(io_save)
+            if len(ImageSequence.all_frames(img)) < 2:
+                is_image = True
+            else:
+                animated_gif = True
         elif mime == "video/webm":
             is_webm = True
         elif (mime := mime.split("/"))[0] == "image":
@@ -1146,7 +1159,14 @@ class NewClient:
         elif not passthrough:
             animated = True
             sticker, saved_exif = convert_to_sticker(
-                sticker, name, packname, enforce_not_broken, animated_gif, is_webm
+                sticker,
+                name,
+                packname,
+                enforce_not_broken,
+                animated_gif,
+                is_webm,
+                quality,
+                compression_level,
             )
             if saved_exif:
                 io_save = BytesIO(sticker)
@@ -1156,6 +1176,10 @@ class NewClient:
         else:
             if not is_webp:
                 raise ConvertStickerError("File is not a webp, which is required for passthrough.")
+            if name or packname:
+                b = add_exif_to_sticker(sticker, name, packname)
+                io_save = BytesIO(b) if b else io_save
+
         if not (passthrough or saved_exif):
             stk.save(
                 io_save,
@@ -1191,6 +1215,8 @@ class NewClient:
         crop: bool = False,
         enforce_not_broken: bool = False,
         animated_gif: bool = False,
+        quality: int = 75,
+        compression_level: int = 4,
         passthrough: bool = False,
         add_msg_secret: bool = False,
     ) -> SendResponse:
@@ -1213,6 +1239,10 @@ class NewClient:
         :type enforce_not_broken: bool, optional
         :param animated_gif: Ensure transparent media are properly processed, defaults to False
         :type animated_gif: bool, optional
+        :param quality: Directly set sticker quality, ranges from 0-100, defaults to 75
+        :type quality: int, optional
+        :param compression_level: Directly set sticker processor compression_level, ranges from 1-6, defaults to 4
+        :type compression_level: int, optional
         :param passthrough: Don't process sticker, send as is, defaults to False.
         :type passthrough: bool, optional
         :param add_msg_secret: Whether to generate 32 random bytes for messageSecret inside MessageContextInfo before sending, defaults to False
@@ -1230,6 +1260,8 @@ class NewClient:
                 crop,
                 enforce_not_broken,
                 animated_gif,
+                quality,
+                compression_level,
                 passthrough,
             ),
             add_msg_secret=add_msg_secret,
@@ -1335,6 +1367,8 @@ class NewClient:
         publisher: str = "",
         crop: bool = False,
         animated_gif: bool = False,
+        quality: int = 75,
+        compression_level: int = 4,
         passthrough: bool = False,
     ) -> list[Message]:
         """Builds a list of sticker-pack messages from image or video files.
@@ -1368,6 +1402,8 @@ class NewClient:
             crop=crop,
             passthrough=passthrough,
             transparent=animated_gif,
+            quality=quality,
+            compression_level=compression_level,
         )
 
         def ensure_non_broken_packs(stickers):
@@ -1407,6 +1443,8 @@ class NewClient:
         publisher: str = "",
         crop: bool = False,
         animated_gif: bool = False,
+        quality: int = 75,
+        compression_level: int = 4,
         passthrough: bool = False,
         add_msg_secret: bool = False,
     ) -> list[SendResponse]:
@@ -1425,6 +1463,12 @@ class NewClient:
         :type publisher: str, optional
         :param crop: Whether to crop-center the image, defaults to False
         :type crop: bool, optional
+        :param animated_gif: Ensure transparent media are properly processed, defaults to False
+        :type animated_gif: bool, optional
+        :param quality: Directly set sticker quality, ranges from 0-100, defaults to 75
+        :type quality: int, optional
+        :param compression_level: Directly set sticker processor compression_level, ranges from 1-6, defaults to 4
+        :type compression_level: int, optional
         :param add_msg_secret: Whether to generate 32 random bytes for messageSecret inside MessageContextInfo before sending, defaults to False
         :type add_msg_secret: bool, optional
         :return: A list of response(s) from the send message function.
@@ -1432,7 +1476,15 @@ class NewClient:
         """
         responses = []
         msgs = self.build_stickerpack_message(
-            files, quoted, packname, publisher, crop, animated_gif, passthrough
+            files,
+            quoted,
+            packname,
+            publisher,
+            crop,
+            animated_gif,
+            quality,
+            compression_level,
+            passthrough,
         )
         for msg in msgs:
             response = self.send_message(
