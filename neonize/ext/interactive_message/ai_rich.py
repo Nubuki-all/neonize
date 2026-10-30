@@ -120,25 +120,13 @@ def _extract_inline_entities(
                             "latex_expression": txt,
                             "latex_image": {
                                 "url": url,
-                                "width": (
-                                    int(parts[1])
-                                    if len(parts) > 1 and parts[1]
-                                    else 100
-                                ),
-                                "height": (
-                                    int(parts[2])
-                                    if len(parts) > 2 and parts[2]
-                                    else 100
-                                ),
+                                "width": (int(parts[1]) if len(parts) > 1 and parts[1] else 100),
+                                "height": (int(parts[2]) if len(parts) > 2 and parts[2] else 100),
                             },
                             "font_height": (
-                                float(parts[3])
-                                if len(parts) > 3 and parts[3]
-                                else 83.333
+                                float(parts[3]) if len(parts) > 3 and parts[3] else 83.333
                             ),
-                            "padding": (
-                                float(parts[4]) if len(parts) > 4 and parts[4] else 15.0
-                            ),
+                            "padding": (float(parts[4]) if len(parts) > 4 and parts[4] else 15.0),
                             "__typename": "GenAILatexItem",
                         },
                     )
@@ -389,21 +377,14 @@ def _build_table_metadata(table: list[list[str]]):
     if not table:
         raise ValueError("Table must have at least one row (header).")
     header, *data_rows = table
-    max_len = (
-        max(len(header), *(len(r) for r in data_rows)) if data_rows else len(header)
-    )
+    max_len = max(len(header), *(len(r) for r in data_rows)) if data_rows else len(header)
 
-    def normalize(r):
+    def normalize(r: list[str]) -> list[str]:
         return r + [""] * (max_len - len(r))
 
     rows_proto = [
-        AIRichResponseTableMetadata.AIRichResponseTableRow(
-            items=normalize(header), isHeading=True
-        )
-    ] + [
-        AIRichResponseTableMetadata.AIRichResponseTableRow(items=normalize(r))
-        for r in data_rows
-    ]
+        AIRichResponseTableMetadata.AIRichResponseTableRow(items=normalize(header), isHeading=True)
+    ] + [AIRichResponseTableMetadata.AIRichResponseTableRow(items=normalize(r)) for r in data_rows]
 
     unified_rows = [{"is_header": True, "cells": normalize(header)}] + [
         {"is_header": False, "cells": normalize(r)} for r in data_rows
@@ -597,6 +578,34 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         if inline_entities:
             primitive["inline_entities"] = inline_entities
         self._sections.append(_new_layout("Single", primitive))
+        return self
+
+    def add_html(
+        self,
+        html: str,
+        *,
+        fallback_text: str = "HTML interaktif",
+        trusted_sources: list[str] | None = None,
+    ) -> Self:
+        """Add an experimental HTML rich-response primitive."""
+        if not html.strip():
+            raise ValueError("html must not be empty")
+        self._submessages.append(
+            AIRichResponseSubMessage(
+                messageType=AI_RICH_RESPONSE_TEXT,
+                messageText=fallback_text,
+            )
+        )
+        self._sections.append(
+            _new_layout(
+                "Single",
+                {
+                    "__typename": "GenAIaeacdsnwHtmlPrimitive",
+                    "payload": html,
+                    "trusted_sources": trusted_sources or [],
+                },
+            )
+        )
         return self
 
     def add_code(self, language: str, code: str) -> Self:
@@ -822,9 +831,7 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         ]
         is_multi = isinstance(product, list)
         layout = "HScroll" if is_multi else "Single"
-        self._sections.append(
-            _new_layout(layout, products if is_multi else products[0])
-        )
+        self._sections.append(_new_layout(layout, products if is_multi else products[0]))
         return self
 
     def add_post(self, post: Post | list[Post]) -> Self:
@@ -951,9 +958,7 @@ class AIRichMessage(CustomInteractiveMessage, InteractiveMessageBuilder):
         inner_message = Message(richResponseMessage=rich_msg)
         bot_metadata = BotMetadata(
             messageDisclaimerText=self._title,
-            richResponseSourcesMetadata=BotSourcesMetadata(
-                sources=self._rich_response_sources
-            ),
+            richResponseSourcesMetadata=BotSourcesMetadata(sources=self._rich_response_sources),
         )
 
         return Message(

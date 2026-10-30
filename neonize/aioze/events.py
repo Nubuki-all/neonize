@@ -44,6 +44,7 @@ from ..proto.Neonize_pb2 import PairStatus as PairStatusEv
 from ..proto.Neonize_pb2 import Picture as PictureEv
 from ..proto.Neonize_pb2 import Presence as PresenceEv
 from ..proto.Neonize_pb2 import Receipt as ReceiptEv
+from ..proto.Neonize_pb2 import RotateADVSecret as RotateADVSecretEv
 from ..proto.Neonize_pb2 import StreamError as StreamErrorEv
 from ..proto.Neonize_pb2 import StreamReplaced as StreamReplacedEv
 from ..proto.Neonize_pb2 import TemporaryBan as TemporaryBanEv
@@ -101,6 +102,7 @@ __all__ = [
     "PrivacySettingsEv",
     "QREv",
     "ReceiptEv",
+    "RotateADVSecretEv",
     "StreamErrorEv",
     "StreamReplacedEv",
     "TemporaryBanEv",
@@ -119,9 +121,7 @@ class Event:
         """
         self.client = client
         self.blocking_func = self.paircode(self.default_paircode_cb)
-        self.list_func: dict[
-            int, Callable[[NewAClient, Message], Coroutine[None, None, None]]
-        ] = {}
+        self.list_func: dict[int, Callable[[NewAClient, Message], Coroutine[None, None, None]]] = {}
         self._qr = self.__onqr
 
     def execute(self, uuid: int, binary: int, size: int, code: int):
@@ -147,9 +147,7 @@ class Event:
             self.client.connected = True
         handler = self.list_func.get(code)
         if handler is not None:
-            asyncio.run_coroutine_threadsafe(
-                handler(self.client, message), event_global_loop
-            )
+            asyncio.run_coroutine_threadsafe(handler(self.client, message), event_global_loop)
 
     async def __onqr(self, _: NewAClient, data_qr: bytes):
         """
@@ -196,9 +194,7 @@ class Event:
         return paircodecb
 
     @staticmethod
-    async def default_paircode_cb(
-        client: NewAClient, data: str, connected: bool = True
-    ):
+    async def default_paircode_cb(client: NewAClient, data: str, connected: bool = True):
         """
         A default callback function that handles the pair code event.
         This function is called when the pair code event occurs, and it blocks the execution until the event is processed.

@@ -34,9 +34,9 @@ message UploadResponse {
     required string url = 1;
     required string DirectPath = 2;
     required string Handle = 3;
-    required bytes MediaKey = 4;
-    required bytes FileEncSHA256 = 5;
-    required bytes FileSHA256 = 6;
+    optional bytes MediaKey = 4;
+    optional bytes FileEncSHA256 = 5;
+    optional bytes FileSHA256 = 6;
     required uint32 FileLength = 7;
 }
 
@@ -192,6 +192,8 @@ message SendResponse {
     required int64 ServerID = 3;
     required MessageDebugTimings DebugTimings = 4;
     optional WAWebProtobufsE2E.Message Message = 5;
+    optional JID Sender = 6;
+    optional JID Chat = 7;
 }
 
 message SendMessageReturnFunction {
@@ -401,7 +403,7 @@ message NewsletterMessage {
     required int64 MessageServerID = 1;
     required int64 ViewsCount = 2;
     repeated Reaction ReactionCounts = 3;
-    required WAWebProtobufsE2E.Message Message = 4;
+    optional WAWebProtobufsE2E.Message Message = 4;
 }
 
 message GetNewsletterMessageUpdateReturnFunction {
@@ -722,6 +724,8 @@ message JoinedGroup { // 21
     required string Type = 2;
     required string CreateKey = 3;
     required GroupInfo GroupInfo = 4;
+    optional JID Sender = 5;
+    optional JID SenderPN = 6;
 }
 message GroupInfoEvent { //22
     required JID JID = 1;
@@ -887,6 +891,10 @@ message UndecryptableMessage {
         DECRYPT_FAIL_HIDE = 2;
     }
     required DecryptFailModeT DecryptFailMode = 3;
+}
+message RotateADVSecret {
+    required string OldSecret = 1;
+    required string NewSecret = 2;
 }
 message UpdateGroupParticipantsReturnFunction {
     optional string Error = 1;
