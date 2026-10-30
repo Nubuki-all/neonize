@@ -744,6 +744,7 @@ func StopAll() {
 func Stop(id *C.char) {
 	utils.Noop.Infof("Stopping client with ID: %s", C.GoString(id))
 	sprRetryStores.Delete(C.GoString(id)) // utils.Logger
+	removeCalls(C.GoString(id))
 	if client, exists := clients[C.GoString(id)]; exists {
 		client.Disconnect()
 		delete(clients, C.GoString(id))
@@ -810,6 +811,7 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, newDevice 
 	clientLog := utils.NewLogger("Client", C.GoString(logLevel), utils.Callback(logCb))
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 	clients[uuid] = client
+	installCalls(uuid, client)
 	sprStore := newSPRRetryStore(C.GoString(db))
 	sprRetryStores.Store(uuid, sprStore)
 	installSPRRetryHooks(client, sprStore)
