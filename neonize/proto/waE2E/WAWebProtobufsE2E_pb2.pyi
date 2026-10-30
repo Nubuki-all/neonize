@@ -1030,6 +1030,124 @@ class SecretEncryptedMessage(_message.Message):
 Global___SecretEncryptedMessage: _TypeAlias = SecretEncryptedMessage  # noqa: Y015
 
 @_typing.final
+class RequestLocationUpdateMessage(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    class _UpdateType:
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
+
+    class _UpdateTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[RequestLocationUpdateMessage._UpdateType.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
+        UNKNOWN: RequestLocationUpdateMessage._UpdateType.ValueType  # 0
+        CANCEL: RequestLocationUpdateMessage._UpdateType.ValueType  # 1
+
+    class UpdateType(_UpdateType, metaclass=_UpdateTypeEnumTypeWrapper): ...
+    UNKNOWN: RequestLocationUpdateMessage.UpdateType.ValueType  # 0
+    CANCEL: RequestLocationUpdateMessage.UpdateType.ValueType  # 1
+
+    KEY_FIELD_NUMBER: _builtins.int
+    UPDATETYPE_FIELD_NUMBER: _builtins.int
+    SENDERTIMESTAMPMS_FIELD_NUMBER: _builtins.int
+    updateType: Global___RequestLocationUpdateMessage.UpdateType.ValueType
+    senderTimestampMS: _builtins.int
+    @_builtins.property
+    def key(self) -> _WACommon_pb2.MessageKey: ...
+    def __init__(
+        self,
+        *,
+        key: _WACommon_pb2.MessageKey | None = ...,
+        updateType: Global___RequestLocationUpdateMessage.UpdateType.ValueType | None = ...,
+        senderTimestampMS: _builtins.int | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "senderTimestampMS", b"senderTimestampMS", "updateType", b"updateType"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["key", b"key", "senderTimestampMS", b"senderTimestampMS", "updateType", b"updateType"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___RequestLocationUpdateMessage: _TypeAlias = RequestLocationUpdateMessage  # noqa: Y015
+
+@_typing.final
+class EventInviteMessage(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    class _EventStatus:
+        ValueType = _typing.NewType("ValueType", _builtins.int)
+        V: _TypeAlias = ValueType  # noqa: Y015
+
+    class _EventStatusEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[EventInviteMessage._EventStatus.ValueType], _builtins.type):
+        DESCRIPTOR: _descriptor.EnumDescriptor
+        UNKNOWN: EventInviteMessage._EventStatus.ValueType  # 0
+        ACTIVE: EventInviteMessage._EventStatus.ValueType  # 1
+        CANCELED: EventInviteMessage._EventStatus.ValueType  # 2
+        SUSPENDED: EventInviteMessage._EventStatus.ValueType  # 3
+        DELETED: EventInviteMessage._EventStatus.ValueType  # 4
+        LEFT_EVENT: EventInviteMessage._EventStatus.ValueType  # 5
+        REMOVED_FROM_INVITE_LIST: EventInviteMessage._EventStatus.ValueType  # 6
+
+    class EventStatus(_EventStatus, metaclass=_EventStatusEnumTypeWrapper): ...
+    UNKNOWN: EventInviteMessage.EventStatus.ValueType  # 0
+    ACTIVE: EventInviteMessage.EventStatus.ValueType  # 1
+    CANCELED: EventInviteMessage.EventStatus.ValueType  # 2
+    SUSPENDED: EventInviteMessage.EventStatus.ValueType  # 3
+    DELETED: EventInviteMessage.EventStatus.ValueType  # 4
+    LEFT_EVENT: EventInviteMessage.EventStatus.ValueType  # 5
+    REMOVED_FROM_INVITE_LIST: EventInviteMessage.EventStatus.ValueType  # 6
+
+    CONTEXTINFO_FIELD_NUMBER: _builtins.int
+    EVENTID_FIELD_NUMBER: _builtins.int
+    EVENTTITLE_FIELD_NUMBER: _builtins.int
+    JPEGTHUMBNAIL_FIELD_NUMBER: _builtins.int
+    STARTTIME_FIELD_NUMBER: _builtins.int
+    CAPTION_FIELD_NUMBER: _builtins.int
+    ISCANCELED_FIELD_NUMBER: _builtins.int
+    ENDTIME_FIELD_NUMBER: _builtins.int
+    CALLLINK_FIELD_NUMBER: _builtins.int
+    COVERIMAGEHANDLE_FIELD_NUMBER: _builtins.int
+    LOCATIONNAME_FIELD_NUMBER: _builtins.int
+    LASTUPDATEDTSUSEC_FIELD_NUMBER: _builtins.int
+    STATUS_FIELD_NUMBER: _builtins.int
+    eventID: _builtins.str
+    eventTitle: _builtins.str
+    JPEGThumbnail: _builtins.bytes
+    startTime: _builtins.int
+    caption: _builtins.str
+    isCanceled: _builtins.bool
+    endTime: _builtins.int
+    callLink: _builtins.str
+    coverImageHandle: _builtins.str
+    locationName: _builtins.str
+    lastUpdatedTSUsec: _builtins.int
+    status: Global___EventInviteMessage.EventStatus.ValueType
+    @_builtins.property
+    def contextInfo(self) -> Global___ContextInfo: ...
+    def __init__(
+        self,
+        *,
+        contextInfo: Global___ContextInfo | None = ...,
+        eventID: _builtins.str | None = ...,
+        eventTitle: _builtins.str | None = ...,
+        JPEGThumbnail: _builtins.bytes | None = ...,
+        startTime: _builtins.int | None = ...,
+        caption: _builtins.str | None = ...,
+        isCanceled: _builtins.bool | None = ...,
+        endTime: _builtins.int | None = ...,
+        callLink: _builtins.str | None = ...,
+        coverImageHandle: _builtins.str | None = ...,
+        locationName: _builtins.str | None = ...,
+        lastUpdatedTSUsec: _builtins.int | None = ...,
+        status: Global___EventInviteMessage.EventStatus.ValueType | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["JPEGThumbnail", b"JPEGThumbnail", "callLink", b"callLink", "caption", b"caption", "contextInfo", b"contextInfo", "coverImageHandle", b"coverImageHandle", "endTime", b"endTime", "eventID", b"eventID", "eventTitle", b"eventTitle", "isCanceled", b"isCanceled", "lastUpdatedTSUsec", b"lastUpdatedTSUsec", "locationName", b"locationName", "startTime", b"startTime", "status", b"status"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["JPEGThumbnail", b"JPEGThumbnail", "callLink", b"callLink", "caption", b"caption", "contextInfo", b"contextInfo", "coverImageHandle", b"coverImageHandle", "endTime", b"endTime", "eventID", b"eventID", "eventTitle", b"eventTitle", "isCanceled", b"isCanceled", "lastUpdatedTSUsec", b"lastUpdatedTSUsec", "locationName", b"locationName", "startTime", b"startTime", "status", b"status"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___EventInviteMessage: _TypeAlias = EventInviteMessage  # noqa: Y015
+
+@_typing.final
 class GroupInviteMessage(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
@@ -3291,6 +3409,7 @@ class ProtocolMessage(_message.Message):
     ACP2SETTING_FIELD_NUMBER: _builtins.int
     SHAREDDEVICECONTACTHASHKEYSHARE_FIELD_NUMBER: _builtins.int
     SHAREDDEVICECONTACTHASHKEYREQUEST_FIELD_NUMBER: _builtins.int
+    ADDITIONALPROMPTIDS_FIELD_NUMBER: _builtins.int
     type: Global___ProtocolMessage.Type.ValueType
     ephemeralExpiration: _builtins.int
     ephemeralSettingTimestamp: _builtins.int
@@ -3350,6 +3469,8 @@ class ProtocolMessage(_message.Message):
     def sharedDeviceContactHashKeyShare(self) -> Global___SharedDeviceContactHashKeyShare: ...
     @_builtins.property
     def sharedDeviceContactHashKeyRequest(self) -> Global___SharedDeviceContactHashKeyRequest: ...
+    @_builtins.property
+    def additionalPromptIDs(self) -> _containers.RepeatedScalarFieldContainer[_builtins.str]: ...
     def __init__(
         self,
         *,
@@ -3386,10 +3507,11 @@ class ProtocolMessage(_message.Message):
         acp2Setting: _WACommon_pb2.ACP2Setting | None = ...,
         sharedDeviceContactHashKeyShare: Global___SharedDeviceContactHashKeyShare | None = ...,
         sharedDeviceContactHashKeyRequest: Global___SharedDeviceContactHashKeyRequest | None = ...,
+        additionalPromptIDs: _abc.Iterable[_builtins.str] | None = ...,
     ) -> None: ...
     _HasFieldArgType: _TypeAlias = _typing.Literal["acp2Setting", b"acp2Setting", "afterReadDuration", b"afterReadDuration", "aiMediaCollectionMessage", b"aiMediaCollectionMessage", "aiMetadataOperation", b"aiMetadataOperation", "aiPsiMetadata", b"aiPsiMetadata", "aiQueryFanout", b"aiQueryFanout", "appStateFatalExceptionNotification", b"appStateFatalExceptionNotification", "appStateSyncKeyRequest", b"appStateSyncKeyRequest", "appStateSyncKeyShare", b"appStateSyncKeyShare", "botFeedbackMessage", b"botFeedbackMessage", "chatThemeSetting", b"chatThemeSetting", "cloudApiThreadControlNotification", b"cloudApiThreadControlNotification", "coexStateSync", b"coexStateSync", "disappearingMode", b"disappearingMode", "editedMessage", b"editedMessage", "ephemeralExpiration", b"ephemeralExpiration", "ephemeralSettingTimestamp", b"ephemeralSettingTimestamp", "historySyncNotification", b"historySyncNotification", "initialSecurityNotificationSettingSync", b"initialSecurityNotificationSettingSync", "invokerJID", b"invokerJID", "key", b"key", "lidMigrationMappingSyncMessage", b"lidMigrationMappingSyncMessage", "limitSharing", b"limitSharing", "markAsVerifiedAction", b"markAsVerifiedAction", "mediaNotifyMessage", b"mediaNotifyMessage", "memberLabel", b"memberLabel", "peerDataOperationRequestMessage", b"peerDataOperationRequestMessage", "peerDataOperationRequestResponseMessage", b"peerDataOperationRequestResponseMessage", "requestWelcomeMessageMetadata", b"requestWelcomeMessageMetadata", "sharedDeviceContactHashKeyRequest", b"sharedDeviceContactHashKeyRequest", "sharedDeviceContactHashKeyShare", b"sharedDeviceContactHashKeyShare", "timestampMS", b"timestampMS", "type", b"type"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["acp2Setting", b"acp2Setting", "afterReadDuration", b"afterReadDuration", "aiMediaCollectionMessage", b"aiMediaCollectionMessage", "aiMetadataOperation", b"aiMetadataOperation", "aiPsiMetadata", b"aiPsiMetadata", "aiQueryFanout", b"aiQueryFanout", "appStateFatalExceptionNotification", b"appStateFatalExceptionNotification", "appStateSyncKeyRequest", b"appStateSyncKeyRequest", "appStateSyncKeyShare", b"appStateSyncKeyShare", "botFeedbackMessage", b"botFeedbackMessage", "chatThemeSetting", b"chatThemeSetting", "cloudApiThreadControlNotification", b"cloudApiThreadControlNotification", "coexStateSync", b"coexStateSync", "disappearingMode", b"disappearingMode", "editedMessage", b"editedMessage", "ephemeralExpiration", b"ephemeralExpiration", "ephemeralSettingTimestamp", b"ephemeralSettingTimestamp", "historySyncNotification", b"historySyncNotification", "initialSecurityNotificationSettingSync", b"initialSecurityNotificationSettingSync", "invokerJID", b"invokerJID", "key", b"key", "lidMigrationMappingSyncMessage", b"lidMigrationMappingSyncMessage", "limitSharing", b"limitSharing", "markAsVerifiedAction", b"markAsVerifiedAction", "mediaNotifyMessage", b"mediaNotifyMessage", "memberLabel", b"memberLabel", "peerDataOperationRequestMessage", b"peerDataOperationRequestMessage", "peerDataOperationRequestResponseMessage", b"peerDataOperationRequestResponseMessage", "requestWelcomeMessageMetadata", b"requestWelcomeMessageMetadata", "sharedDeviceContactHashKeyRequest", b"sharedDeviceContactHashKeyRequest", "sharedDeviceContactHashKeyShare", b"sharedDeviceContactHashKeyShare", "timestampMS", b"timestampMS", "type", b"type"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["acp2Setting", b"acp2Setting", "additionalPromptIDs", b"additionalPromptIDs", "afterReadDuration", b"afterReadDuration", "aiMediaCollectionMessage", b"aiMediaCollectionMessage", "aiMetadataOperation", b"aiMetadataOperation", "aiPsiMetadata", b"aiPsiMetadata", "aiQueryFanout", b"aiQueryFanout", "appStateFatalExceptionNotification", b"appStateFatalExceptionNotification", "appStateSyncKeyRequest", b"appStateSyncKeyRequest", "appStateSyncKeyShare", b"appStateSyncKeyShare", "botFeedbackMessage", b"botFeedbackMessage", "chatThemeSetting", b"chatThemeSetting", "cloudApiThreadControlNotification", b"cloudApiThreadControlNotification", "coexStateSync", b"coexStateSync", "disappearingMode", b"disappearingMode", "editedMessage", b"editedMessage", "ephemeralExpiration", b"ephemeralExpiration", "ephemeralSettingTimestamp", b"ephemeralSettingTimestamp", "historySyncNotification", b"historySyncNotification", "initialSecurityNotificationSettingSync", b"initialSecurityNotificationSettingSync", "invokerJID", b"invokerJID", "key", b"key", "lidMigrationMappingSyncMessage", b"lidMigrationMappingSyncMessage", "limitSharing", b"limitSharing", "markAsVerifiedAction", b"markAsVerifiedAction", "mediaNotifyMessage", b"mediaNotifyMessage", "memberLabel", b"memberLabel", "peerDataOperationRequestMessage", b"peerDataOperationRequestMessage", "peerDataOperationRequestResponseMessage", b"peerDataOperationRequestResponseMessage", "requestWelcomeMessageMetadata", b"requestWelcomeMessageMetadata", "sharedDeviceContactHashKeyRequest", b"sharedDeviceContactHashKeyRequest", "sharedDeviceContactHashKeyShare", b"sharedDeviceContactHashKeyShare", "timestampMS", b"timestampMS", "type", b"type"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
@@ -3625,10 +3747,14 @@ class MusicMessage(_message.Message):
         DESCRIPTOR: _descriptor.EnumDescriptor
         UNKNOWN: MusicMessage._MusicMessageStyle.ValueType  # 0
         VINYL: MusicMessage._MusicMessageStyle.ValueType  # 1
+        MESSAGE_BUBBLE: MusicMessage._MusicMessageStyle.ValueType  # 2
+        LYRICS: MusicMessage._MusicMessageStyle.ValueType  # 3
 
     class MusicMessageStyle(_MusicMessageStyle, metaclass=_MusicMessageStyleEnumTypeWrapper): ...
     UNKNOWN: MusicMessage.MusicMessageStyle.ValueType  # 0
     VINYL: MusicMessage.MusicMessageStyle.ValueType  # 1
+    MESSAGE_BUBBLE: MusicMessage.MusicMessageStyle.ValueType  # 2
+    LYRICS: MusicMessage.MusicMessageStyle.ValueType  # 3
 
     EMBEDDEDMUSIC_FIELD_NUMBER: _builtins.int
     SONGURI_FIELD_NUMBER: _builtins.int
@@ -4321,6 +4447,10 @@ class ContextInfo(_message.Message):
         MOTION_PHOTO_CHILD: ContextInfo._PairedMediaType.ValueType  # 6
         HEVC_VIDEO_PARENT: ContextInfo._PairedMediaType.ValueType  # 7
         HEVC_VIDEO_CHILD: ContextInfo._PairedMediaType.ValueType  # 8
+        AV1_VIDEO_PARENT: ContextInfo._PairedMediaType.ValueType  # 9
+        AV1_VIDEO_CHILD: ContextInfo._PairedMediaType.ValueType  # 10
+        STREAMED_VIDEO_PARENT: ContextInfo._PairedMediaType.ValueType  # 11
+        STREAMED_VIDEO_CHILD: ContextInfo._PairedMediaType.ValueType  # 12
 
     class PairedMediaType(_PairedMediaType, metaclass=_PairedMediaTypeEnumTypeWrapper): ...
     NOT_PAIRED_MEDIA: ContextInfo.PairedMediaType.ValueType  # 0
@@ -4332,6 +4462,10 @@ class ContextInfo(_message.Message):
     MOTION_PHOTO_CHILD: ContextInfo.PairedMediaType.ValueType  # 6
     HEVC_VIDEO_PARENT: ContextInfo.PairedMediaType.ValueType  # 7
     HEVC_VIDEO_CHILD: ContextInfo.PairedMediaType.ValueType  # 8
+    AV1_VIDEO_PARENT: ContextInfo.PairedMediaType.ValueType  # 9
+    AV1_VIDEO_CHILD: ContextInfo.PairedMediaType.ValueType  # 10
+    STREAMED_VIDEO_PARENT: ContextInfo.PairedMediaType.ValueType  # 11
+    STREAMED_VIDEO_CHILD: ContextInfo.PairedMediaType.ValueType  # 12
 
     class _StatusAttributionType:
         ValueType = _typing.NewType("ValueType", _builtins.int)
@@ -4728,6 +4862,14 @@ class ContextInfo(_message.Message):
         AGMSUBTITLESTRATEGY_FIELD_NUMBER: _builtins.int
         AGMHEADERINTERACTIONSTRATEGY_FIELD_NUMBER: _builtins.int
         CONTAINSCTWAFLOWSAUTOLABEL_FIELD_NUMBER: _builtins.int
+        PRODUCTID_FIELD_NUMBER: _builtins.int
+        CONTAINSCTWAPROMO_FIELD_NUMBER: _builtins.int
+        CTWAPROMORESPONSEID_FIELD_NUMBER: _builtins.int
+        CTWAPROMOOFFERID_FIELD_NUMBER: _builtins.int
+        CTWAPROMOADENTRYID_FIELD_NUMBER: _builtins.int
+        CTWAPROMORESPONSEEXPIRESATSECONDS_FIELD_NUMBER: _builtins.int
+        CTWAPROMOSCHEMAVERSION_FIELD_NUMBER: _builtins.int
+        CTWAPROMOADGROUPID_FIELD_NUMBER: _builtins.int
         title: _builtins.str
         body: _builtins.str
         mediaType: Global___ContextInfo.ExternalAdReplyInfo.MediaType.ValueType
@@ -4761,6 +4903,14 @@ class ContextInfo(_message.Message):
         agmSubtitleStrategy: _builtins.int
         agmHeaderInteractionStrategy: _builtins.int
         containsCtwaFlowsAutoLabel: _builtins.bool
+        productID: _builtins.str
+        containsCtwaPromo: _builtins.bool
+        ctwaPromoResponseID: _builtins.str
+        ctwaPromoOfferID: _builtins.str
+        ctwaPromoAdEntryID: _builtins.str
+        ctwaPromoResponseExpiresAtSeconds: _builtins.int
+        ctwaPromoSchemaVersion: _builtins.int
+        ctwaPromoAdgroupID: _builtins.str
         def __init__(
             self,
             *,
@@ -4797,10 +4947,18 @@ class ContextInfo(_message.Message):
             agmSubtitleStrategy: _builtins.int | None = ...,
             agmHeaderInteractionStrategy: _builtins.int | None = ...,
             containsCtwaFlowsAutoLabel: _builtins.bool | None = ...,
+            productID: _builtins.str | None = ...,
+            containsCtwaPromo: _builtins.bool | None = ...,
+            ctwaPromoResponseID: _builtins.str | None = ...,
+            ctwaPromoOfferID: _builtins.str | None = ...,
+            ctwaPromoAdEntryID: _builtins.str | None = ...,
+            ctwaPromoResponseExpiresAtSeconds: _builtins.int | None = ...,
+            ctwaPromoSchemaVersion: _builtins.int | None = ...,
+            ctwaPromoAdgroupID: _builtins.str | None = ...,
         ) -> None: ...
-        _HasFieldArgType: _TypeAlias = _typing.Literal["adContextPreviewDismissed", b"adContextPreviewDismissed", "adPreviewURL", b"adPreviewURL", "adType", b"adType", "agmHeaderInteractionStrategy", b"agmHeaderInteractionStrategy", "agmSubtitleStrategy", b"agmSubtitleStrategy", "agmThumbnailStrategy", b"agmThumbnailStrategy", "agmTitleStrategy", b"agmTitleStrategy", "automatedGreetingMessageCtaType", b"automatedGreetingMessageCtaType", "automatedGreetingMessageShown", b"automatedGreetingMessageShown", "body", b"body", "clickToWhatsappCall", b"clickToWhatsappCall", "containsAutoReply", b"containsAutoReply", "containsCtwaFlowsAutoLabel", b"containsCtwaFlowsAutoLabel", "containsCtwaFlowsAutoReply", b"containsCtwaFlowsAutoReply", "ctaPayload", b"ctaPayload", "ctwaClid", b"ctwaClid", "disableNudge", b"disableNudge", "greetingMessageBody", b"greetingMessageBody", "mediaType", b"mediaType", "mediaURL", b"mediaURL", "originalImageURL", b"originalImageURL", "ref", b"ref", "renderLargerThumbnail", b"renderLargerThumbnail", "showAdAttribution", b"showAdAttribution", "sourceApp", b"sourceApp", "sourceID", b"sourceID", "sourceType", b"sourceType", "sourceURL", b"sourceURL", "thumbnail", b"thumbnail", "thumbnailURL", b"thumbnailURL", "title", b"title", "wtwaAdFormat", b"wtwaAdFormat", "wtwaWebsiteURL", b"wtwaWebsiteURL"]  # noqa: Y015
+        _HasFieldArgType: _TypeAlias = _typing.Literal["adContextPreviewDismissed", b"adContextPreviewDismissed", "adPreviewURL", b"adPreviewURL", "adType", b"adType", "agmHeaderInteractionStrategy", b"agmHeaderInteractionStrategy", "agmSubtitleStrategy", b"agmSubtitleStrategy", "agmThumbnailStrategy", b"agmThumbnailStrategy", "agmTitleStrategy", b"agmTitleStrategy", "automatedGreetingMessageCtaType", b"automatedGreetingMessageCtaType", "automatedGreetingMessageShown", b"automatedGreetingMessageShown", "body", b"body", "clickToWhatsappCall", b"clickToWhatsappCall", "containsAutoReply", b"containsAutoReply", "containsCtwaFlowsAutoLabel", b"containsCtwaFlowsAutoLabel", "containsCtwaFlowsAutoReply", b"containsCtwaFlowsAutoReply", "containsCtwaPromo", b"containsCtwaPromo", "ctaPayload", b"ctaPayload", "ctwaClid", b"ctwaClid", "ctwaPromoAdEntryID", b"ctwaPromoAdEntryID", "ctwaPromoAdgroupID", b"ctwaPromoAdgroupID", "ctwaPromoOfferID", b"ctwaPromoOfferID", "ctwaPromoResponseExpiresAtSeconds", b"ctwaPromoResponseExpiresAtSeconds", "ctwaPromoResponseID", b"ctwaPromoResponseID", "ctwaPromoSchemaVersion", b"ctwaPromoSchemaVersion", "disableNudge", b"disableNudge", "greetingMessageBody", b"greetingMessageBody", "mediaType", b"mediaType", "mediaURL", b"mediaURL", "originalImageURL", b"originalImageURL", "productID", b"productID", "ref", b"ref", "renderLargerThumbnail", b"renderLargerThumbnail", "showAdAttribution", b"showAdAttribution", "sourceApp", b"sourceApp", "sourceID", b"sourceID", "sourceType", b"sourceType", "sourceURL", b"sourceURL", "thumbnail", b"thumbnail", "thumbnailURL", b"thumbnailURL", "title", b"title", "wtwaAdFormat", b"wtwaAdFormat", "wtwaWebsiteURL", b"wtwaWebsiteURL"]  # noqa: Y015
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-        _ClearFieldArgType: _TypeAlias = _typing.Literal["adContextPreviewDismissed", b"adContextPreviewDismissed", "adPreviewURL", b"adPreviewURL", "adType", b"adType", "agmHeaderInteractionStrategy", b"agmHeaderInteractionStrategy", "agmSubtitleStrategy", b"agmSubtitleStrategy", "agmThumbnailStrategy", b"agmThumbnailStrategy", "agmTitleStrategy", b"agmTitleStrategy", "automatedGreetingMessageCtaType", b"automatedGreetingMessageCtaType", "automatedGreetingMessageShown", b"automatedGreetingMessageShown", "body", b"body", "clickToWhatsappCall", b"clickToWhatsappCall", "containsAutoReply", b"containsAutoReply", "containsCtwaFlowsAutoLabel", b"containsCtwaFlowsAutoLabel", "containsCtwaFlowsAutoReply", b"containsCtwaFlowsAutoReply", "ctaPayload", b"ctaPayload", "ctwaClid", b"ctwaClid", "disableNudge", b"disableNudge", "greetingMessageBody", b"greetingMessageBody", "mediaType", b"mediaType", "mediaURL", b"mediaURL", "originalImageURL", b"originalImageURL", "ref", b"ref", "renderLargerThumbnail", b"renderLargerThumbnail", "showAdAttribution", b"showAdAttribution", "sourceApp", b"sourceApp", "sourceID", b"sourceID", "sourceType", b"sourceType", "sourceURL", b"sourceURL", "thumbnail", b"thumbnail", "thumbnailURL", b"thumbnailURL", "title", b"title", "wtwaAdFormat", b"wtwaAdFormat", "wtwaWebsiteURL", b"wtwaWebsiteURL"]  # noqa: Y015
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["adContextPreviewDismissed", b"adContextPreviewDismissed", "adPreviewURL", b"adPreviewURL", "adType", b"adType", "agmHeaderInteractionStrategy", b"agmHeaderInteractionStrategy", "agmSubtitleStrategy", b"agmSubtitleStrategy", "agmThumbnailStrategy", b"agmThumbnailStrategy", "agmTitleStrategy", b"agmTitleStrategy", "automatedGreetingMessageCtaType", b"automatedGreetingMessageCtaType", "automatedGreetingMessageShown", b"automatedGreetingMessageShown", "body", b"body", "clickToWhatsappCall", b"clickToWhatsappCall", "containsAutoReply", b"containsAutoReply", "containsCtwaFlowsAutoLabel", b"containsCtwaFlowsAutoLabel", "containsCtwaFlowsAutoReply", b"containsCtwaFlowsAutoReply", "containsCtwaPromo", b"containsCtwaPromo", "ctaPayload", b"ctaPayload", "ctwaClid", b"ctwaClid", "ctwaPromoAdEntryID", b"ctwaPromoAdEntryID", "ctwaPromoAdgroupID", b"ctwaPromoAdgroupID", "ctwaPromoOfferID", b"ctwaPromoOfferID", "ctwaPromoResponseExpiresAtSeconds", b"ctwaPromoResponseExpiresAtSeconds", "ctwaPromoResponseID", b"ctwaPromoResponseID", "ctwaPromoSchemaVersion", b"ctwaPromoSchemaVersion", "disableNudge", b"disableNudge", "greetingMessageBody", b"greetingMessageBody", "mediaType", b"mediaType", "mediaURL", b"mediaURL", "originalImageURL", b"originalImageURL", "productID", b"productID", "ref", b"ref", "renderLargerThumbnail", b"renderLargerThumbnail", "showAdAttribution", b"showAdAttribution", "sourceApp", b"sourceApp", "sourceID", b"sourceID", "sourceType", b"sourceType", "sourceURL", b"sourceURL", "thumbnail", b"thumbnail", "thumbnailURL", b"thumbnailURL", "title", b"title", "wtwaAdFormat", b"wtwaAdFormat", "wtwaWebsiteURL", b"wtwaWebsiteURL"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
         def WhichOneof(self, oneof_group: _Never) -> None: ...
 
@@ -5237,6 +5395,8 @@ class MessageAssociation(_message.Message):
         STATUS_REACTION: MessageAssociation._AssociationType.ValueType  # 18
         HEVC_VIDEO_DUAL_UPLOAD: MessageAssociation._AssociationType.ValueType  # 19
         POLL_ADD_OPTION: MessageAssociation._AssociationType.ValueType  # 20
+        AV1_VIDEO_DUAL_UPLOAD: MessageAssociation._AssociationType.ValueType  # 21
+        STREAMED_HD_VIDEO_DUAL_UPLOAD: MessageAssociation._AssociationType.ValueType  # 22
 
     class AssociationType(_AssociationType, metaclass=_AssociationTypeEnumTypeWrapper): ...
     UNKNOWN: MessageAssociation.AssociationType.ValueType  # 0
@@ -5260,6 +5420,8 @@ class MessageAssociation(_message.Message):
     STATUS_REACTION: MessageAssociation.AssociationType.ValueType  # 18
     HEVC_VIDEO_DUAL_UPLOAD: MessageAssociation.AssociationType.ValueType  # 19
     POLL_ADD_OPTION: MessageAssociation.AssociationType.ValueType  # 20
+    AV1_VIDEO_DUAL_UPLOAD: MessageAssociation.AssociationType.ValueType  # 21
+    STREAMED_HD_VIDEO_DUAL_UPLOAD: MessageAssociation.AssociationType.ValueType  # 22
 
     ASSOCIATIONTYPE_FIELD_NUMBER: _builtins.int
     PARENTMESSAGEKEY_FIELD_NUMBER: _builtins.int
@@ -5927,6 +6089,10 @@ class Message(_message.Message):
     NEWSLETTERSCHEDULEDMESSAGE_FIELD_NUMBER: _builtins.int
     ACP2SETTINGMESSAGE_FIELD_NUMBER: _builtins.int
     AUDIOSTICKERMESSAGE_FIELD_NUMBER: _builtins.int
+    INSTANTIMAGEMESSAGE_FIELD_NUMBER: _builtins.int
+    REQUESTLOCATIONMESSAGE_FIELD_NUMBER: _builtins.int
+    BOTGROUPPARTICIPANTMESSAGE_FIELD_NUMBER: _builtins.int
+    REQUESTLOCATIONUPDATEMESSAGE_FIELD_NUMBER: _builtins.int
     conversation: _builtins.str
     @_builtins.property
     def senderKeyDistributionMessage(self) -> Global___SenderKeyDistributionMessage: ...
@@ -6152,6 +6318,14 @@ class Message(_message.Message):
     def acp2SettingMessage(self) -> Global___FutureProofMessage: ...
     @_builtins.property
     def audioStickerMessage(self) -> Global___FutureProofMessage: ...
+    @_builtins.property
+    def instantImageMessage(self) -> Global___ImageMessage: ...
+    @_builtins.property
+    def requestLocationMessage(self) -> Global___RequestLocationMessage: ...
+    @_builtins.property
+    def botGroupParticipantMessage(self) -> Global___FutureProofMessage: ...
+    @_builtins.property
+    def requestLocationUpdateMessage(self) -> Global___RequestLocationUpdateMessage: ...
     def __init__(
         self,
         *,
@@ -6268,10 +6442,14 @@ class Message(_message.Message):
         newsletterScheduledMessage: Global___FutureProofMessage | None = ...,
         acp2SettingMessage: Global___FutureProofMessage | None = ...,
         audioStickerMessage: Global___FutureProofMessage | None = ...,
+        instantImageMessage: Global___ImageMessage | None = ...,
+        requestLocationMessage: Global___RequestLocationMessage | None = ...,
+        botGroupParticipantMessage: Global___FutureProofMessage | None = ...,
+        requestLocationUpdateMessage: Global___RequestLocationUpdateMessage | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["acp2SettingMessage", b"acp2SettingMessage", "albumMessage", b"albumMessage", "associatedChildMessage", b"associatedChildMessage", "audioMessage", b"audioMessage", "audioStickerMessage", b"audioStickerMessage", "bcallMessage", b"bcallMessage", "botForwardedMessage", b"botForwardedMessage", "botInvokeMessage", b"botInvokeMessage", "botPlatformRegistrationSuccessMessage", b"botPlatformRegistrationSuccessMessage", "botTaskMessage", b"botTaskMessage", "buttonsMessage", b"buttonsMessage", "buttonsResponseMessage", b"buttonsResponseMessage", "call", b"call", "callLogMesssage", b"callLogMesssage", "cancelPaymentRequestMessage", b"cancelPaymentRequestMessage", "chat", b"chat", "commentMessage", b"commentMessage", "conditionalRevealMessage", b"conditionalRevealMessage", "contactMessage", b"contactMessage", "contactsArrayMessage", b"contactsArrayMessage", "conversation", b"conversation", "declinePaymentRequestMessage", b"declinePaymentRequestMessage", "deviceSentMessage", b"deviceSentMessage", "documentMessage", b"documentMessage", "documentWithCaptionMessage", b"documentWithCaptionMessage", "editedMessage", b"editedMessage", "encCommentMessage", b"encCommentMessage", "encEventResponseMessage", b"encEventResponseMessage", "encReactionMessage", b"encReactionMessage", "ephemeralMessage", b"ephemeralMessage", "eventCoverImage", b"eventCoverImage", "eventInviteMessage", b"eventInviteMessage", "eventMessage", b"eventMessage", "extendedTextMessage", b"extendedTextMessage", "fastRatchetKeySenderKeyDistributionMessage", b"fastRatchetKeySenderKeyDistributionMessage", "groupInviteMessage", b"groupInviteMessage", "groupMentionedMessage", b"groupMentionedMessage", "groupRootKeyShare", b"groupRootKeyShare", "groupStatusMentionMessage", b"groupStatusMentionMessage", "groupStatusMessage", b"groupStatusMessage", "groupStatusMessageV2", b"groupStatusMessageV2", "highlyStructuredMessage", b"highlyStructuredMessage", "imageMessage", b"imageMessage", "interactiveMessage", b"interactiveMessage", "interactiveResponseMessage", b"interactiveResponseMessage", "invoiceMessage", b"invoiceMessage", "keepInChatMessage", b"keepInChatMessage", "limitSharingMessage", b"limitSharingMessage", "listMessage", b"listMessage", "listResponseMessage", b"listResponseMessage", "liveLocationMessage", b"liveLocationMessage", "locationMessage", b"locationMessage", "lottieStickerMessage", b"lottieStickerMessage", "messageContextInfo", b"messageContextInfo", "messageHistoryBundle", b"messageHistoryBundle", "messageHistoryNotice", b"messageHistoryNotice", "musicMessage", b"musicMessage", "newsletterAdminInviteMessage", b"newsletterAdminInviteMessage", "newsletterAdminProfileMessage", b"newsletterAdminProfileMessage", "newsletterAdminProfileStatusMessage", b"newsletterAdminProfileStatusMessage", "newsletterFollowerInviteMessageV2", b"newsletterFollowerInviteMessageV2", "newsletterScheduledMessage", b"newsletterScheduledMessage", "orderMessage", b"orderMessage", "paymentInviteMessage", b"paymentInviteMessage", "paymentReminderMessage", b"paymentReminderMessage", "pinInChatMessage", b"pinInChatMessage", "placeholderMessage", b"placeholderMessage", "pollAddOptionMessage", b"pollAddOptionMessage", "pollCreationMessage", b"pollCreationMessage", "pollCreationMessageV2", b"pollCreationMessageV2", "pollCreationMessageV3", b"pollCreationMessageV3", "pollCreationMessageV4", b"pollCreationMessageV4", "pollCreationMessageV5", b"pollCreationMessageV5", "pollCreationMessageV6", b"pollCreationMessageV6", "pollCreationOptionImageMessage", b"pollCreationOptionImageMessage", "pollResultSnapshotMessage", b"pollResultSnapshotMessage", "pollResultSnapshotMessageV3", b"pollResultSnapshotMessageV3", "pollUpdateMessage", b"pollUpdateMessage", "productMessage", b"productMessage", "protocolMessage", b"protocolMessage", "ptvMessage", b"ptvMessage", "questionMessage", b"questionMessage", "questionReplyMessage", b"questionReplyMessage", "questionResponseMessage", b"questionResponseMessage", "reactionMessage", b"reactionMessage", "requestPaymentMessage", b"requestPaymentMessage", "requestPhoneNumberMessage", b"requestPhoneNumberMessage", "richResponseMessage", b"richResponseMessage", "rootSecretDistributeMessage", b"rootSecretDistributeMessage", "scheduledCallCreationMessage", b"scheduledCallCreationMessage", "scheduledCallEditMessage", b"scheduledCallEditMessage", "secretEncryptedMessage", b"secretEncryptedMessage", "sendPaymentMessage", b"sendPaymentMessage", "senderKeyDistributionMessage", b"senderKeyDistributionMessage", "splitPaymentMessage", b"splitPaymentMessage", "splitPaymentUpdateMessage", b"splitPaymentUpdateMessage", "spoilerMessage", b"spoilerMessage", "statusAddYours", b"statusAddYours", "statusLinkPreviewMetadata", b"statusLinkPreviewMetadata", "statusMentionMessage", b"statusMentionMessage", "statusNotificationMessage", b"statusNotificationMessage", "statusQuestionAnswerMessage", b"statusQuestionAnswerMessage", "statusQuotedMessage", b"statusQuotedMessage", "statusStickerInteractionMessage", b"statusStickerInteractionMessage", "stickerMessage", b"stickerMessage", "stickerPackMessage", b"stickerPackMessage", "stickerSyncRmrMessage", b"stickerSyncRmrMessage", "templateButtonReplyMessage", b"templateButtonReplyMessage", "templateMessage", b"templateMessage", "videoMessage", b"videoMessage", "viewOnceMessage", b"viewOnceMessage", "viewOnceMessageV2", b"viewOnceMessageV2", "viewOnceMessageV2Extension", b"viewOnceMessageV2Extension"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["acp2SettingMessage", b"acp2SettingMessage", "albumMessage", b"albumMessage", "associatedChildMessage", b"associatedChildMessage", "audioMessage", b"audioMessage", "audioStickerMessage", b"audioStickerMessage", "bcallMessage", b"bcallMessage", "botForwardedMessage", b"botForwardedMessage", "botGroupParticipantMessage", b"botGroupParticipantMessage", "botInvokeMessage", b"botInvokeMessage", "botPlatformRegistrationSuccessMessage", b"botPlatformRegistrationSuccessMessage", "botTaskMessage", b"botTaskMessage", "buttonsMessage", b"buttonsMessage", "buttonsResponseMessage", b"buttonsResponseMessage", "call", b"call", "callLogMesssage", b"callLogMesssage", "cancelPaymentRequestMessage", b"cancelPaymentRequestMessage", "chat", b"chat", "commentMessage", b"commentMessage", "conditionalRevealMessage", b"conditionalRevealMessage", "contactMessage", b"contactMessage", "contactsArrayMessage", b"contactsArrayMessage", "conversation", b"conversation", "declinePaymentRequestMessage", b"declinePaymentRequestMessage", "deviceSentMessage", b"deviceSentMessage", "documentMessage", b"documentMessage", "documentWithCaptionMessage", b"documentWithCaptionMessage", "editedMessage", b"editedMessage", "encCommentMessage", b"encCommentMessage", "encEventResponseMessage", b"encEventResponseMessage", "encReactionMessage", b"encReactionMessage", "ephemeralMessage", b"ephemeralMessage", "eventCoverImage", b"eventCoverImage", "eventInviteMessage", b"eventInviteMessage", "eventMessage", b"eventMessage", "extendedTextMessage", b"extendedTextMessage", "fastRatchetKeySenderKeyDistributionMessage", b"fastRatchetKeySenderKeyDistributionMessage", "groupInviteMessage", b"groupInviteMessage", "groupMentionedMessage", b"groupMentionedMessage", "groupRootKeyShare", b"groupRootKeyShare", "groupStatusMentionMessage", b"groupStatusMentionMessage", "groupStatusMessage", b"groupStatusMessage", "groupStatusMessageV2", b"groupStatusMessageV2", "highlyStructuredMessage", b"highlyStructuredMessage", "imageMessage", b"imageMessage", "instantImageMessage", b"instantImageMessage", "interactiveMessage", b"interactiveMessage", "interactiveResponseMessage", b"interactiveResponseMessage", "invoiceMessage", b"invoiceMessage", "keepInChatMessage", b"keepInChatMessage", "limitSharingMessage", b"limitSharingMessage", "listMessage", b"listMessage", "listResponseMessage", b"listResponseMessage", "liveLocationMessage", b"liveLocationMessage", "locationMessage", b"locationMessage", "lottieStickerMessage", b"lottieStickerMessage", "messageContextInfo", b"messageContextInfo", "messageHistoryBundle", b"messageHistoryBundle", "messageHistoryNotice", b"messageHistoryNotice", "musicMessage", b"musicMessage", "newsletterAdminInviteMessage", b"newsletterAdminInviteMessage", "newsletterAdminProfileMessage", b"newsletterAdminProfileMessage", "newsletterAdminProfileStatusMessage", b"newsletterAdminProfileStatusMessage", "newsletterFollowerInviteMessageV2", b"newsletterFollowerInviteMessageV2", "newsletterScheduledMessage", b"newsletterScheduledMessage", "orderMessage", b"orderMessage", "paymentInviteMessage", b"paymentInviteMessage", "paymentReminderMessage", b"paymentReminderMessage", "pinInChatMessage", b"pinInChatMessage", "placeholderMessage", b"placeholderMessage", "pollAddOptionMessage", b"pollAddOptionMessage", "pollCreationMessage", b"pollCreationMessage", "pollCreationMessageV2", b"pollCreationMessageV2", "pollCreationMessageV3", b"pollCreationMessageV3", "pollCreationMessageV4", b"pollCreationMessageV4", "pollCreationMessageV5", b"pollCreationMessageV5", "pollCreationMessageV6", b"pollCreationMessageV6", "pollCreationOptionImageMessage", b"pollCreationOptionImageMessage", "pollResultSnapshotMessage", b"pollResultSnapshotMessage", "pollResultSnapshotMessageV3", b"pollResultSnapshotMessageV3", "pollUpdateMessage", b"pollUpdateMessage", "productMessage", b"productMessage", "protocolMessage", b"protocolMessage", "ptvMessage", b"ptvMessage", "questionMessage", b"questionMessage", "questionReplyMessage", b"questionReplyMessage", "questionResponseMessage", b"questionResponseMessage", "reactionMessage", b"reactionMessage", "requestLocationMessage", b"requestLocationMessage", "requestLocationUpdateMessage", b"requestLocationUpdateMessage", "requestPaymentMessage", b"requestPaymentMessage", "requestPhoneNumberMessage", b"requestPhoneNumberMessage", "richResponseMessage", b"richResponseMessage", "rootSecretDistributeMessage", b"rootSecretDistributeMessage", "scheduledCallCreationMessage", b"scheduledCallCreationMessage", "scheduledCallEditMessage", b"scheduledCallEditMessage", "secretEncryptedMessage", b"secretEncryptedMessage", "sendPaymentMessage", b"sendPaymentMessage", "senderKeyDistributionMessage", b"senderKeyDistributionMessage", "splitPaymentMessage", b"splitPaymentMessage", "splitPaymentUpdateMessage", b"splitPaymentUpdateMessage", "spoilerMessage", b"spoilerMessage", "statusAddYours", b"statusAddYours", "statusLinkPreviewMetadata", b"statusLinkPreviewMetadata", "statusMentionMessage", b"statusMentionMessage", "statusNotificationMessage", b"statusNotificationMessage", "statusQuestionAnswerMessage", b"statusQuestionAnswerMessage", "statusQuotedMessage", b"statusQuotedMessage", "statusStickerInteractionMessage", b"statusStickerInteractionMessage", "stickerMessage", b"stickerMessage", "stickerPackMessage", b"stickerPackMessage", "stickerSyncRmrMessage", b"stickerSyncRmrMessage", "templateButtonReplyMessage", b"templateButtonReplyMessage", "templateMessage", b"templateMessage", "videoMessage", b"videoMessage", "viewOnceMessage", b"viewOnceMessage", "viewOnceMessageV2", b"viewOnceMessageV2", "viewOnceMessageV2Extension", b"viewOnceMessageV2Extension"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["acp2SettingMessage", b"acp2SettingMessage", "albumMessage", b"albumMessage", "associatedChildMessage", b"associatedChildMessage", "audioMessage", b"audioMessage", "audioStickerMessage", b"audioStickerMessage", "bcallMessage", b"bcallMessage", "botForwardedMessage", b"botForwardedMessage", "botInvokeMessage", b"botInvokeMessage", "botPlatformRegistrationSuccessMessage", b"botPlatformRegistrationSuccessMessage", "botTaskMessage", b"botTaskMessage", "buttonsMessage", b"buttonsMessage", "buttonsResponseMessage", b"buttonsResponseMessage", "call", b"call", "callLogMesssage", b"callLogMesssage", "cancelPaymentRequestMessage", b"cancelPaymentRequestMessage", "chat", b"chat", "commentMessage", b"commentMessage", "conditionalRevealMessage", b"conditionalRevealMessage", "contactMessage", b"contactMessage", "contactsArrayMessage", b"contactsArrayMessage", "conversation", b"conversation", "declinePaymentRequestMessage", b"declinePaymentRequestMessage", "deviceSentMessage", b"deviceSentMessage", "documentMessage", b"documentMessage", "documentWithCaptionMessage", b"documentWithCaptionMessage", "editedMessage", b"editedMessage", "encCommentMessage", b"encCommentMessage", "encEventResponseMessage", b"encEventResponseMessage", "encReactionMessage", b"encReactionMessage", "ephemeralMessage", b"ephemeralMessage", "eventCoverImage", b"eventCoverImage", "eventInviteMessage", b"eventInviteMessage", "eventMessage", b"eventMessage", "extendedTextMessage", b"extendedTextMessage", "fastRatchetKeySenderKeyDistributionMessage", b"fastRatchetKeySenderKeyDistributionMessage", "groupInviteMessage", b"groupInviteMessage", "groupMentionedMessage", b"groupMentionedMessage", "groupRootKeyShare", b"groupRootKeyShare", "groupStatusMentionMessage", b"groupStatusMentionMessage", "groupStatusMessage", b"groupStatusMessage", "groupStatusMessageV2", b"groupStatusMessageV2", "highlyStructuredMessage", b"highlyStructuredMessage", "imageMessage", b"imageMessage", "interactiveMessage", b"interactiveMessage", "interactiveResponseMessage", b"interactiveResponseMessage", "invoiceMessage", b"invoiceMessage", "keepInChatMessage", b"keepInChatMessage", "limitSharingMessage", b"limitSharingMessage", "listMessage", b"listMessage", "listResponseMessage", b"listResponseMessage", "liveLocationMessage", b"liveLocationMessage", "locationMessage", b"locationMessage", "lottieStickerMessage", b"lottieStickerMessage", "messageContextInfo", b"messageContextInfo", "messageHistoryBundle", b"messageHistoryBundle", "messageHistoryNotice", b"messageHistoryNotice", "musicMessage", b"musicMessage", "newsletterAdminInviteMessage", b"newsletterAdminInviteMessage", "newsletterAdminProfileMessage", b"newsletterAdminProfileMessage", "newsletterAdminProfileStatusMessage", b"newsletterAdminProfileStatusMessage", "newsletterFollowerInviteMessageV2", b"newsletterFollowerInviteMessageV2", "newsletterScheduledMessage", b"newsletterScheduledMessage", "orderMessage", b"orderMessage", "paymentInviteMessage", b"paymentInviteMessage", "paymentReminderMessage", b"paymentReminderMessage", "pinInChatMessage", b"pinInChatMessage", "placeholderMessage", b"placeholderMessage", "pollAddOptionMessage", b"pollAddOptionMessage", "pollCreationMessage", b"pollCreationMessage", "pollCreationMessageV2", b"pollCreationMessageV2", "pollCreationMessageV3", b"pollCreationMessageV3", "pollCreationMessageV4", b"pollCreationMessageV4", "pollCreationMessageV5", b"pollCreationMessageV5", "pollCreationMessageV6", b"pollCreationMessageV6", "pollCreationOptionImageMessage", b"pollCreationOptionImageMessage", "pollResultSnapshotMessage", b"pollResultSnapshotMessage", "pollResultSnapshotMessageV3", b"pollResultSnapshotMessageV3", "pollUpdateMessage", b"pollUpdateMessage", "productMessage", b"productMessage", "protocolMessage", b"protocolMessage", "ptvMessage", b"ptvMessage", "questionMessage", b"questionMessage", "questionReplyMessage", b"questionReplyMessage", "questionResponseMessage", b"questionResponseMessage", "reactionMessage", b"reactionMessage", "requestPaymentMessage", b"requestPaymentMessage", "requestPhoneNumberMessage", b"requestPhoneNumberMessage", "richResponseMessage", b"richResponseMessage", "rootSecretDistributeMessage", b"rootSecretDistributeMessage", "scheduledCallCreationMessage", b"scheduledCallCreationMessage", "scheduledCallEditMessage", b"scheduledCallEditMessage", "secretEncryptedMessage", b"secretEncryptedMessage", "sendPaymentMessage", b"sendPaymentMessage", "senderKeyDistributionMessage", b"senderKeyDistributionMessage", "splitPaymentMessage", b"splitPaymentMessage", "splitPaymentUpdateMessage", b"splitPaymentUpdateMessage", "spoilerMessage", b"spoilerMessage", "statusAddYours", b"statusAddYours", "statusLinkPreviewMetadata", b"statusLinkPreviewMetadata", "statusMentionMessage", b"statusMentionMessage", "statusNotificationMessage", b"statusNotificationMessage", "statusQuestionAnswerMessage", b"statusQuestionAnswerMessage", "statusQuotedMessage", b"statusQuotedMessage", "statusStickerInteractionMessage", b"statusStickerInteractionMessage", "stickerMessage", b"stickerMessage", "stickerPackMessage", b"stickerPackMessage", "stickerSyncRmrMessage", b"stickerSyncRmrMessage", "templateButtonReplyMessage", b"templateButtonReplyMessage", "templateMessage", b"templateMessage", "videoMessage", b"videoMessage", "viewOnceMessage", b"viewOnceMessage", "viewOnceMessageV2", b"viewOnceMessageV2", "viewOnceMessageV2Extension", b"viewOnceMessageV2Extension"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["acp2SettingMessage", b"acp2SettingMessage", "albumMessage", b"albumMessage", "associatedChildMessage", b"associatedChildMessage", "audioMessage", b"audioMessage", "audioStickerMessage", b"audioStickerMessage", "bcallMessage", b"bcallMessage", "botForwardedMessage", b"botForwardedMessage", "botGroupParticipantMessage", b"botGroupParticipantMessage", "botInvokeMessage", b"botInvokeMessage", "botPlatformRegistrationSuccessMessage", b"botPlatformRegistrationSuccessMessage", "botTaskMessage", b"botTaskMessage", "buttonsMessage", b"buttonsMessage", "buttonsResponseMessage", b"buttonsResponseMessage", "call", b"call", "callLogMesssage", b"callLogMesssage", "cancelPaymentRequestMessage", b"cancelPaymentRequestMessage", "chat", b"chat", "commentMessage", b"commentMessage", "conditionalRevealMessage", b"conditionalRevealMessage", "contactMessage", b"contactMessage", "contactsArrayMessage", b"contactsArrayMessage", "conversation", b"conversation", "declinePaymentRequestMessage", b"declinePaymentRequestMessage", "deviceSentMessage", b"deviceSentMessage", "documentMessage", b"documentMessage", "documentWithCaptionMessage", b"documentWithCaptionMessage", "editedMessage", b"editedMessage", "encCommentMessage", b"encCommentMessage", "encEventResponseMessage", b"encEventResponseMessage", "encReactionMessage", b"encReactionMessage", "ephemeralMessage", b"ephemeralMessage", "eventCoverImage", b"eventCoverImage", "eventInviteMessage", b"eventInviteMessage", "eventMessage", b"eventMessage", "extendedTextMessage", b"extendedTextMessage", "fastRatchetKeySenderKeyDistributionMessage", b"fastRatchetKeySenderKeyDistributionMessage", "groupInviteMessage", b"groupInviteMessage", "groupMentionedMessage", b"groupMentionedMessage", "groupRootKeyShare", b"groupRootKeyShare", "groupStatusMentionMessage", b"groupStatusMentionMessage", "groupStatusMessage", b"groupStatusMessage", "groupStatusMessageV2", b"groupStatusMessageV2", "highlyStructuredMessage", b"highlyStructuredMessage", "imageMessage", b"imageMessage", "instantImageMessage", b"instantImageMessage", "interactiveMessage", b"interactiveMessage", "interactiveResponseMessage", b"interactiveResponseMessage", "invoiceMessage", b"invoiceMessage", "keepInChatMessage", b"keepInChatMessage", "limitSharingMessage", b"limitSharingMessage", "listMessage", b"listMessage", "listResponseMessage", b"listResponseMessage", "liveLocationMessage", b"liveLocationMessage", "locationMessage", b"locationMessage", "lottieStickerMessage", b"lottieStickerMessage", "messageContextInfo", b"messageContextInfo", "messageHistoryBundle", b"messageHistoryBundle", "messageHistoryNotice", b"messageHistoryNotice", "musicMessage", b"musicMessage", "newsletterAdminInviteMessage", b"newsletterAdminInviteMessage", "newsletterAdminProfileMessage", b"newsletterAdminProfileMessage", "newsletterAdminProfileStatusMessage", b"newsletterAdminProfileStatusMessage", "newsletterFollowerInviteMessageV2", b"newsletterFollowerInviteMessageV2", "newsletterScheduledMessage", b"newsletterScheduledMessage", "orderMessage", b"orderMessage", "paymentInviteMessage", b"paymentInviteMessage", "paymentReminderMessage", b"paymentReminderMessage", "pinInChatMessage", b"pinInChatMessage", "placeholderMessage", b"placeholderMessage", "pollAddOptionMessage", b"pollAddOptionMessage", "pollCreationMessage", b"pollCreationMessage", "pollCreationMessageV2", b"pollCreationMessageV2", "pollCreationMessageV3", b"pollCreationMessageV3", "pollCreationMessageV4", b"pollCreationMessageV4", "pollCreationMessageV5", b"pollCreationMessageV5", "pollCreationMessageV6", b"pollCreationMessageV6", "pollCreationOptionImageMessage", b"pollCreationOptionImageMessage", "pollResultSnapshotMessage", b"pollResultSnapshotMessage", "pollResultSnapshotMessageV3", b"pollResultSnapshotMessageV3", "pollUpdateMessage", b"pollUpdateMessage", "productMessage", b"productMessage", "protocolMessage", b"protocolMessage", "ptvMessage", b"ptvMessage", "questionMessage", b"questionMessage", "questionReplyMessage", b"questionReplyMessage", "questionResponseMessage", b"questionResponseMessage", "reactionMessage", b"reactionMessage", "requestLocationMessage", b"requestLocationMessage", "requestLocationUpdateMessage", b"requestLocationUpdateMessage", "requestPaymentMessage", b"requestPaymentMessage", "requestPhoneNumberMessage", b"requestPhoneNumberMessage", "richResponseMessage", b"richResponseMessage", "rootSecretDistributeMessage", b"rootSecretDistributeMessage", "scheduledCallCreationMessage", b"scheduledCallCreationMessage", "scheduledCallEditMessage", b"scheduledCallEditMessage", "secretEncryptedMessage", b"secretEncryptedMessage", "sendPaymentMessage", b"sendPaymentMessage", "senderKeyDistributionMessage", b"senderKeyDistributionMessage", "splitPaymentMessage", b"splitPaymentMessage", "splitPaymentUpdateMessage", b"splitPaymentUpdateMessage", "spoilerMessage", b"spoilerMessage", "statusAddYours", b"statusAddYours", "statusLinkPreviewMetadata", b"statusLinkPreviewMetadata", "statusMentionMessage", b"statusMentionMessage", "statusNotificationMessage", b"statusNotificationMessage", "statusQuestionAnswerMessage", b"statusQuestionAnswerMessage", "statusQuotedMessage", b"statusQuotedMessage", "statusStickerInteractionMessage", b"statusStickerInteractionMessage", "stickerMessage", b"stickerMessage", "stickerPackMessage", b"stickerPackMessage", "stickerSyncRmrMessage", b"stickerSyncRmrMessage", "templateButtonReplyMessage", b"templateButtonReplyMessage", "templateMessage", b"templateMessage", "videoMessage", b"videoMessage", "viewOnceMessage", b"viewOnceMessage", "viewOnceMessageV2", b"viewOnceMessageV2", "viewOnceMessageV2Extension", b"viewOnceMessageV2Extension"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
@@ -7032,6 +7210,26 @@ class DeviceSentMessage(_message.Message):
 Global___DeviceSentMessage: _TypeAlias = DeviceSentMessage  # noqa: Y015
 
 @_typing.final
+class RequestLocationMessage(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    CONTEXTINFO_FIELD_NUMBER: _builtins.int
+    @_builtins.property
+    def contextInfo(self) -> Global___ContextInfo: ...
+    def __init__(
+        self,
+        *,
+        contextInfo: Global___ContextInfo | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["contextInfo", b"contextInfo"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["contextInfo", b"contextInfo"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___RequestLocationMessage: _TypeAlias = RequestLocationMessage  # noqa: Y015
+
+@_typing.final
 class RequestPhoneNumberMessage(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
@@ -7050,50 +7248,6 @@ class RequestPhoneNumberMessage(_message.Message):
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___RequestPhoneNumberMessage: _TypeAlias = RequestPhoneNumberMessage  # noqa: Y015
-
-@_typing.final
-class EventInviteMessage(_message.Message):
-    DESCRIPTOR: _descriptor.Descriptor
-
-    CONTEXTINFO_FIELD_NUMBER: _builtins.int
-    EVENTID_FIELD_NUMBER: _builtins.int
-    EVENTTITLE_FIELD_NUMBER: _builtins.int
-    JPEGTHUMBNAIL_FIELD_NUMBER: _builtins.int
-    STARTTIME_FIELD_NUMBER: _builtins.int
-    CAPTION_FIELD_NUMBER: _builtins.int
-    ISCANCELED_FIELD_NUMBER: _builtins.int
-    ENDTIME_FIELD_NUMBER: _builtins.int
-    CALLLINK_FIELD_NUMBER: _builtins.int
-    eventID: _builtins.str
-    eventTitle: _builtins.str
-    JPEGThumbnail: _builtins.bytes
-    startTime: _builtins.int
-    caption: _builtins.str
-    isCanceled: _builtins.bool
-    endTime: _builtins.int
-    callLink: _builtins.str
-    @_builtins.property
-    def contextInfo(self) -> Global___ContextInfo: ...
-    def __init__(
-        self,
-        *,
-        contextInfo: Global___ContextInfo | None = ...,
-        eventID: _builtins.str | None = ...,
-        eventTitle: _builtins.str | None = ...,
-        JPEGThumbnail: _builtins.bytes | None = ...,
-        startTime: _builtins.int | None = ...,
-        caption: _builtins.str | None = ...,
-        isCanceled: _builtins.bool | None = ...,
-        endTime: _builtins.int | None = ...,
-        callLink: _builtins.str | None = ...,
-    ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["JPEGThumbnail", b"JPEGThumbnail", "callLink", b"callLink", "caption", b"caption", "contextInfo", b"contextInfo", "endTime", b"endTime", "eventID", b"eventID", "eventTitle", b"eventTitle", "isCanceled", b"isCanceled", "startTime", b"startTime"]  # noqa: Y015
-    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["JPEGThumbnail", b"JPEGThumbnail", "callLink", b"callLink", "caption", b"caption", "contextInfo", b"contextInfo", "endTime", b"endTime", "eventID", b"eventID", "eventTitle", b"eventTitle", "isCanceled", b"isCanceled", "startTime", b"startTime"]  # noqa: Y015
-    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
-    def WhichOneof(self, oneof_group: _Never) -> None: ...
-
-Global___EventInviteMessage: _TypeAlias = EventInviteMessage  # noqa: Y015
 
 @_typing.final
 class NewsletterFollowerInviteMessage(_message.Message):
@@ -7830,23 +7984,49 @@ class FullHistorySyncOnDemandRequestMetadata(_message.Message):
     REQUESTID_FIELD_NUMBER: _builtins.int
     BUSINESSPRODUCT_FIELD_NUMBER: _builtins.int
     OPAQUECLIENTDATA_FIELD_NUMBER: _builtins.int
+    CONNECTION_FIELD_NUMBER: _builtins.int
     requestID: _builtins.str
     businessProduct: _builtins.str
     opaqueClientData: _builtins.bytes
+    @_builtins.property
+    def connection(self) -> Global___CoexConnectionDescriptor: ...
     def __init__(
         self,
         *,
         requestID: _builtins.str | None = ...,
         businessProduct: _builtins.str | None = ...,
         opaqueClientData: _builtins.bytes | None = ...,
+        connection: Global___CoexConnectionDescriptor | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["businessProduct", b"businessProduct", "opaqueClientData", b"opaqueClientData", "requestID", b"requestID"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["businessProduct", b"businessProduct", "connection", b"connection", "opaqueClientData", b"opaqueClientData", "requestID", b"requestID"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["businessProduct", b"businessProduct", "opaqueClientData", b"opaqueClientData", "requestID", b"requestID"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["businessProduct", b"businessProduct", "connection", b"connection", "opaqueClientData", b"opaqueClientData", "requestID", b"requestID"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___FullHistorySyncOnDemandRequestMetadata: _TypeAlias = FullHistorySyncOnDemandRequestMetadata  # noqa: Y015
+
+@_typing.final
+class CoexConnectionDescriptor(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    PROVIDERID_FIELD_NUMBER: _builtins.int
+    PRODUCT_FIELD_NUMBER: _builtins.int
+    providerID: _builtins.int
+    product: _builtins.str
+    def __init__(
+        self,
+        *,
+        providerID: _builtins.int | None = ...,
+        product: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["product", b"product", "providerID", b"providerID"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["product", b"product", "providerID", b"providerID"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___CoexConnectionDescriptor: _TypeAlias = CoexConnectionDescriptor  # noqa: Y015
 
 @_typing.final
 class AppStateFatalExceptionNotification(_message.Message):
@@ -8175,22 +8355,28 @@ Global___ChatStockImageWallpaper: _TypeAlias = ChatStockImageWallpaper  # noqa: 
 class ChatSolidColorWallpaper(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
-    COLORLIGHT_FIELD_NUMBER: _builtins.int
-    COLORDARK_FIELD_NUMBER: _builtins.int
+    BACKGROUNDLIGHTARGB_FIELD_NUMBER: _builtins.int
+    BACKGROUNDDARKARGB_FIELD_NUMBER: _builtins.int
     ISDOODLEENABLED_FIELD_NUMBER: _builtins.int
-    colorLight: _builtins.str
-    colorDark: _builtins.str
+    DOODLELIGHTARGB_FIELD_NUMBER: _builtins.int
+    DOODLEDARKARGB_FIELD_NUMBER: _builtins.int
+    backgroundLightArgb: _builtins.int
+    backgroundDarkArgb: _builtins.int
     isDoodleEnabled: _builtins.bool
+    doodleLightArgb: _builtins.int
+    doodleDarkArgb: _builtins.int
     def __init__(
         self,
         *,
-        colorLight: _builtins.str | None = ...,
-        colorDark: _builtins.str | None = ...,
+        backgroundLightArgb: _builtins.int | None = ...,
+        backgroundDarkArgb: _builtins.int | None = ...,
         isDoodleEnabled: _builtins.bool | None = ...,
+        doodleLightArgb: _builtins.int | None = ...,
+        doodleDarkArgb: _builtins.int | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["colorDark", b"colorDark", "colorLight", b"colorLight", "isDoodleEnabled", b"isDoodleEnabled"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["backgroundDarkArgb", b"backgroundDarkArgb", "backgroundLightArgb", b"backgroundLightArgb", "doodleDarkArgb", b"doodleDarkArgb", "doodleLightArgb", b"doodleLightArgb", "isDoodleEnabled", b"isDoodleEnabled"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["colorDark", b"colorDark", "colorLight", b"colorLight", "isDoodleEnabled", b"isDoodleEnabled"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["backgroundDarkArgb", b"backgroundDarkArgb", "backgroundLightArgb", b"backgroundLightArgb", "doodleDarkArgb", b"doodleDarkArgb", "doodleLightArgb", b"doodleLightArgb", "isDoodleEnabled", b"isDoodleEnabled"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 

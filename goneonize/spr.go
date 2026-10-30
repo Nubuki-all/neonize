@@ -87,7 +87,7 @@ func (s *sprRetryStore) persistLocked() error {
 	if s.path == "" {
 		return nil
 	}
-	if err := os.MkdirAll(filepath.Dir(s.path), 0700); err != nil {
+	if err := os.MkdirAll(filepath.Dir(s.path), 0o700); err != nil {
 		return err
 	}
 	data, err := json.Marshal(s.messages)
@@ -95,10 +95,10 @@ func (s *sprRetryStore) persistLocked() error {
 		return err
 	}
 	tmp := s.path + ".tmp"
-	if err = os.WriteFile(tmp, data, 0600); err != nil {
+	if err = os.WriteFile(tmp, data, 0o600); err != nil {
 		return err
 	}
-	if err = os.Chmod(tmp, 0600); err != nil {
+	if err = os.Chmod(tmp, 0o600); err != nil {
 		_ = os.Remove(tmp)
 		return err
 	}

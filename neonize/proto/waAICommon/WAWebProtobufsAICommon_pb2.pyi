@@ -76,6 +76,7 @@ class _BotMetricsEntryPointEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_
     NEW_CHAT_LIST: _BotMetricsEntryPoint.ValueType  # 56
     CONTACTS_TAB: _BotMetricsEntryPoint.ValueType  # 57
     NEW_3P_AGENT_CREATION: _BotMetricsEntryPoint.ValueType  # 58
+    SHARE: _BotMetricsEntryPoint.ValueType  # 59
 
 class BotMetricsEntryPoint(_BotMetricsEntryPoint, metaclass=_BotMetricsEntryPointEnumTypeWrapper): ...
 
@@ -129,6 +130,7 @@ CHATLIST_SEARCH: BotMetricsEntryPoint.ValueType  # 55
 NEW_CHAT_LIST: BotMetricsEntryPoint.ValueType  # 56
 CONTACTS_TAB: BotMetricsEntryPoint.ValueType  # 57
 NEW_3P_AGENT_CREATION: BotMetricsEntryPoint.ValueType  # 58
+SHARE: BotMetricsEntryPoint.ValueType  # 59
 Global___BotMetricsEntryPoint: _TypeAlias = BotMetricsEntryPoint  # noqa: Y015
 
 class _BotMetricsThreadEntryPoint:
@@ -883,6 +885,17 @@ class BotCapabilityMetadata(_message.Message):
         AI_RICH_RESPONSE_REMINDERS_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 69
         AI_STOP_GENERATION_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 70
         AI_RICH_RESPONSE_3P_LINKING_CARD_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 71
+        HATCH_NOTIFICATION_METADATA_EVENT_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 72
+        AI_SUGGESTED_REPLIES_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 73
+        RICH_RESPONSE_IN_APP_SURVEY_BLOKS: BotCapabilityMetadata._BotCapabilityType.ValueType  # 74
+        RICH_RESPONSE_IMAGE_SOURCE_ATTRIBUTION: BotCapabilityMetadata._BotCapabilityType.ValueType  # 75
+        HATCH_CONNECTOR_ACTION_CARD_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 76
+        HATCH_SECURE_CREDENTIAL_CARD_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 77
+        HATCH_BROWSER_TASK_CARD_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 78
+        HATCH_ARTIFACT_CARD_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 79
+        AI_STUDY_CENTER_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 80
+        AI_MUSE_JARVIS_SCHEMA_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 81
+        AI_STUDY_QUIZ_ENABLED: BotCapabilityMetadata._BotCapabilityType.ValueType  # 82
 
     class BotCapabilityType(_BotCapabilityType, metaclass=_BotCapabilityTypeEnumTypeWrapper): ...
     UNKNOWN: BotCapabilityMetadata.BotCapabilityType.ValueType  # 0
@@ -957,6 +970,17 @@ class BotCapabilityMetadata(_message.Message):
     AI_RICH_RESPONSE_REMINDERS_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 69
     AI_STOP_GENERATION_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 70
     AI_RICH_RESPONSE_3P_LINKING_CARD_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 71
+    HATCH_NOTIFICATION_METADATA_EVENT_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 72
+    AI_SUGGESTED_REPLIES_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 73
+    RICH_RESPONSE_IN_APP_SURVEY_BLOKS: BotCapabilityMetadata.BotCapabilityType.ValueType  # 74
+    RICH_RESPONSE_IMAGE_SOURCE_ATTRIBUTION: BotCapabilityMetadata.BotCapabilityType.ValueType  # 75
+    HATCH_CONNECTOR_ACTION_CARD_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 76
+    HATCH_SECURE_CREDENTIAL_CARD_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 77
+    HATCH_BROWSER_TASK_CARD_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 78
+    HATCH_ARTIFACT_CARD_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 79
+    AI_STUDY_CENTER_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 80
+    AI_MUSE_JARVIS_SCHEMA_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 81
+    AI_STUDY_QUIZ_ENABLED: BotCapabilityMetadata.BotCapabilityType.ValueType  # 82
 
     CAPABILITIES_FIELD_NUMBER: _builtins.int
     @_builtins.property
@@ -1231,9 +1255,11 @@ class BotMessageOrigin(_message.Message):
     class _BotMessageOriginTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[BotMessageOrigin._BotMessageOriginType.ValueType], _builtins.type):
         DESCRIPTOR: _descriptor.EnumDescriptor
         BOT_MESSAGE_ORIGIN_TYPE_AI_INITIATED: BotMessageOrigin._BotMessageOriginType.ValueType  # 0
+        BOT_MESSAGE_ORIGIN_TYPE_META_AI_THREAD_WELCOME: BotMessageOrigin._BotMessageOriginType.ValueType  # 1
 
     class BotMessageOriginType(_BotMessageOriginType, metaclass=_BotMessageOriginTypeEnumTypeWrapper): ...
     BOT_MESSAGE_ORIGIN_TYPE_AI_INITIATED: BotMessageOrigin.BotMessageOriginType.ValueType  # 0
+    BOT_MESSAGE_ORIGIN_TYPE_META_AI_THREAD_WELCOME: BotMessageOrigin.BotMessageOriginType.ValueType  # 1
 
     TYPE_FIELD_NUMBER: _builtins.int
     type: Global___BotMessageOrigin.BotMessageOriginType.ValueType
@@ -1268,12 +1294,14 @@ class AIThreadInfo(_message.Message):
             DEFAULT: AIThreadInfo.AIThreadClientInfo._AIThreadType.ValueType  # 1
             INCOGNITO: AIThreadInfo.AIThreadClientInfo._AIThreadType.ValueType  # 2
             SIDE_CHAT: AIThreadInfo.AIThreadClientInfo._AIThreadType.ValueType  # 3
+            PRIVATE_SEARCH_CHAT: AIThreadInfo.AIThreadClientInfo._AIThreadType.ValueType  # 4
 
         class AIThreadType(_AIThreadType, metaclass=_AIThreadTypeEnumTypeWrapper): ...
         UNKNOWN: AIThreadInfo.AIThreadClientInfo.AIThreadType.ValueType  # 0
         DEFAULT: AIThreadInfo.AIThreadClientInfo.AIThreadType.ValueType  # 1
         INCOGNITO: AIThreadInfo.AIThreadClientInfo.AIThreadType.ValueType  # 2
         SIDE_CHAT: AIThreadInfo.AIThreadClientInfo.AIThreadType.ValueType  # 3
+        PRIVATE_SEARCH_CHAT: AIThreadInfo.AIThreadClientInfo.AIThreadType.ValueType  # 4
 
         TYPE_FIELD_NUMBER: _builtins.int
         SOURCECHATJID_FIELD_NUMBER: _builtins.int
