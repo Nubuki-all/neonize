@@ -287,6 +287,10 @@ class PutArchivedError(NeonizeError):
     """Raised when archiving/unarchiving a chat fails."""
 
 
+class CallError(NeonizeError):
+    """Raised when a voice call operation fails."""
+
+
 # ---------------------------------------------------------------------------
 # State & Misc
 # ---------------------------------------------------------------------------

@@ -14,10 +14,15 @@ from ..proto.Neonize_pb2 import QR as QREv
 from ..proto.Neonize_pb2 import BlocklistChange as BlocklistChangeEv
 from ..proto.Neonize_pb2 import BlocklistEvent as BlocklistEv
 from ..proto.Neonize_pb2 import CallAccept as CallAcceptEv
+from ..proto.Neonize_pb2 import CallEnded as CallEndedEv
+from ..proto.Neonize_pb2 import CallGroupState as CallGroupStateEv
+from ..proto.Neonize_pb2 import CallIncoming as CallIncomingEv
 from ..proto.Neonize_pb2 import CallOffer as CallOfferEv
 from ..proto.Neonize_pb2 import CallOfferNotice as CallOfferNoticeEv
+from ..proto.Neonize_pb2 import CallPlaybackFinished as CallPlaybackFinishedEv
 from ..proto.Neonize_pb2 import CallPreAccept as CallPreAcceptEv
 from ..proto.Neonize_pb2 import CallRelayLatency as CallRelayLatencyEv
+from ..proto.Neonize_pb2 import CallStateChanged as CallStateChangedEv
 from ..proto.Neonize_pb2 import CallTerminate as CallTerminateEv
 from ..proto.Neonize_pb2 import CallTransport as CallTransportEv
 from ..proto.Neonize_pb2 import ChatPresence as ChatPresenceEv
@@ -103,6 +108,11 @@ __all__ = [
     "QREv",
     "ReceiptEv",
     "RotateADVSecretEv",
+    "CallIncomingEv",
+    "CallStateChangedEv",
+    "CallEndedEv",
+    "CallPlaybackFinishedEv",
+    "CallGroupStateEv",
     "StreamErrorEv",
     "StreamReplacedEv",
     "TemporaryBanEv",

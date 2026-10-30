@@ -640,6 +640,28 @@ if not os.environ.get("SPHINX"):
     gocode.FreeBytesStruct.argtypes = [ctypes.POINTER(Bytes)]
     gocode.FreeBytesStruct.restype = None
 
+    gocode.EnableCalls.argtypes = [ctypes.c_char_p]
+    gocode.EnableCalls.restype = None
+    gocode.CallUser.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    gocode.CallUser.restype = ctypes.c_void_p
+    gocode.CallGroup.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    gocode.CallGroup.restype = ctypes.c_void_p
+    gocode.CallPlay.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    gocode.CallPlay.restype = ctypes.c_void_p
+    gocode.CallAnswer.argtypes = [ctypes.c_char_p]
+    gocode.CallAnswer.restype = ctypes.c_void_p
+    gocode.CallReject.argtypes = [ctypes.c_char_p]
+    gocode.CallReject.restype = ctypes.c_void_p
+    gocode.CallHangup.argtypes = [ctypes.c_char_p]
+    gocode.CallHangup.restype = ctypes.c_void_p
+    gocode.CallPause.argtypes = [ctypes.c_char_p]
+    gocode.CallPause.restype = ctypes.c_void_p
+    gocode.CallResume.argtypes = [ctypes.c_char_p]
+    gocode.CallResume.restype = ctypes.c_void_p
+    gocode.CallStopPlayback.argtypes = [ctypes.c_char_p]
+    gocode.CallStopPlayback.restype = ctypes.c_void_p
+    gocode.CallState.argtypes = [ctypes.c_char_p]
+    gocode.CallState.restype = ctypes.c_void_p
     gocode.FreeString.argtypes = [ctypes.c_void_p]
     gocode.FreeString.restype = None
 
@@ -696,6 +718,16 @@ if not os.environ.get("SPHINX"):
     # is kept out of the binary-loading path.)
     for _string_returning_func in (
         "Neonize",
+        "CallUser",
+        "CallGroup",
+        "CallPlay",
+        "CallAnswer",
+        "CallReject",
+        "CallHangup",
+        "CallPause",
+        "CallResume",
+        "CallStopPlayback",
+        "CallState",
         "LeaveGroup",
         "SetGroupName",
         "RejectCall",

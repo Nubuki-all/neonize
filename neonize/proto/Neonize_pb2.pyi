@@ -4205,3 +4205,147 @@ class Stop(_message.Message):
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
 Global___Stop: _TypeAlias = Stop  # noqa: Y015
+
+@_typing.final
+class CallIncoming(_message.Message):
+    """Voice call events (meowcaller, clients created with enable_calls=True)"""
+
+    DESCRIPTOR: _descriptor.Descriptor
+
+    CALLID_FIELD_NUMBER: _builtins.int
+    PEER_FIELD_NUMBER: _builtins.int
+    ISVIDEO_FIELD_NUMBER: _builtins.int
+    CallID: _builtins.str
+    IsVideo: _builtins.bool
+    @_builtins.property
+    def Peer(self) -> Global___JID: ...
+    def __init__(
+        self,
+        *,
+        CallID: _builtins.str | None = ...,
+        Peer: Global___JID | None = ...,
+        IsVideo: _builtins.bool | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["CallID", b"CallID", "IsVideo", b"IsVideo", "Peer", b"Peer"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["CallID", b"CallID", "IsVideo", b"IsVideo", "Peer", b"Peer"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___CallIncoming: _TypeAlias = CallIncoming  # noqa: Y015
+
+@_typing.final
+class CallStateChanged(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    CALLID_FIELD_NUMBER: _builtins.int
+    STATE_FIELD_NUMBER: _builtins.int
+    CallID: _builtins.str
+    State: _builtins.str
+    def __init__(
+        self,
+        *,
+        CallID: _builtins.str | None = ...,
+        State: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["CallID", b"CallID", "State", b"State"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["CallID", b"CallID", "State", b"State"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___CallStateChanged: _TypeAlias = CallStateChanged  # noqa: Y015
+
+@_typing.final
+class CallEnded(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    CALLID_FIELD_NUMBER: _builtins.int
+    REASON_FIELD_NUMBER: _builtins.int
+    CallID: _builtins.str
+    Reason: _builtins.str
+    def __init__(
+        self,
+        *,
+        CallID: _builtins.str | None = ...,
+        Reason: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["CallID", b"CallID", "Reason", b"Reason"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["CallID", b"CallID", "Reason", b"Reason"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___CallEnded: _TypeAlias = CallEnded  # noqa: Y015
+
+@_typing.final
+class CallPlaybackFinished(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    CALLID_FIELD_NUMBER: _builtins.int
+    CallID: _builtins.str
+    def __init__(
+        self,
+        *,
+        CallID: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["CallID", b"CallID"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["CallID", b"CallID"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___CallPlaybackFinished: _TypeAlias = CallPlaybackFinished  # noqa: Y015
+
+@_typing.final
+class CallGroupParticipant(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    JID_FIELD_NUMBER: _builtins.int
+    PN_FIELD_NUMBER: _builtins.int
+    STATE_FIELD_NUMBER: _builtins.int
+    HANDRAISED_FIELD_NUMBER: _builtins.int
+    State: _builtins.str
+    HandRaised: _builtins.bool
+    @_builtins.property
+    def JID(self) -> Global___JID: ...
+    @_builtins.property
+    def PN(self) -> Global___JID: ...
+    def __init__(
+        self,
+        *,
+        JID: Global___JID | None = ...,
+        PN: Global___JID | None = ...,
+        State: _builtins.str | None = ...,
+        HandRaised: _builtins.bool | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["HandRaised", b"HandRaised", "JID", b"JID", "PN", b"PN", "State", b"State"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["HandRaised", b"HandRaised", "JID", b"JID", "PN", b"PN", "State", b"State"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___CallGroupParticipant: _TypeAlias = CallGroupParticipant  # noqa: Y015
+
+@_typing.final
+class CallGroupState(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    CALLID_FIELD_NUMBER: _builtins.int
+    PARTICIPANTS_FIELD_NUMBER: _builtins.int
+    CallID: _builtins.str
+    @_builtins.property
+    def Participants(self) -> _containers.RepeatedCompositeFieldContainer[Global___CallGroupParticipant]: ...
+    def __init__(
+        self,
+        *,
+        CallID: _builtins.str | None = ...,
+        Participants: _abc.Iterable[Global___CallGroupParticipant] | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["CallID", b"CallID"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["CallID", b"CallID", "Participants", b"Participants"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___CallGroupState: _TypeAlias = CallGroupState  # noqa: Y015

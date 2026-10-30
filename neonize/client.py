@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import base64
 import ctypes
+import json
 import logging
 import re
 import struct
@@ -39,6 +40,7 @@ from .events import event as stop_event
 from .exc import (
     BuildPollVoteCreationError,
     BuildPollVoteError,
+    CallError,
     ContactStoreError,
     ConvertStickerError,
     CreateGroupError,
@@ -414,6 +416,7 @@ class NewClient:
         props: DeviceProps | None = None,
         uuid: str | None = None,
         new_device: bool = False,
+        enable_calls: bool = False,
     ):
         """Initializes a new client instance.
 
@@ -433,6 +436,9 @@ class NewClient:
             database already stores other sessions; without it, connecting
             without a *jid* resumes the first stored session.
         :type new_device: bool
+        :param enable_calls: Enable voice calls (``call_*`` methods) through meowcaller.
+            Off by default because it takes over the client's call signalling.
+        :type enable_calls: bool
 
         .. note::
 
@@ -443,6 +449,7 @@ class NewClient:
         self.name = name
         self.device_props = props
         self.new_device = new_device
+        self.enable_calls = enable_calls
         self.jid = jid
         self.uuid = (jid.User if jid else (uuid or name)).encode()
         self.__client = gocode
@@ -3592,6 +3599,87 @@ class NewClient:
             raise DecryptPollVoteError(model.Error)
         return model.PollVoteMessage
 
+    def _call_result(self, raw: bytes) -> dict:
+        result = json.loads(raw or b"{}")
+        if result.get("error"):
+            raise CallError(result["error"])
+        return result
+
+    def _call_check(self, err: bytes) -> None:
+        if err:
+            raise CallError(err.decode())
+
+    def call_user(self, target: JID | str) -> str:
+        """Place a 1:1 voice call. Requires ``enable_calls=True``.
+
+        :param target: Phone number, phone JID or ``@lid`` JID to call.
+        :type target: JID | str
+        :raises CallError: If the call could not be placed.
+        :return: The call ID, used by the other ``call_*`` methods.
+        :rtype: str
+        """
+        target = Jid2String(target) if isinstance(target, JID) else target
+        return self._call_result(self.__client.CallUser(self.uuid, target.encode()))["call_id"]
+
+    def call_group(self, group: JID | str) -> str:
+        """Place a voice call that rings every member of a group (at most 31).
+        Requires ``enable_calls=True``. Group calls are experimental in meowcaller.
+
+        :param group: The group JID (or its bare numeric ID).
+        :type group: JID | str
+        :raises CallError: If the call could not be placed.
+        :return: The call ID, used by the other ``call_*`` methods.
+        :rtype: str
+        """
+        group = Jid2String(group) if isinstance(group, JID) else group
+        return self._call_result(self.__client.CallGroup(self.uuid, group.encode()))["call_id"]
+
+    def call_answer(self, call_id: str) -> None:
+        """Answer an incoming call (its ID is the ``CallID`` of the call offer event)."""
+        self._call_check(self.__client.CallAnswer(call_id.encode()))
+
+    def call_reject(self, call_id: str) -> None:
+        """Reject an incoming call."""
+        self._call_check(self.__client.CallReject(call_id.encode()))
+
+    def call_hangup(self, call_id: str) -> None:
+        """End a call and stop anything playing in it."""
+        self._call_check(self.__client.CallHangup(call_id.encode()))
+
+    def call_play(self, call_id: str, source: str) -> None:
+        """Play audio into a call, replacing whatever is playing.
+
+        The source is decoded with ffmpeg, so any file path or URL ffmpeg can read works.
+
+        :param call_id: The call to play into.
+        :type call_id: str
+        :param source: Path or URL of the audio.
+        :type source: str
+        :raises CallError: If the call is unknown or ffmpeg could not be started.
+        """
+        self._call_check(self.__client.CallPlay(call_id.encode(), source.encode()))
+
+    def call_pause(self, call_id: str) -> None:
+        """Pause playback; the call hears silence until :meth:`call_resume`."""
+        self._call_check(self.__client.CallPause(call_id.encode()))
+
+    def call_resume(self, call_id: str) -> None:
+        """Resume paused playback."""
+        self._call_check(self.__client.CallResume(call_id.encode()))
+
+    def call_stop_playback(self, call_id: str) -> None:
+        """Stop playback without ending the call."""
+        self._call_check(self.__client.CallStopPlayback(call_id.encode()))
+
+    def call_state(self, call_id: str) -> dict:
+        """Return ``{"call_id", "peer", "state", "player"}`` for a call.
+
+        ``state`` is one of idle, calling, ringing, connecting, active, ended or
+        waiting_room; ``player`` is idle, playing or paused (idle again once a
+        song finishes).
+        """
+        return self._call_result(self.__client.CallState(call_id.encode()))
+
     def prepare_pair_phone_payload(
         self,
         phone: str,
@@ -3710,6 +3798,8 @@ class NewClient:
         # False for a still-running thread, whereas an Event flag is never
         # corrupted by the interrupt.
         done = ThreadEvent()
+        if self.enable_calls:
+            self.__client.EnableCalls(self.uuid)
 
         def _worker():
             try:

@@ -947,3 +947,31 @@ message LogEntry {
 }
 
 message Stop{}
+
+// Voice call events (meowcaller, clients created with enable_calls=True)
+message CallIncoming {
+    required string CallID = 1;
+    required JID Peer = 2;
+    required bool IsVideo = 3;
+}
+message CallStateChanged {
+    required string CallID = 1;
+    required string State = 2;
+}
+message CallEnded {
+    required string CallID = 1;
+    required string Reason = 2;
+}
+message CallPlaybackFinished {
+    required string CallID = 1;
+}
+message CallGroupParticipant {
+    required JID JID = 1;
+    optional JID PN = 2;
+    required string State = 3;
+    required bool HandRaised = 4;
+}
+message CallGroupState {
+    required string CallID = 1;
+    repeated CallGroupParticipant Participants = 2;
+}
