@@ -57,7 +57,7 @@ jobs:
     - name: Install Protoc
       uses: arduino/setup-protoc@v3
       with:
-        version: "32.1"
+        version: "34.1"
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: build
       run: |
@@ -113,7 +113,7 @@ jobs:
     - name: Install Protoc
       uses: arduino/setup-protoc@v3
       with:
-        version: "32.1"
+        version: "34.1"
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Cache dependencies
       uses: actions/cache@v4
@@ -189,7 +189,7 @@ jobs:
     - name: Install Protoc
       uses: arduino/setup-protoc@v3
       with:
-        version: "32.1"
+        version: "34.1"
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Cache dependencies
       uses: actions/cache@v4
@@ -264,7 +264,7 @@ jobs:
     - name: Install Protoc
       uses: arduino/setup-protoc@v3
       with:
-        version: "32.1"
+        version: "34.1"
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Cache dependencies
       uses: actions/cache@v4
@@ -408,7 +408,7 @@ jobs:
     - name: Install Protoc
       uses: arduino/setup-protoc@v3
       with:
-        version: "32.1"
+        version: "34.1"
         repo-token: ${{ secrets.PAT }}
     - name: install deps
       run: |
