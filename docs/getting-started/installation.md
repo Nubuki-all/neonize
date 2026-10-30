@@ -1,174 +1,77 @@
 # Installation
 
-This guide will walk you through the process of installing Neonize on your system.
+## Requirements
 
-## System Requirements
+- Python 3.10 or newer
+- FFmpeg (required for media conversion: stickers, audio, video, thumbnails)
 
-### Python Version
+## Install from PyPI
 
-Neonize requires Python 3.10 or higher. You can check your Python version by running:
+=== "pip"
 
-```bash
-python --version
-```
-
-If you need to upgrade Python, visit [python.org](https://www.python.org/downloads/).
-
-## Installation Methods
-
-### Using pip (Recommended)
-
-The simplest way to install Neonize is using pip:
-
-```bash
-pip install neonize
-```
-
-### Using uv
-
-If you're using the modern [uv](https://github.com/astral-sh/uv) package manager:
-
-```bash
-uv add neonize
-```
-
-### Using Poetry
-
-For projects managed with Poetry:
-
-```bash
-poetry add neonize
-```
-
-### Development Installation
-
-To install Neonize with development dependencies:
-
-```bash
-# Clone the repository
-git clone https://github.com/krypton-byte/neonize.git
-cd neonize
-
-# Install with development dependencies
-pip install -e ".[dev]"
-```
-
-## Verifying Installation
-
-After installation, verify that Neonize is correctly installed:
-
-```python
-import neonize
-print(neonize.__version__)
-```
-
-This should print the installed version of Neonize without any errors.
-
-## Optional Dependencies
-
-### FFmpeg (For Media Processing)
-
-Neonize uses FFmpeg for video and audio processing. Install it based on your operating system:
-
-=== "Ubuntu/Debian"
     ```bash
-    sudo apt update
+    pip install neonize
+    ```
+
+=== "uv"
+
+    ```bash
+    uv add neonize
+    ```
+
+The PyPI wheel ships the compiled Go core (`.so` / `.dll` / `.dylib`) inside
+the package. There is nothing else to download at runtime — the native
+library is loaded directly from the wheel on import.
+
+!!! note "Platform detection"
+    Neonize selects the correct binary for your platform at import time via
+    `neonize.utils.platform`. If no matching binary exists, an
+    `UnsupportedPlatform` error is raised with the exact filename it looked
+    for.
+
+## Install FFmpeg
+
+Sticker and audio/video handling shell out to FFmpeg for transcoding.
+
+=== "Debian / Ubuntu"
+
+    ```bash
     sudo apt install ffmpeg
     ```
 
-=== "macOS"
+=== "Fedora"
+
+    ```bash
+    sudo dnf install ffmpeg
+    ```
+
+=== "macOS (Homebrew)"
+
     ```bash
     brew install ffmpeg
     ```
 
-=== "Windows"
-    Download from [ffmpeg.org](https://ffmpeg.org/download.html) and add to PATH
+=== "Windows (winget)"
 
-### Database Drivers
+    ```powershell
+    winget install Gyan.FFmpeg
+    ```
 
-#### PostgreSQL Support
+Text-only bots that never send or convert media work without FFmpeg.
 
-If you plan to use PostgreSQL as your database:
+## Verify the Installation
 
-```bash
-pip install psycopg2-binary
+```python
+import neonize
+
+print(neonize.__version__)
+from neonize.client import NewClient  # noqa: E402  (loads the native core)
 ```
 
-Or for production environments:
+If this prints a version and imports cleanly, both the Python layer and the
+Go core are functional.
 
-```bash
-pip install psycopg2
-```
+## Installing from Source
 
-## Platform-Specific Notes
-
-### Linux
-
-On Linux systems, you may need to install additional system libraries:
-
-```bash
-# Ubuntu/Debian
-sudo apt install libmagic1
-
-# Fedora/RHEL
-sudo dnf install file-libs
-```
-
-### Windows
-
-On Windows, Neonize automatically installs `python-magic-bin` which includes the necessary libraries.
-
-### macOS
-
-On macOS, you may need to install libmagic:
-
-```bash
-brew install libmagic
-```
-
-## Troubleshooting
-
-### Common Installation Issues
-
-#### Issue: `ModuleNotFoundError: No module named 'neonize'`
-
-**Solution**: Ensure you've activated the correct Python environment and that the installation completed successfully.
-
-```bash
-pip list | grep neonize
-```
-
-#### Issue: FFmpeg not found
-
-**Solution**: Make sure FFmpeg is installed and available in your system PATH.
-
-```bash
-ffmpeg -version
-```
-
-#### Issue: Permission denied during installation
-
-**Solution**: Use a virtual environment or install with the `--user` flag:
-
-```bash
-pip install --user neonize
-```
-
-### Getting Help
-
-If you encounter issues not covered here:
-
-1. Check the [FAQ](../faq.md) section
-2. Search [GitHub Issues](https://github.com/krypton-byte/neonize/issues)
-3. Open a new issue with detailed information about your problem
-
-## Next Steps
-
-Now that you have Neonize installed, proceed to:
-
-- [Quick Start Guide](quickstart.md) - Create your first bot
-- [Authentication](authentication.md) - Learn about WhatsApp authentication
-- [User Guide](../user-guide/index.md) - Explore Neonize features
-
-!!! success "Installation Complete"
-    You're now ready to build amazing WhatsApp bots with Neonize! 🎉
+Building from source requires Go 1.25+, protoc, and a C compiler. See
+[Building from Source](../development/building.md) for the full toolchain.

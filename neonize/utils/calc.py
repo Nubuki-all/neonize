@@ -34,9 +34,7 @@ def get_media_keys(media_key: bytes, app_info: bytes):
     )
 
 
-def get_sidecar_from_upload(
-    plaintext: bytes, media_key: bytes, media_type: str = "video"
-) -> bytes:
+def get_sidecar_from_upload(plaintext: bytes, media_key: bytes, media_type: str = "video") -> bytes:
     iv, cipher_key, mac_key, _ = get_media_keys(media_key, MEDIA_KEY_INFO[media_type])
 
     cipher = AES.new(cipher_key, AES.MODE_CBC, iv)

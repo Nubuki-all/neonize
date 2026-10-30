@@ -1,64 +1,63 @@
-# Async Client
+# Async Client Overview
 
-Working with Neonize's asynchronous client.
-
-## Overview
-
-The async client (`NewAClient`) provides full async/await support for high-performance applications.
-
-## Quick Links
-
-- [Getting Started](quickstart.md) - Start with async client
-- [Event Handling](events.md) - Async event handlers
-- [Best Practices](best-practices.md) - Async patterns and tips
-
-## Basic Usage
+`neonize.aioze.client.NewAClient` is the asyncio-native mirror of the
+synchronous client. The method surface is identical — every sync method has
+an async counterpart with the same name and parameters, awaited instead of
+called:
 
 ```python
-import asyncio
 from neonize.aioze.client import NewAClient
-from neonize.aioze.events import MessageEv, ConnectedEv
 
-async def main():
-    client = NewAClient("async_bot")
-    
-    @client.event
-    async def on_connected(client: NewAClient, event: ConnectedEv):
-        print("✅ Connected!")
-    
-    @client.event
-    async def on_message(client: NewAClient, event: MessageEv):
-        text = event.Message.conversation
-        if text == "ping":
-            await client.reply_message("pong!", event)
-    
-    await client.connect()
+client = NewAClient("session.db")
 
-asyncio.run(main())
+await client.send_message(chat, "Hello")   # instead of client.send_message(...)
 ```
 
-## When to Use Async
+## When to Choose Async
 
-Use async client when you need:
+| Scenario | Recommendation |
+| --- | --- |
+| Web service (FastAPI, aiohttp) handling WhatsApp in-process | Async client |
+| Many concurrent sessions | Async + `ClientFactory` |
+| Simple single-session scripts | Sync client |
 
-- **High concurrency** - Handle many connections simultaneously
-- **Non-blocking I/O** - Don't block on network operations
-- **Integration** - Work with async frameworks (FastAPI, aiohttp)
-- **Performance** - Maximum throughput
+Both clients can coexist; they share nothing at runtime.
 
-## Async vs Sync
+## Multi-Session with ClientFactory
 
-| Feature | Async Client | Sync Client |
-|---------|-------------|-------------|
-| Performance | ⚡ Higher | 🐌 Lower |
-| Concurrency | ✅ Excellent | ⚠️ Limited |
-| Complexity | 🔴 Higher | 🟢 Lower |
-| Best For | Production | Prototyping |
+`ClientFactory` manages a fleet of clients over one SQLite database:
 
-## Next Steps
+```python
+from neonize.aioze.client import ClientFactory
 
-Continue to:
+factory = ClientFactory("sessions.db")
 
-- [Async Quick Start](quickstart.md) - Build your first async bot
-- [Async Events](events.md) - Handle events asynchronously
-- [Best Practices](best-practices.md) - Write efficient async code
+# Resume every stored device:
+for device in factory.get_all_devices():
+    factory.new_client(device.JID)
+
+# Or create a fresh pairing slot:
+factory.new_client(uuid="bot-3")
+```
+
+Events registered on the factory fan out across **all** managed clients.
+
+```python
+@factory.event(MessageEv)
+async def on_message(client: NewAClient, ev: MessageEv):
+    await client.reply_message("pong", ev.Message)
+```
+
+Run until interrupted:
+
+```python
+await factory.idle_all()
+```
+
+The full walkthrough lives in [Quick Start](quickstart.md).
+
+## What Stays the Same
+
+- Event types (`neonize.aioze.events`) carry identical payloads.
+- Constructors take the same options.
+- Errors (`neonize.exc`) are shared between both clients.

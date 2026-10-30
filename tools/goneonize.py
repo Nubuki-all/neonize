@@ -7,6 +7,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from .version import Version
+
 cwd = (Path(__file__).parent.parent / "goneonize/").__str__()
 # shell = [
 #     "protoc --go_out=. Neonize.proto def.proto",
@@ -57,15 +59,15 @@ def __build():
     if (Path(cwd) / "defproto").exists():
         shutil.rmtree(f"{cwd}/defproto")
     os.mkdir(f"{cwd}/defproto")
-    os.rename(
-        f"{cwd}/github.com/krypton-byte/neonize/defproto/",
-        f"{cwd}/defproto")
+    os.rename(f"{cwd}/github.com/krypton-byte/neonize/defproto/", f"{cwd}/defproto")
     shutil.rmtree(f"{cwd}/github.com")
-    subprocess.call(
-        shlex.split(
-            f"go build -buildmode=c-shared -ldflags=-s -o {filename} main.go"),
+    build_env = os.environ.copy()
+    build_env["CGO_ENABLED"] = "1"
+    subprocess.run(
+        shlex.split(f"go build -buildmode=c-shared -ldflags=-s -o {filename} main.go"),
         cwd=cwd,
-        env=os.environ.update({"CGO_ENABLED": "1"}),
+        env=build_env,
+        check=True,
     )
     if (Path(cwd).parent / filename).exists():
         os.remove(os.path.dirname(cwd) + "/" + filename)
@@ -78,6 +80,7 @@ def build_proto():
             wf.write(file.read())
     for sh in shell:
         subprocess.call(shlex.split(sh), cwd=cwd + "/defproto")
+
     # if (Path(cwd) / "defproto").exists():
     #     shutil.rmtree(f"{cwd}/defproto")
     # os.mkdir(f"{cwd}/defproto")
@@ -85,43 +88,49 @@ def build_proto():
     # shutil.rmtree(f"{cwd}/github.com")
 
 
-def build_neonize():
+def build_neonize(smart: bool = False):
+    version = Version()
+    if smart and version.goneonize != version.neonize:
+        print("goneonize version unchanged, skipping goneonize build.")
+        return
     os_name = os.environ.get("GOOS") or platform.system().lower()
     arch_name = os.environ.get("GOARCH") or platform.machine().lower()
     print(f"os: {os_name}, arch: {arch_name}")
     filename = generated_name(os_name, arch_name)
     print(filename)
-    subprocess.call(
-        shlex.split(
-            f"go build -buildmode=c-shared -ldflags=-s -o {filename} "),
+    build_env = os.environ.copy()
+    build_env["CGO_ENABLED"] = "1"
+    subprocess.run(
+        shlex.split(f"go build -buildmode=c-shared -ldflags=-s -o {filename}"),
         cwd=cwd,
-        env=os.environ.update({"CGO_ENABLED": "1"}),
+        env=build_env,
+        check=True,
     )
-    if (Path(cwd).parent / f"neonize/{filename}").exists():
-        os.remove(os.path.dirname(cwd) + "/neonize/" + filename)
-    os.rename(
-        f"{cwd}/{filename}",
-        os.path.dirname(cwd) +
-        "/neonize/" +
-        filename)
+    output_dir = Path(cwd).parent / "neonize"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_path = output_dir / filename
+    output_path.unlink(missing_ok=True)
+    (Path(cwd) / filename).replace(output_path)
 
 
 def build():
     args = argparse.ArgumentParser()
     sub = args.add_subparsers(dest="build", required=True)
-    sub.add_parser("goneonize")
+    goparser = sub.add_parser("goneonize")
+    goparser.add_argument("--smart", action="store_true", default=False)
     # arg.add_argument("--out", type=str, default=os.path.dirname(cwd) + "/neonize/")
     sub.add_parser("proto")
     sub.add_parser("all")
     parse = args.parse_args()
+    smart = parse.smart if hasattr(parse, "smart") else False
     match parse.build:
         case "goneonize":
-            build_neonize()
+            build_neonize(smart=smart)
         case "proto":
             build_proto()
         case "all":
             build_proto()
-            build_neonize()
+            build_neonize(smart=smart)
 
 
 def build_android():
@@ -131,9 +140,7 @@ def build_android():
     if (Path(cwd) / "defproto").exists():
         shutil.rmtree(f"{cwd}/defproto")
     os.mkdir(f"{cwd}/defproto")
-    os.rename(
-        f"{cwd}/github.com/krypton-byte/neonize/defproto/",
-        f"{cwd}/defproto")
+    os.rename(f"{cwd}/github.com/krypton-byte/neonize/defproto/", f"{cwd}/defproto")
     shutil.rmtree(f"{cwd}/github.com")
     os.environ.update(
         {
@@ -143,8 +150,7 @@ def build_android():
         }
     )
     subprocess.call(
-        shlex.split(
-            f"go build -buildmode=c-shared -ldflags=-s -o {filename} main.go"),
+        shlex.split(f"go build -buildmode=c-shared -ldflags=-s -o {filename} main.go"),
         cwd=cwd,
         env=os.environ,
     )

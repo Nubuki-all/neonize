@@ -110,10 +110,7 @@ class TemporaryFile:
 
     def __exit__(self, exc_type, exc_value, traceback):
         os.remove(self.path)
-        log.debug(
-            "exc_type: %r, exc_value: %r, traceback: %r"
-            % (exc_type, exc_value, traceback)
-        )
+        log.debug("exc_type: %r, exc_value: %r, traceback: %r" % (exc_type, exc_value, traceback))
 
 
 def prepare_zip_file_content(file_name_content: dict) -> bytes:

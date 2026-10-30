@@ -11,21 +11,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-go@v4
+    - uses: actions/setup-go@v5
       with:
-        go-version: '^1.21.5'
+        go-version-file: goneonize/go.mod
+        cache-dependency-path: goneonize/go.sum
     - name: installing proto-gen-go
       run: |
         cd goneonize
         go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
         go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
-        python-version: "3.11.8"
+        python-version: "3.11"
     - name: Install Protoc
       uses: arduino/setup-protoc@v3
       with:
-        version: "32.1"
+        version: "34.1"
         repo-token: ${{ secrets.GITHUB_TOKEN }}
     - name: Install uv
       uses: astral-sh/setup-uv@v5
@@ -35,23 +36,12 @@ jobs:
         uv run task proto
         # git diff --exit-code || uv run task build proto
         uv run task build proto
-    - uses: astral-sh/ruff-action@v3
-      continue-on-error: true
-      with:
-        args: "check --fix"
-    - name: Install Python lint libraries
+    - name: lint and format python (ruff, settings from pyproject.toml)
       run: |
-        pip3 install autopep8 autoflake isort black
-    - name: Check for showstoppers
-      run: autopep8 --verbose --in-place --recursive --aggressive --exclude='*/proto/*' .
-    - name: Remove unused imports and variables
-      run: autoflake --in-place --recursive --remove-all-unused-imports --remove-unused-variables --exclude "*/proto/*" --ignore-init-module-imports .
-    - name: lint with isort and black
-      run: |
-        isort neonize --skip "neonize/proto"
-        black neonize  --exclude "neonize/proto"
+        uv run --with ruff ruff check --fix --exit-zero .
+        uv run --with ruff ruff format .
     - name: update golang dependencies
-      run: cd goneonize && go get -u && go mod tidy
+      run: cd goneonize && go get -u ./... && go mod tidy
     - name: Run golangci-lint
       uses: golangci/golangci-lint-action@v8
       with:
@@ -62,6 +52,8 @@ jobs:
       run: go install mvdan.cc/gofumpt@latest
     - name: reformat go
       run: cd goneonize && gofumpt -l -w .
+    - name: verify goneonize still builds
+      run: cd goneonize && go build ./...
     - name: Create Pull Request
       id: cpr
       uses: peter-evans/create-pull-request@v7

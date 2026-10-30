@@ -13,9 +13,11 @@ import "C"
 
 import (
 	"context"
+	cryptorand "crypto/rand"
 	// "crypto/sha256"
 	// "encoding/hex"
 	"fmt"
+	"os"
 	"strings"
 	"time"
 	"unsafe"
@@ -142,6 +144,29 @@ func getButtonTypeFromMessage(msg *waE2E.Message) string {
 	}
 }
 
+// shouldAddBotNode reports whether the <bot biz_bot="1"/> node should be
+// appended for the given chat. WhatsApp renders that node as an "AI" badge on
+// the message and counts the sender's traffic as automated, so it is a claim
+// about the account and not only about one message. A library cannot know
+// whether its caller wants that claim made, and the caller that does want it
+// can say so; the caller that does not should not have to know the node exists.
+// So it is opt-in, through the NEONIZE_BOT_TAG env var:
+//
+//	"on"            - append the bot node in 1:1 chats (upstream behavior)
+//	unset (default) - never append it
+//
+// The variable is read by the Go runtime from the environment the process
+// started with, so a host that wants the node sets it before launch; setting it
+// from inside a running process does not reach here.
+func shouldAddBotNode(isPrivate bool) bool {
+	switch strings.ToLower(strings.TrimSpace(os.Getenv("NEONIZE_BOT_TAG"))) {
+	case "on", "true", "1", "yes":
+		return isPrivate
+	default:
+		return false
+	}
+}
+
 // GenerateWABinary for create button
 func GenerateWABinary(ctx context.Context, to types.JID, msg *waE2E.Message) *[]waBinary.Node {
 	isPrivate := to.Server == types.DefaultUserServer
@@ -226,7 +251,7 @@ func GenerateWABinary(ctx context.Context, to types.JID, msg *waE2E.Message) *[]
 			}
 		}
 
-		if isPrivate {
+		if shouldAddBotNode(isPrivate) {
 			botNode := waBinary.Node{
 				Tag:   "bot",
 				Attrs: waBinary.Attrs{"biz_bot": "1"},
@@ -266,7 +291,7 @@ func GenerateWABinary(ctx context.Context, to types.JID, msg *waE2E.Message) *[]
 		}
 		nodes = append(nodes, bizNode)
 
-		if isPrivate {
+		if shouldAddBotNode(isPrivate) {
 			botNode := waBinary.Node{
 				Tag:   "bot",
 				Attrs: waBinary.Attrs{"biz_bot": "1"},
@@ -275,7 +300,7 @@ func GenerateWABinary(ctx context.Context, to types.JID, msg *waE2E.Message) *[]
 		}
 
 	default:
-		if isPrivate {
+		if shouldAddBotNode(isPrivate) {
 			botNode := waBinary.Node{
 				Tag:   "bot",
 				Attrs: waBinary.Attrs{"biz_bot": "1"},
@@ -317,6 +342,146 @@ func GetPNFromLID(id *C.char, JIDByte *C.uchar, JIDSize C.int) *C.struct_BytesRe
 	if err != nil {
 		return_.Error = proto.String(err.Error())
 	}
+	return ProtoReturnV3(&return_)
+}
+
+const sprSupported = false
+
+//export SendSPRMessage
+func SendSPRMessage(id *C.char, groupByte *C.uchar, groupSize C.int, targetsByte *C.uchar, targetsSize C.int, targetText *C.char, decoyText *C.char) *C.struct_BytesReturn {
+	return_ := defproto.SendMessageReturnFunction{}
+	clientID := C.GoString(id)
+	client := clients[clientID]
+	if client == nil {
+		return_.Error = proto.String("client is nil")
+		return ProtoReturnV3(&return_)
+	}
+	// Upstream's SPR send needs SendRequestExtra.GroupParticipants and
+	// RotateGroupSenderKey, which whatsmeow does not have, so it is disabled
+	// until whatsmeow supports targeted group sends.
+	if !sprSupported {
+		return_.Error = proto.String("SPR group send is not supported by this whatsmeow version")
+		return ProtoReturnV3(&return_)
+	}
+
+	var groupProto defproto.JID
+	if err := proto.Unmarshal(getByteByAddr(groupByte, groupSize), &groupProto); err != nil {
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
+	}
+	group := utils.DecodeJidProto(&groupProto)
+	if group.Server != types.GroupServer || group.User == "" {
+		return_.Error = proto.String("SPR destination must be a WhatsApp group")
+		return ProtoReturnV3(&return_)
+	}
+
+	var targetsProto defproto.JIDArray
+	if err := proto.Unmarshal(getByteByAddr(targetsByte, targetsSize), &targetsProto); err != nil {
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
+	}
+	if len(targetsProto.JIDS) == 0 || len(targetsProto.JIDS) > 25 {
+		return_.Error = proto.String("SPR requires between 1 and 25 selected targets")
+		return ProtoReturnV3(&return_)
+	}
+	targetTextValue := strings.TrimSpace(C.GoString(targetText))
+	decoyTextValue := strings.TrimSpace(C.GoString(decoyText))
+	if targetTextValue == "" || decoyTextValue == "" {
+		return_.Error = proto.String("SPR target and decoy messages must not be empty")
+		return ProtoReturnV3(&return_)
+	}
+
+	ctx := context.Background()
+	groupInfo, err := client.GetGroupInfo(ctx, group)
+	if err != nil {
+		return_.Error = proto.String(fmt.Sprintf("failed to verify SPR group members: %v", err))
+		return ProtoReturnV3(&return_)
+	}
+	participants := make([]types.JID, 0, len(targetsProto.JIDS))
+	targetKeys := make([]string, 0, len(targetsProto.JIDS))
+	seenTargets := make(map[string]bool)
+	for _, targetProto := range targetsProto.JIDS {
+		target := utils.DecodeJidProto(targetProto).ToNonAD()
+		if target.User == "" || (target.Server != types.DefaultUserServer && target.Server != types.HiddenUserServer) {
+			return_.Error = proto.String("SPR targets must be individual WhatsApp accounts")
+			return ProtoReturnV3(&return_)
+		}
+		if seenTargets[target.String()] {
+			continue
+		}
+		isMember := false
+		targetAliases := []types.JID{target}
+		for _, member := range groupInfo.Participants {
+			for _, memberJID := range []types.JID{member.JID, member.PhoneNumber, member.LID} {
+				if !memberJID.IsEmpty() && memberJID.ToNonAD() == target {
+					isMember = true
+					targetAliases = append(targetAliases, member.JID, member.PhoneNumber, member.LID)
+					break
+				}
+			}
+			if isMember {
+				break
+			}
+		}
+		if !isMember {
+			return_.Error = proto.String(fmt.Sprintf("SPR target %s is not a member of group %s", target, group))
+			return ProtoReturnV3(&return_)
+		}
+		participants = append(participants, target)
+		for _, alias := range targetAliases {
+			if alias.IsEmpty() {
+				continue
+			}
+			key := alias.ToNonAD().String()
+			if !seenTargets[key] {
+				seenTargets[key] = true
+				targetKeys = append(targetKeys, key)
+			}
+		}
+	}
+	if len(participants) == 0 {
+		return_.Error = proto.String("SPR requires at least one unique target")
+		return ProtoReturnV3(&return_)
+	}
+
+	secret := make([]byte, 32)
+	if _, err := cryptorand.Read(secret); err != nil {
+		return_.Error = proto.String(fmt.Sprintf("failed to generate SPR message secret: %v", err))
+		return ProtoReturnV3(&return_)
+	}
+	storeValue, ok := sprRetryStores.Load(clientID)
+	if !ok {
+		return_.Error = proto.String("SPR retry store is unavailable")
+		return ProtoReturnV3(&return_)
+	}
+	sprStore := storeValue.(*sprRetryStore)
+	messageID := client.GenerateMessageID()
+	if err := sprStore.put(sprRetryMessage{
+		Group:         group.String(),
+		MessageID:     string(messageID),
+		Targets:       targetKeys,
+		TargetMessage: targetTextValue,
+		DecoyMessage:  decoyTextValue,
+	}); err != nil {
+		return_.Error = proto.String(fmt.Sprintf("failed to save SPR retry data: %v", err))
+		return ProtoReturnV3(&return_)
+	}
+
+	message := waE2E.Message{
+		Conversation: proto.String(targetTextValue),
+		MessageContextInfo: &waE2E.MessageContextInfo{
+			MessageSecret: secret,
+		},
+	}
+	extra := whatsmeow.SendRequestExtra{
+		ID: messageID,
+	}
+	response, err := client.SendMessage(ctx, group, &message, extra)
+	if err != nil {
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
+	}
+	return_.SendResponse = utils.EncodeSendResponse(response)
 	return ProtoReturnV3(&return_)
 }
 
@@ -371,9 +536,17 @@ func ProtoReturnV2(data proto.Message) *C.struct_BytesReturn {
 }
 
 func ProtoReturnV3(data proto.Message) *C.struct_BytesReturn {
-	data_buf, err := proto.Marshal(data)
+	// Marshal into a pooled buffer to avoid a fresh heap allocation on every
+	// call; the bytes are copied onto the C heap below, so the buffer can be
+	// returned to the pool immediately afterwards.
+	bufPtr := bufPool.Get().(*[]byte)
+	data_buf, err := proto.MarshalOptions{}.MarshalAppend((*bufPtr)[:0], data)
 	if err != nil {
-		panic(err)
+		bufPool.Put(bufPtr)
+		// Return an empty BytesReturn instead of panicking. The Python side
+		// will receive an empty protobuf message, which unmarshals as a
+		// zero-value struct — the same as a successful call with no data.
+		return (*C.struct_BytesReturn)(C.calloc(1, C.size_t(unsafe.Sizeof(C.struct_BytesReturn{}))))
 	}
 	result := (*C.struct_BytesReturn)(C.malloc(C.size_t(unsafe.Sizeof(C.struct_BytesReturn{}))))
 	result.size = C.size_t(len(data_buf))
@@ -383,10 +556,15 @@ func ProtoReturnV3(data proto.Message) *C.struct_BytesReturn {
 	} else {
 		result.data = nil
 	}
+	*bufPtr = data_buf // keep the grown capacity for the next caller
+	bufPool.Put(bufPtr)
 	return result
 }
 
 func getBytesAndSize(data []byte) (*C.char, C.size_t) {
+	if len(data) == 0 {
+		return nil, 0
+	}
 	messageSourceCDATA := (*C.char)(unsafe.Pointer(&data[0]))
 	messageSourceCSize := C.size_t(len(data))
 	return messageSourceCDATA, messageSourceCSize
@@ -564,7 +742,8 @@ func StopAll() {
 
 //export Stop
 func Stop(id *C.char) {
-	utils.Noop.Infof("Stopping client with ID:", C.GoString(id)) // utils.Logger
+	utils.Noop.Infof("Stopping client with ID: %s", C.GoString(id))
+	sprRetryStores.Delete(C.GoString(id)) // utils.Logger
 	if client, exists := clients[C.GoString(id)]; exists {
 		client.Disconnect()
 		delete(clients, C.GoString(id))
@@ -584,7 +763,7 @@ func Stop(id *C.char) {
 }
 
 //export Neonize
-func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *C.char, qrCb C.ptr_to_python_function_string, logStatus C.ptr_to_python_function_string, event C.ptr_to_python_function_bytes, logCb C.ptr_to_python_function_callback_bytes2, subscribes *C.uchar, lenSubscriber C.int, devicePropsBuf *C.uchar, devicePropsSize C.int, pairphone *C.uchar, pairphoneSize C.int, proxySettingsRaw *C.struct_ProxySettings) *C.char {
+func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, newDevice C.int, logLevel *C.char, qrCb C.ptr_to_python_function_string, logStatus C.ptr_to_python_function_string, event C.ptr_to_python_function_bytes, logCb C.ptr_to_python_function_callback_bytes2, subscribes *C.uchar, lenSubscriber C.int, devicePropsBuf *C.uchar, devicePropsSize C.int, pairphone *C.uchar, pairphoneSize C.int, proxySettingsRaw *C.struct_ProxySettings) *C.char {
 	subscribers := map[int]bool{}
 	var deviceProps waCompanionReg.DeviceProps
 	loginStateChan := make(chan bool)
@@ -607,6 +786,9 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 		return C.CString(err.Error())
 	}
 	// If you want multiple sessions, remember their JIDs and use .GetDevice(jid) or .GetAllDevices() instead.
+	// Pass newDevice != 0 to pair an ADDITIONAL account: it forces a brand-new
+	// blank device (fresh QR) even when the store already holds other sessions,
+	// where GetFirstDevice would silently resume the first stored one.
 	var deviceStore *store.Device
 	var err_device error
 	var JID defproto.JID
@@ -616,6 +798,8 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 			return C.CString(jidbyte_err.Error())
 		}
 		deviceStore, err_device = container.GetDevice(context.TODO(), utils.DecodeJidProto(&JID))
+	} else if int(newDevice) != 0 {
+		deviceStore = container.NewDevice()
 	} else {
 		deviceStore, err_device = container.GetFirstDevice(context.TODO())
 	}
@@ -626,6 +810,9 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 	clientLog := utils.NewLogger("Client", C.GoString(logLevel), utils.Callback(logCb))
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 	clients[uuid] = client
+	sprStore := newSPRRetryStore(C.GoString(db))
+	sprRetryStores.Store(uuid, sprStore)
+	installSPRRetryHooks(client, sprStore)
 	if err := applyProxySettings(client, proxySettingsRaw); err != nil {
 		return C.CString(err.Error())
 	}
@@ -777,20 +964,21 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 				if encMessage := v.Message.GetSecretEncryptedMessage(); encMessage != nil && encMessage.GetSecretEncType() == waE2E.SecretEncryptedMessage_MESSAGE_EDIT {
 					decrypted, err := client.DecryptSecretEncryptedMessage(ctx, v)
 					if err != nil {
-						clientLog.Errorf("failed to decrypt secret encrypted message edit: %w", err)
-					}
-					if decrypted.GetProtocolMessage().GetType() != waE2E.ProtocolMessage_MESSAGE_EDIT {
-						decrypted = &waE2E.Message{
-							ProtocolMessage: &waE2E.ProtocolMessage{
-								Key:           encMessage.GetTargetMessageKey(),
-								Type:          waE2E.ProtocolMessage_MESSAGE_EDIT.Enum(),
-								EditedMessage: decrypted,
-								TimestampMS:   proto.Int64(v.Info.Timestamp.UnixMilli()),
-							},
+						clientLog.Warnf("failed to decrypt secret encrypted message edit %s: %v", v.Info.ID, err)
+					} else {
+						if decrypted.GetProtocolMessage().GetType() != waE2E.ProtocolMessage_MESSAGE_EDIT {
+							decrypted = &waE2E.Message{
+								ProtocolMessage: &waE2E.ProtocolMessage{
+									Key:           encMessage.GetTargetMessageKey(),
+									Type:          waE2E.ProtocolMessage_MESSAGE_EDIT.Enum(),
+									EditedMessage: decrypted,
+									TimestampMS:   proto.Int64(v.Info.Timestamp.UnixMilli()),
+								},
+							}
 						}
+						v.Message = decrypted
+						v.IsEdit = true
 					}
-					v.Message = decrypted
-					v.IsEdit = true
 				}
 				messageSource := utils.EncodeEventTypesMessage(v)
 				messageEvent := MessageEvent{
@@ -831,7 +1019,7 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 				joined := utils.EncodeJoinedGroup(v)
 				messageEvent := MessageEvent{
 					eventType: 21,
-					message:   &joined,
+					message:   joined,
 				}
 				eventChan <- &messageEvent
 			}
@@ -1082,6 +1270,18 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 				}
 				eventChan <- &messageEvent
 			}
+		case *events.RotateADVSecret:
+			if _, ok := subscribers[45]; ok {
+				rot := defproto.RotateADVSecret{
+					OldSecret: proto.String(v.OldSecret),
+					NewSecret: proto.String(v.NewSecret),
+				}
+				messageEvent := MessageEvent{
+					eventType: 45,
+					message:   &rot,
+				}
+				eventChan <- &messageEvent
+			}
 		}
 
 		// C.free(unsafe.Pointer(CData))
@@ -1127,21 +1327,34 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 			// }
 
 		} else {
-			qrChan, _ := client.GetQRChannel(context.Background())
+			// Tied to the client context so Stop also ends the QR wait below.
+			qrChan, _ := client.GetQRChannel(ctx)
 			err = client.Connect()
 			if err != nil {
 				return C.CString(err.Error())
 			}
-			for evt := range qrChan {
-				if evt.Event == "code" {
-					// Render the QR code here
-					// e.g. qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
-					// or just manually `echo 2@... | qrencode -t ansiutf8` in a terminal
-					qrFuncCb(evt.Code)
-					// C.free(unsafe.Pointer(cstr))
-				} else {
-					fmt.Println("Login event:", evt.Event)
-					logStatusCb(evt.Event)
+			// whatsmeow leaves the QR channel open when the client is
+			// disconnected on purpose, so also stop waiting once Stop
+			// cancels the client context.
+		waitForQR:
+			for {
+				select {
+				case evt, ok := <-qrChan:
+					if !ok {
+						break waitForQR
+					}
+					if evt.Event == "code" {
+						// Render the QR code here
+						// e.g. qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
+						// or just manually `echo 2@... | qrencode -t ansiutf8` in a terminal
+						qrFuncCb(evt.Code)
+						// C.free(unsafe.Pointer(cstr))
+					} else {
+						fmt.Println("Login event:", evt.Event)
+						logStatusCb(evt.Event)
+					}
+				case <-ctx.Done():
+					return C.CString("")
 				}
 			}
 		}
@@ -1154,9 +1367,15 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, logLevel *
 	}
 
 	if int(pairphoneSize) > 0 {
-		for stat := range loginStateChan {
-			if stat {
-				break
+	waitForLogin:
+		for {
+			select {
+			case stat := <-loginStateChan:
+				if stat {
+					break waitForLogin
+				}
+			case <-ctx.Done():
+				return C.CString("")
 			}
 		}
 	}
@@ -1413,6 +1632,22 @@ func SetGroupName(id *C.char, JIDByte *C.uchar, JIDSize C.int, name *C.char) *C.
 		return C.CString(err.Error())
 	}
 	status_err := clients[C.GoString(id)].SetGroupName(context.Background(), utils.DecodeJidProto(&neoJIDProto), C.GoString(name))
+	if status_err != nil {
+		return C.CString(status_err.Error())
+	}
+	return C.CString("")
+}
+
+//export RejectCall
+func RejectCall(id *C.char, JIDByte *C.uchar, JIDSize C.int, callID *C.char) *C.char {
+	jidbyte := getByteByAddr(JIDByte, JIDSize)
+	var neoJIDProto defproto.JID
+	err := proto.Unmarshal(jidbyte, &neoJIDProto)
+	if err != nil {
+		return C.CString(err.Error())
+	}
+	// callFrom is the caller's JID (the CallOffer creator); whatsmeow addresses the <reject> to it.
+	status_err := clients[C.GoString(id)].RejectCall(context.Background(), utils.DecodeJidProto(&neoJIDProto), C.GoString(callID))
 	if status_err != nil {
 		return C.CString(status_err.Error())
 	}
@@ -1686,9 +1921,11 @@ func GetNewsletterMessageUpdate(id *C.char, JIDByte *C.uchar, JIDSize C.int, Cou
 	}
 	NewsletterMessages := []*defproto.NewsletterMessage{}
 	for _, msg := range newsletterMessage {
-		NewsletterMessages = append(NewsletterMessages, utils.EncodeNewsletterMessage(msg))
+		if encoded := utils.EncodeNewsletterMessage(msg); encoded != nil {
+			NewsletterMessages = append(NewsletterMessages, encoded)
+		}
 	}
-	if newsletterMessage != nil {
+	if len(NewsletterMessages) > 0 {
 		return_.NewsletterMessage = NewsletterMessages
 	}
 	return ProtoReturnV3(&return_)
@@ -1713,9 +1950,11 @@ func GetNewsletterMessages(id *C.char, JIDByte *C.uchar, JIDSize C.int, Count C.
 	}
 	NewsletterMessages := []*defproto.NewsletterMessage{}
 	for _, msg := range newsletterMessage {
-		NewsletterMessages = append(NewsletterMessages, utils.EncodeNewsletterMessage(msg))
+		if encoded := utils.EncodeNewsletterMessage(msg); encoded != nil {
+			NewsletterMessages = append(NewsletterMessages, encoded)
+		}
 	}
-	if newsletterMessage != nil {
+	if len(NewsletterMessages) > 0 {
 		return_.NewsletterMessage = NewsletterMessages
 	}
 	return ProtoReturnV3(&return_)
@@ -1852,6 +2091,10 @@ func PairPhone(id *C.char, pairPhoneByte *C.uchar, pairPhoneSize C.int) *C.struc
 	}
 
 	client := clients[C.GoString(id)]
+	if client == nil {
+		return_.Error = proto.String("client is nil: ensure client is connected before calling PairPhone, or pass pairphone to connect()")
+		return ProtoReturnV3(&return_)
+	}
 	code, err := client.PairPhone(
 		context.Background(),
 		*pairPhoneParams.Phone,
@@ -1976,12 +2219,12 @@ func SetPassive(id *C.char, passive C.bool) *C.char {
 //export SetStatusMessage
 func SetStatusMessage(id *C.char, msg, emoji *C.char, seconds C.int) *C.char {
 	txt := C.GoString(msg)
-	status := types.SetStatusInput{
-		Text: &txt,
-		Emoji: &types.SetStatusEmoji{
-			Content: C.GoString(emoji),
-		},
-		Duration: jsontime.S(time.Duration(seconds) * time.Second),
+	status := types.SetStatusInput{Text: &txt}
+	if emojiText := C.GoString(emoji); emojiText != "" {
+		status.Emoji = &types.SetStatusEmoji{Content: emojiText}
+	}
+	if seconds > 0 {
+		status.Duration = jsontime.S(time.Duration(seconds) * time.Second)
 	}
 	err := clients[C.GoString(id)].SetStatusMessage(context.Background(), status)
 	if err != nil {
@@ -2045,7 +2288,7 @@ func UpdateBlocklist(id *C.char, jidByte *C.uchar, JIDSize C.int, action *C.char
 		return_.Error = proto.String(err_j.Error())
 		return ProtoReturnV3(&return_)
 	}
-	blocklist, err := clients[C.GoString(id)].UpdateBlocklist(context.Background(), utils.DecodeJidProto(&JID), events.BlocklistChangeAction(C.GoString(action)))
+	blocklist, err := clients[C.GoString(id)].UpdateBlocklist(context.Background(), utils.DecodeJidProto(&JID), events.BlocklistChangeAction(C.GoString(action)), "")
 	if err != nil {
 		return_.Error = proto.String(err.Error())
 		return ProtoReturnV3(&return_)
@@ -2198,7 +2441,7 @@ func GetUserDevices(id *C.char, JIDSByte *C.uchar, JIDSSize C.int) *C.struct_Byt
 
 //export GetBlocklist
 func GetBlocklist(id *C.char) *C.struct_BytesReturn {
-	blocklist, err := clients[C.GoString(id)].GetBlocklist(context.Background())
+	blocklist, err := clients[C.GoString(id)].GetBlocklist(context.Background(), "")
 	return_ := defproto.GetBlocklistReturnFunction{}
 	if err != nil {
 		return_.Error = proto.String(err.Error())
@@ -2488,6 +2731,8 @@ func SendFBMessage(id *C.char, to *C.uchar, toSize C.int, message *C.uchar, mess
 		ID:           proto.String(resp.ID),
 		ServerID:     proto.Int64(int64(resp.ServerID)),
 		DebugTimings: utils.EncodeMessageDebugTimings(resp.DebugTimings),
+		Sender:       utils.EncodeJidProto(resp.Sender),
+		Chat:         utils.EncodeJidProto(resp.Chat),
 	}
 	_return.SendResponse = &response
 	return ProtoReturnV3(&_return)
@@ -2496,12 +2741,21 @@ func SendFBMessage(id *C.char, to *C.uchar, toSize C.int, message *C.uchar, mess
 func main() {
 }
 
-func FetchMe(id string) *defproto.Device {
-	cli := clients[id].Store
+func FetchMe(ctx context.Context, id string) *defproto.Device {
+	client := clients[id]
+	if client == nil {
+		return nil
+	}
+	cli := client.Store
 
-	// Block until cli.ID is set
+	// Block until cli.ID is set, or until the client is stopped (a client
+	// stopped before it ever logged in never gets an ID)
 	for cli.ID == nil {
-		time.Sleep(100 * time.Millisecond) // Check 10 times per second
+		select {
+		case <-ctx.Done():
+			return nil
+		case <-time.After(100 * time.Millisecond):
+		}
 	}
 
 	device := defproto.Device{
@@ -2521,8 +2775,13 @@ func FetchMe(id string) *defproto.Device {
 // comment
 func CallbackFunction(ctx context.Context, callback C.ptr_to_python_function_bytes, id string) error {
 	uuid := C.CString(id)
+	defer C.free(unsafe.Pointer(uuid)) // released when the client's event loop exits; was leaked once per session
 	channel := eventChannel[id]
-	buff, err := proto.Marshal(FetchMe(id))
+	me := FetchMe(ctx, id)
+	if me == nil {
+		return nil
+	}
+	buff, err := proto.Marshal(me)
 	if err != nil {
 		return err
 	}
@@ -2566,4 +2825,87 @@ func FreeString(str *C.char) {
 	if str != nil {
 		C.free(unsafe.Pointer(str))
 	}
+}
+
+// RequestHistorySync asks the user's primary device for older messages.
+//
+// WhatsApp keeps no server-side archive for a linked device, so messages older
+// than what the client already holds can only be obtained by asking the phone.
+// The request is anchored on a message the client already has; the phone
+// answers with up to `count` messages immediately preceding it.
+//
+// The answer arrives asynchronously as a HistorySync event with syncType
+// ON_DEMAND, not as the return value of this call.
+//
+//export RequestHistorySync
+func RequestHistorySync(
+	id *C.char,
+	ChatByte *C.uchar, ChatSize C.int,
+	messageID *C.char,
+	fromMe C.int,
+	timestamp C.longlong,
+	count C.int,
+) *C.struct_BytesReturn {
+	return_ := defproto.SendMessageReturnFunction{}
+	client, ok := clients[C.GoString(id)]
+	if !ok || client == nil {
+		return_.Error = proto.String("client not found for the given uuid")
+		return ProtoReturnV3(&return_)
+	}
+	var chat defproto.JID
+	if err := proto.Unmarshal(getByteByAddr(ChatByte, ChatSize), &chat); err != nil {
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
+	}
+	info := types.MessageInfo{
+		MessageSource: types.MessageSource{
+			Chat:     utils.DecodeJidProto(&chat),
+			IsFromMe: int(fromMe) != 0,
+		},
+		ID:        types.MessageID(C.GoString(messageID)),
+		Timestamp: time.Unix(int64(timestamp), 0),
+	}
+	message := client.BuildHistorySyncRequest(&info, int(count))
+	if message == nil {
+		return_.Error = proto.String("failed to build history sync request")
+		return ProtoReturnV3(&return_)
+	}
+	resp, err := client.SendPeerMessage(context.Background(), message)
+	if err != nil {
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
+	}
+	return_.SendResponse = utils.EncodeSendResponse(resp)
+	return ProtoReturnV3(&return_)
+}
+
+// SendPeerMessage sends an already-built protocol message to the user's own
+// devices.
+//
+// Peer messages carry the PeerDataOperationRequest family — on-demand history,
+// full history sync over a time window, placeholder resends, chunk retries.
+// whatsmeow only ships a builder for one of them, so rather than binding each
+// operation separately this takes a serialised waE2E.Message and lets the caller
+// construct whichever request it needs.
+//
+//export SendPeerMessage
+func SendPeerMessage(id *C.char, messageByte *C.uchar, messageSize C.int) *C.struct_BytesReturn {
+	return_ := defproto.SendMessageReturnFunction{}
+	client, ok := clients[C.GoString(id)]
+	if !ok || client == nil {
+		return_.Error = proto.String("client not found for the given uuid")
+		return ProtoReturnV3(&return_)
+	}
+	var message waE2E.Message
+	if err := proto.Unmarshal(getByteByAddr(messageByte, messageSize), &message); err != nil {
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
+	}
+	resp, err := client.SendPeerMessage(context.Background(), &message)
+	if err != nil {
+		return_.Error = proto.String(err.Error())
+		return ProtoReturnV3(&return_)
+	}
+	return_.SendResponse = utils.EncodeSendResponse(resp)
+	return ProtoReturnV3(&return_)
 }

@@ -44,10 +44,12 @@ func DecodeReqCreateGroup(reqCreateGroup *defproto.ReqCreateGroup) whatsmeow.Req
 	for _, participant := range reqCreateGroup.Participants {
 		participants = append(participants, DecodeJidProto(participant))
 	}
+	// CreateKey was removed from whatsmeow.ReqCreateGroup upstream;
+	// the create key is now generated internally by whatsmeow.
+	_ = reqCreateGroup.CreateKey
 	new_type := whatsmeow.ReqCreateGroup{
 		Name:         *reqCreateGroup.Name,
 		Participants: participants,
-		CreateKey:    *reqCreateGroup.CreateKey,
 	}
 	if reqCreateGroup.GroupParent != nil {
 		new_type.GroupParent = DecodeGroupParent(reqCreateGroup.GroupParent)
@@ -200,9 +202,6 @@ func DecodeSendRequestExtra(extra *defproto.SendRequestExtra) whatsmeow.SendRequ
 		Peer:         *extra.Peer,
 		Timeout:      time.Duration(*extra.Timeout),
 	}
-}
-
-func DecodeNewsLetterMessageMeta(defproto.NewsLetterMessageMeta) {
 }
 
 func DecodeEventTypesMessage(message *defproto.Message) *events.Message {

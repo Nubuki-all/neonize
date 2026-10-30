@@ -172,6 +172,8 @@ func EncodeSendResponse(sendResponse whatsmeow.SendResponse) *defproto.SendRespo
 		ID:           proto.String(sendResponse.ID),
 		ServerID:     proto.Int64(int64(sendResponse.ServerID)),
 		DebugTimings: EncodeMessageDebugTimings(sendResponse.DebugTimings),
+		Sender:       EncodeJidProto(sendResponse.Sender),
+		Chat:         EncodeJidProto(sendResponse.Chat),
 	}
 }
 
@@ -446,7 +448,12 @@ func EncodeNewsLetterMessageMetadata(metadata types.NewsletterMetadata) *defprot
 
 func EncodeBlocklist(blocklist *types.Blocklist) *defproto.Blocklist {
 	JIDs := []*defproto.JID{}
-	for _, jid := range blocklist.JIDs {
+	for _, item := range blocklist.Items {
+		// prefer the phone number JID, as Blocklist.JIDs used to hold
+		jid := item.PN
+		if jid.IsEmpty() {
+			jid = item.LID
+		}
 		JIDs = append(JIDs, EncodeJidProto(jid))
 	}
 	return &defproto.Blocklist{
@@ -456,6 +463,9 @@ func EncodeBlocklist(blocklist *types.Blocklist) *defproto.Blocklist {
 }
 
 func EncodeNewsletterMessage(message *types.NewsletterMessage) *defproto.NewsletterMessage {
+	if message == nil {
+		return nil
+	}
 	reacts := []*defproto.Reaction{}
 	for react, count := range message.ReactionCounts {
 		reacts = append(reacts, &defproto.Reaction{
@@ -466,7 +476,7 @@ func EncodeNewsletterMessage(message *types.NewsletterMessage) *defproto.Newslet
 	return &defproto.NewsletterMessage{
 		MessageServerID: proto.Int64(int64(message.MessageServerID)),
 		ViewsCount:      proto.Int64(int64(message.ViewsCount)),
-		Message:         message.Message,
+		Message:         message.Message, // may be nil for deleted messages — field is optional
 		ReactionCounts:  reacts,
 	}
 }
@@ -739,13 +749,20 @@ func EncodePresence(presence *events.Presence) defproto.Presence {
 	}
 }
 
-func EncodeJoinedGroup(joined *events.JoinedGroup) defproto.JoinedGroup {
-	return defproto.JoinedGroup{
+func EncodeJoinedGroup(joined *events.JoinedGroup) *defproto.JoinedGroup {
+	joinedGroup := &defproto.JoinedGroup{
 		Reason:    &joined.Reason,
-		Type:      &joined.Reason,
+		Type:      &joined.Type,
 		CreateKey: &joined.CreateKey,
 		GroupInfo: EncodeGroupInfo(&joined.GroupInfo),
 	}
+	if joined.Sender != nil {
+		joinedGroup.Sender = EncodeJidProto(*joined.Sender)
+	}
+	if joined.SenderPN != nil {
+		joinedGroup.SenderPN = EncodeJidProto(*joined.SenderPN)
+	}
+	return joinedGroup
 }
 
 func EncodeGroupDelete(delete types.GroupDelete) *defproto.GroupDelete {
@@ -906,9 +923,12 @@ func EncodeNewsletterMuteChange(mute *events.NewsletterMuteChange) defproto.News
 }
 
 func EncodeNewsletterLiveUpdate(update *events.NewsletterLiveUpdate) defproto.NewsletterLiveUpdate {
-	messages := make([]*defproto.NewsletterMessage, len(update.Messages))
-	for i, message := range update.Messages {
-		messages[i] = EncodeNewsletterMessage(message)
+	messages := make([]*defproto.NewsletterMessage, 0, len(update.Messages))
+	for _, message := range update.Messages {
+		encoded := EncodeNewsletterMessage(message)
+		if encoded != nil {
+			messages = append(messages, encoded)
+		}
 	}
 	return defproto.NewsletterLiveUpdate{
 		JID:      EncodeJidProto(update.JID),

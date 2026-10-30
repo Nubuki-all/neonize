@@ -3,6 +3,7 @@ import json
 import logging
 import os
 import shlex
+import shutil
 import subprocess
 import tempfile
 import uuid
@@ -17,6 +18,44 @@ from .iofile import (
 )
 
 log = logging.getLogger(__name__)
+
+
+# -- Startup diagnostic ------------------------------------------------------
+
+_ffmpeg_checked = False
+
+
+def check_ffmpeg_available() -> bool:
+    """Check whether ``ffmpeg`` and ``ffprobe`` are on the system PATH.
+
+    Returns *True* if both binaries are found, *False* otherwise.  The check
+    is performed only once per process; subsequent calls return the cached
+    result.
+
+    A warning is logged when the tools are missing so that users see a clear
+    message before a media operation fails with an obscure ``FileNotFoundError``.
+    """
+    global _ffmpeg_checked  # noqa: PLW0603
+    if _ffmpeg_checked:
+        return True
+    _ffmpeg_checked = True
+
+    ffmpeg_found = shutil.which("ffmpeg") is not None
+    ffprobe_found = shutil.which("ffprobe") is not None
+    if not (ffmpeg_found and ffprobe_found):
+        missing = []
+        if not ffmpeg_found:
+            missing.append("ffmpeg")
+        if not ffprobe_found:
+            missing.append("ffprobe")
+        log.warning(
+            "neonize: %s not found on PATH -- media operations "
+            "(stickers, voice notes, video, thumbnails) will fail.  "
+            "Install FFmpeg: https://ffmpeg.org/download.html",
+            " and ".join(missing),
+        )
+        return False
+    return True
 
 
 class ImageFormat(Enum):
@@ -195,9 +234,7 @@ class AFFmpeg:
     async def __aenter__(self):
         if isinstance(self.__file_data, str):
             if URL_MATCH.match(self.__file_data):
-                self.filename = TemporaryFile(
-                    prefix=self.prefix, touch=False
-                ).__enter__()
+                self.filename = TemporaryFile(prefix=self.prefix, touch=False).__enter__()
                 with open(self.filename.path, "wb") as file:
                     file.write(await get_bytes_from_name_or_url_async(self.__file_data))
             else:
@@ -378,15 +415,24 @@ class AFFmpeg:
         await self.call(
             [
                 "ffmpeg",
-                "-fflags", "+genpts+igndts",
-                "-err_detect", "ignore_err",
-                "-max_error_rate", "1.0",
-                "-i", self.filepath,
-                "-map", "0:v",
-                "-map", "0:a?",
-                "-c:v", "libx264",
-                "-c:a", "copy",
-                "-movflags", "+faststart",
+                "-fflags",
+                "+genpts+igndts",
+                "-err_detect",
+                "ignore_err",
+                "-max_error_rate",
+                "1.0",
+                "-i",
+                self.filepath,
+                "-map",
+                "0:v",
+                "-map",
+                "0:a?",
+                "-c:v",
+                "libx264",
+                "-c:a",
+                "copy",
+                "-movflags",
+                "+faststart",
                 temp,
                 "-y",
             ]
@@ -399,22 +445,30 @@ class AFFmpeg:
                 os.remove(temp)
         return buf
 
-
     async def to_mp4_copy(self) -> bytes:
         """Remuxes video to MP4 container using stream copy and faststart (no re-encoding)."""
         temp = os.path.join(tempfile.gettempdir(), f"{uuid.uuid4()}.mp4")
         await self.call(
             [
                 "ffmpeg",
-                "-fflags", "+genpts+igndts",
-                "-err_detect", "ignore_err",
-                "-max_error_rate", "1.0",
-                "-i", self.filepath,
-                "-map", "0:v",
-                "-map", "0:a?",
-                "-c:v", "copy",
-                "-c:a", "copy",
-                "-movflags", "+faststart",
+                "-fflags",
+                "+genpts+igndts",
+                "-err_detect",
+                "ignore_err",
+                "-max_error_rate",
+                "1.0",
+                "-i",
+                self.filepath,
+                "-map",
+                "0:v",
+                "-map",
+                "0:a?",
+                "-c:v",
+                "copy",
+                "-c:a",
+                "copy",
+                "-movflags",
+                "+faststart",
                 temp,
                 "-y",
             ]
@@ -451,8 +505,7 @@ class AFFmpeg:
                     extra.extend(
                         [
                             "-vf",
-                            "scale='if(gt(iw,ih),%i,-1)':'if(gt(iw,ih),-1,%i)'"
-                            % (size, size),
+                            "scale='if(gt(iw,ih),%i,-1)':'if(gt(iw,ih),-1,%i)'" % (size, size),
                         ]
                     )
         elif isinstance(size, tuple):
@@ -500,10 +553,7 @@ class AFFmpeg:
         format: dict = data["format"]
         return FFProbeInfo(
             format=Format(
-                **{
-                    i: format.get(i, None)
-                    for i, _ in Format.__dataclass_fields__.items()
-                }
+                **{i: format.get(i, None) for i, _ in Format.__dataclass_fields__.items()}
             ),
             streams=[
                 Stream(
@@ -561,6 +611,8 @@ class FFmpeg:
         animated_gif: bool = False,
         max_sticker_size: int = 0,
         is_webm=False,
+        quality=75,
+        compression_level=4,
     ) -> bytes:
         """
         This function converts a given file to webp format using ffmpeg.
@@ -626,8 +678,12 @@ class FFmpeg:
                     "picture",
                     "-fs",
                     f"{MAX_STICKER_FILESIZE}",
-                    "-q:v",
+                    "-b:v",
                     bitrate,
+                    "-q:v",
+                    str(quality),
+                    "-compression_level",
+                    str(compression_level),
                 ]
             )
         ffmpeg_command.append(temp)
@@ -679,6 +735,78 @@ class FFmpeg:
         os.remove(temp)
         return buf
 
+    def to_mp4_copy(self) -> bytes:
+        """Remuxes video to MP4 container using stream copy and faststart (no re-encoding)."""
+        temp = os.path.join(tempfile.gettempdir(), f"{uuid.uuid4()}.mp4")
+        self.call(
+            [
+                "ffmpeg",
+                "-fflags",
+                "+genpts+igndts",
+                "-err_detect",
+                "ignore_err",
+                "-max_error_rate",
+                "1.0",
+                "-i",
+                self.filepath,
+                "-map",
+                "0:v",
+                "-map",
+                "0:a?",
+                "-c:v",
+                "copy",
+                "-c:a",
+                "copy",
+                "-movflags",
+                "+faststart",
+                temp,
+                "-y",
+            ]
+        )
+        try:
+            with open(temp, "rb") as file:
+                buf = file.read()
+        finally:
+            if os.path.exists(temp):
+                os.remove(temp)
+        return buf
+
+    def to_mp4_reencode(self) -> bytes:
+        """Converts/re-encodes video to H.264 with AAC copy and faststart."""
+        temp = os.path.join(tempfile.gettempdir(), f"{uuid.uuid4()}.mp4")
+        self.call(
+            [
+                "ffmpeg",
+                "-fflags",
+                "+genpts+igndts",
+                "-err_detect",
+                "ignore_err",
+                "-max_error_rate",
+                "1.0",
+                "-i",
+                self.filepath,
+                "-map",
+                "0:v",
+                "-map",
+                "0:a?",
+                "-c:v",
+                "libx264",
+                "-c:a",
+                "copy",
+                "-movflags",
+                "+faststart",
+                temp,
+                "-y",
+            ]
+        )
+        try:
+            with open(temp, "rb") as file:
+                buf = file.read()
+        finally:
+            if os.path.exists(temp):
+                os.remove(temp)
+        return buf
+
     def to_mp3(self) -> bytes:
         temp = tempfile.gettempdir() + "/" + uuid.uuid4().__str__() + ".mp3"
         self.call(
@@ -725,8 +853,7 @@ class FFmpeg:
                     extra.extend(
                         [
                             "-vf",
-                            "scale='if(gt(iw,ih),%i,-1)':'if(gt(iw,ih),-1,%i)'"
-                            % (size, size),
+                            "scale='if(gt(iw,ih),%i,-1)':'if(gt(iw,ih),-1,%i)'" % (size, size),
                         ]
                     )
         elif isinstance(size, tuple):
@@ -774,10 +901,7 @@ class FFmpeg:
         format: dict = data["format"]
         return FFProbeInfo(
             format=Format(
-                **{
-                    i: format.get(i, None)
-                    for i, _ in Format.__dataclass_fields__.items()
-                }
+                **{i: format.get(i, None) for i, _ in Format.__dataclass_fields__.items()}
             ),
             streams=[
                 Stream(

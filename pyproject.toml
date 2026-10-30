@@ -10,7 +10,7 @@ dependencies = [
     "linkpreview>=0.11.0",
     "phonenumbers>=8.13.52",
     "pillow>=11.1.0",
-    "protobuf==6.33.2",
+    "protobuf==7.36.2",
     "pycryptodome==3.23.0",
     "python-magic>=0.4.27 ; sys_platform != 'win32'",
     "python-magic-bin>=0.4.14 ; sys_platform == 'win32'",
@@ -22,37 +22,54 @@ dependencies = [
 HomePage = "https://github.com/krypton-byte/neonize"
 [dependency-groups]
 dev = [
+    "python-semantic-release>=10.6",
     "mypy-protobuf>=3.6.0",
     "taskipy>=1.14.1",
     "types-requests>=2.32.0.20241016",
     "wheel>=0.45.1",
 ]
 docs = [
-    "furo>=2024.8.6",
-    "mkdocs-material>=9.7.0",
-    "mkdocstrings>=1.0.0",
-    "mkdocstrings-python>=1.12.2",
-    "mkdocs-git-revision-date-localized-plugin>=1.3.0",
-    "myst-parser>=4.0.0",
-    "sphinx>=8.1.3",
-    "sphinx-autodoc-typehints>=3.0.0",
+    "zensical>=0.0.57; python_version >= '3.10'",
+    "mkdocs-material>=9.6; python_version >= '3.10'",
+    "mkdocstrings>=1.0.0; python_version >= '3.10'",
+    "mkdocstrings-python>=1.12.0; python_version >= '3.10'",
+    "mike>=2.1.0; python_version >= '3.10'",
 ]
+
+[tool.uv.sources]
+mike = { git = "https://github.com/squidfunk/mike.git" }
 
 [tool.taskipy.tasks]
 build = {cmd = "uv run -m tools.goneonize", help = "build goneonize"}
-docsbuild = {cmd = "uv run -m tools.docs", help="build autogen documentation for neonize"}
+# Documentation tasks
+docs-serve = {cmd = "uv run --no-sync zensical serve -f mkdocs.yml", help = "Start Zensical development server with live reload"}
+docs-build = {cmd = "uv run --no-sync zensical build -f mkdocs.yml -s", help = "Build documentation in strict mode (CI parity)"}
 version = {cmd = "uv run -m tools.version_cli", help = "set neonize & goneonize version"}
 download = {cmd = "uv run -m tools.download", help="Download goneonize from github release with specific version"}
 repack = {cmd = "uv run -m tools.repack", help="generate wheel with spesific os & arch"}
 proto = {cmd = "uv run -m tools.update_proto", help="update whatsapp proto files"}
 goneonize_changed = {cmd = "uv run -m tools.build_goneonize_decision", help = "This command to compares the latest release of goneonize"}
-
-# Documentation tasks
-docs-serve = {cmd = "mkdocs serve", help = "Start MkDocs development server with live reload"}
-docs-build = {cmd = "mkdocs build", help = "Build MkDocs documentation to site/ directory"}
-docs-deploy = {cmd = "mkdocs gh-deploy", help = "Deploy documentation to GitHub Pages"}
 docs-clean = {cmd = "rm -rf site/", help = "Clean built documentation"}
-docs-validate = {cmd = "mkdocs build --strict", help = "Build docs with strict validation"}
+docs-validate = {cmd = "uv run --no-sync zensical build -f mkdocs.yml -s", help = "Build docs in strict mode (same as CI)"}
+
+[tool.semantic_release]
+version_variables = [
+    "neonize/__init__.py:__version__",
+    "neonize/download.py:__GONEONIZE_VERSION__",
+    "goneonize/version.go:version",
+]
+tag_format = "{version}"
+allow_zero_version = true
+major_on_zero = false
+commit_parser = "conventional"
+
+[tool.semantic_release.branches.master]
+match = "(master)"
+prerelease = false
+prerelease_token = "rc"
+
+[tool.semantic_release.changelog.default_templates]
+changelog_file = "CHANGELOG.md"
 
 [tool.uv.workspace]
 exclude = ["docs/","goneonize/"]
@@ -69,11 +86,18 @@ requires = ["pdm-backend"]
 build-backend = "pdm.backend"
 [tool.ruff]
 exclude = [
-    "proto","*.pyi"
+    "proto","*.pyi", "docs"
 ]
 line-length = 100
 
+[tool.ruff.lint]
+# Explicit, deterministic rule set: real errors (E4/E7/E9), pyflakes (F) and
+# import sorting (I). Broader opinionated suites (UP/B/SIM/TRY/...) can be
+# enabled incrementally once the existing findings are addressed.
+select = ["E4", "E7", "E9", "F", "I"]
+
 [tool.ruff.format]
+exclude = ["docs"]
 # Like Black, use double quotes for strings.
 quote-style = "double"
 

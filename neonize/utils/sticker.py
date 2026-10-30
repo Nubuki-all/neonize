@@ -39,9 +39,7 @@ def add_exif(name: str = "", packname: str = "") -> bytes:
         "ios-app-store-link": "https://itunes.apple.com/app/sticker-maker-studio/id1443326857",
     }
 
-    exif_attr = bytes.fromhex(
-        "49 49 2A 00 08 00 00 00 01 00 41 57 07 00 00 00 00 00 16 00 00 00"
-    )
+    exif_attr = bytes.fromhex("49 49 2A 00 08 00 00 00 01 00 41 57 07 00 00 00 00 00 16 00 00 00")
     json_buffer = json.dumps(json_data).encode("utf-8")
     exif = exif_attr + json_buffer
     exif_length = len(json_buffer)
@@ -136,6 +134,8 @@ def convert_to_sticker(
     enforce_not_broken=False,
     animated_gif=False,
     is_webm=False,
+    quality=75,
+    compression_level=4,
 ):
     with FFmpeg(file) as ffmpeg:
         sticker = ffmpeg.cv_to_webp(
@@ -143,6 +143,8 @@ def convert_to_sticker(
             animated_gif=animated_gif,
             max_sticker_size=MAX_STICKER_SIZE,
             is_webm=is_webm,
+            quality=quality,
+            compression_level=compression_level,
         )
     if not WEBPMUX_IS_AVAILABLE:
         return sticker, False
@@ -169,11 +171,43 @@ def convert_to_sticker(
     return buf, True
 
 
+def add_exif_to_sticker(sticker, name, packname):
+    if not WEBPMUX_IS_AVAILABLE:
+        return None
+    exif_filename = TemporaryFile(prefix=None, touch=False).__enter__()
+    with open(exif_filename.path, "wb") as file:
+        file.write(add_exif(name=name, packname=packname))
+    temp = tempfile.gettempdir() + "/" + f"{uuid.uuid4()}" + ".webp"
+    with FFmpeg(sticker) as ffmpeg:
+        cmd = [
+            "webpmux",
+            "-set",
+            "exif",
+            f"{exif_filename.path}",
+            ffmpeg.filepath,
+            "-o",
+            temp,
+        ]
+        ffmpeg.call(cmd)
+    exif_filename.__exit__(None, None, None)
+    with open(temp, "rb") as file:
+        buf = file.read()
+    os.remove(temp)
+    return buf
+
+
 astick_sem = asyncio.Semaphore(20)
 
 
 async def aio_convert_to_webp(
-    sticker, name, packname, crop=False, passthrough=True, transparent=False, quality=75, compression_level=4,
+    sticker,
+    name,
+    packname,
+    crop=False,
+    passthrough=True,
+    transparent=False,
+    quality=75,
+    compression_level=4,
 ):
     sticker = await get_bytes_from_name_or_url_async(sticker)
     animated = is_webm = is_image = saved_exif = stk = False
@@ -184,9 +218,7 @@ async def aio_convert_to_webp(
         if len(ImageSequence.all_frames(img)) < 2:
             is_image = True
     elif passthrough:
-        raise ConvertStickerError(
-            "File is not a webp, which is required for passthrough."
-        )
+        raise ConvertStickerError("File is not a webp, which is required for passthrough.")
     elif mime == "video/webm":
         is_webm = True
     elif (mime := mime.split("/"))[0] == "image":
@@ -232,7 +264,14 @@ stick_sem = threading.Semaphore(20)
 
 
 def convert_to_webp(
-    sticker, name, packname, crop=False, passthrough=True, transparent=False
+    sticker,
+    name,
+    packname,
+    crop=False,
+    passthrough=True,
+    transparent=False,
+    quality=75,
+    compression_level=4,
 ):
     sticker = get_bytes_from_name_or_url(sticker)
     animated = is_webm = is_image = saved_exif = stk = False
@@ -243,9 +282,7 @@ def convert_to_webp(
         if len(ImageSequence.all_frames(img)) < 2:
             is_image = True
     elif passthrough:
-        raise ConvertStickerError(
-            "File is not a webp, which is required for passthrough."
-        )
+        raise ConvertStickerError("File is not a webp, which is required for passthrough.")
     elif mime == "video/webm":
         is_webm = True
     elif (mime := mime.split("/"))[0] == "image":
@@ -268,6 +305,8 @@ def convert_to_webp(
                 enforce_not_broken=True,
                 animated_gif=transparent,
                 is_webm=is_webm,
+                quality=quality,
+                compression_level=compression_level,
             )
         if saved_exif:
             io_save = BytesIO(sticker)
