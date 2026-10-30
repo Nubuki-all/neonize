@@ -1327,7 +1327,8 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, newDevice 
 			// }
 
 		} else {
-			qrChan, _ := client.GetQRChannel(context.Background())
+			// Tied to the client context so Stop also ends the QR wait below.
+			qrChan, _ := client.GetQRChannel(ctx)
 			err = client.Connect()
 			if err != nil {
 				return C.CString(err.Error())
@@ -1354,9 +1355,15 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, newDevice 
 	}
 
 	if int(pairphoneSize) > 0 {
-		for stat := range loginStateChan {
-			if stat {
-				break
+	waitForLogin:
+		for {
+			select {
+			case stat := <-loginStateChan:
+				if stat {
+					break waitForLogin
+				}
+			case <-ctx.Done():
+				return C.CString("")
 			}
 		}
 	}
