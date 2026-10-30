@@ -225,6 +225,13 @@ if not os.environ.get("SPHINX"):
         ctypes.c_char_p,
     ]
     gocode.SetGroupName.restype = ctypes.c_void_p
+    gocode.RejectCall.argtypes = [
+        ctypes.c_char_p,
+        ctypes.c_char_p,
+        ctypes.c_int,
+        ctypes.c_char_p,
+    ]
+    gocode.RejectCall.restype = ctypes.c_void_p
     gocode.GetGroupInviteLink.argtypes = [
         ctypes.c_char_p,
         ctypes.c_char_p,
@@ -511,7 +518,12 @@ if not os.environ.get("SPHINX"):
     gocode.SetPrivacySetting.restype = ctypes.POINTER(Bytes)
     gocode.SetPassive.argtypes = [ctypes.c_char_p, ctypes.c_bool]
     gocode.SetPassive.restype = ctypes.c_void_p
-    gocode.SetStatusMessage.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    gocode.SetStatusMessage.argtypes = [
+        ctypes.c_char_p,
+        ctypes.c_char_p,
+        ctypes.c_char_p,
+        ctypes.c_int,
+    ]
     gocode.SetStatusMessage.restype = ctypes.c_void_p
     gocode.SubscribePresence.argtypes = [ctypes.c_char_p, ctypes.c_char_p, ctypes.c_int]
     gocode.SubscribePresence.restype = ctypes.c_void_p
