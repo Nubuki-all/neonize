@@ -2924,15 +2924,15 @@ class NewAClient:
         if err:
             raise SetPassiveError(err)
 
-    async def set_status_message(self, msg: str, emoji: str, seconds: int):
+    async def set_status_message(self, msg: str, emoji: str = "", seconds: int = 0):
         """
         Sets a status message for a client using the client's UUID.
 
         :param msg: The status message to be set.
         :type msg: str
-        :param emoji: The status emoji to be set.
+        :param emoji: Optional status emoji, defaults to none.
         :type emoji: str
-        :param seconds: Duration of the status message to be set.
+        :param seconds: Optional duration in seconds after which the status expires, defaults to 0 (no expiry).
         :type seconds: int
         :raises SetStatusMessageError: If there is an error while setting the status message.
         """

@@ -964,20 +964,21 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, newDevice 
 				if encMessage := v.Message.GetSecretEncryptedMessage(); encMessage != nil && encMessage.GetSecretEncType() == waE2E.SecretEncryptedMessage_MESSAGE_EDIT {
 					decrypted, err := client.DecryptSecretEncryptedMessage(ctx, v)
 					if err != nil {
-						clientLog.Errorf("failed to decrypt secret encrypted message edit: %w", err)
-					}
-					if decrypted.GetProtocolMessage().GetType() != waE2E.ProtocolMessage_MESSAGE_EDIT {
-						decrypted = &waE2E.Message{
-							ProtocolMessage: &waE2E.ProtocolMessage{
-								Key:           encMessage.GetTargetMessageKey(),
-								Type:          waE2E.ProtocolMessage_MESSAGE_EDIT.Enum(),
-								EditedMessage: decrypted,
-								TimestampMS:   proto.Int64(v.Info.Timestamp.UnixMilli()),
-							},
+						clientLog.Warnf("failed to decrypt secret encrypted message edit %s: %v", v.Info.ID, err)
+					} else {
+						if decrypted.GetProtocolMessage().GetType() != waE2E.ProtocolMessage_MESSAGE_EDIT {
+							decrypted = &waE2E.Message{
+								ProtocolMessage: &waE2E.ProtocolMessage{
+									Key:           encMessage.GetTargetMessageKey(),
+									Type:          waE2E.ProtocolMessage_MESSAGE_EDIT.Enum(),
+									EditedMessage: decrypted,
+									TimestampMS:   proto.Int64(v.Info.Timestamp.UnixMilli()),
+								},
+							}
 						}
+						v.Message = decrypted
+						v.IsEdit = true
 					}
-					v.Message = decrypted
-					v.IsEdit = true
 				}
 				messageSource := utils.EncodeEventTypesMessage(v)
 				messageEvent := MessageEvent{
@@ -2199,12 +2200,12 @@ func SetPassive(id *C.char, passive C.bool) *C.char {
 //export SetStatusMessage
 func SetStatusMessage(id *C.char, msg, emoji *C.char, seconds C.int) *C.char {
 	txt := C.GoString(msg)
-	status := types.SetStatusInput{
-		Text: &txt,
-		Emoji: &types.SetStatusEmoji{
-			Content: C.GoString(emoji),
-		},
-		Duration: jsontime.S(time.Duration(seconds) * time.Second),
+	status := types.SetStatusInput{Text: &txt}
+	if emojiText := C.GoString(emoji); emojiText != "" {
+		status.Emoji = &types.SetStatusEmoji{Content: emojiText}
+	}
+	if seconds > 0 {
+		status.Duration = jsontime.S(time.Duration(seconds) * time.Second)
 	}
 	err := clients[C.GoString(id)].SetStatusMessage(context.Background(), status)
 	if err != nil {
