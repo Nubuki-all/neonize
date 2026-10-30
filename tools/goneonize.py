@@ -111,6 +111,8 @@ def build_neonize(smart: bool = False):
     output_path = output_dir / filename
     output_path.unlink(missing_ok=True)
     (Path(cwd) / filename).replace(output_path)
+    # tells neonize which version this bundled library is without loading it
+    output_path.with_name(filename + ".version").write_text(Version().goneonize)
 
 
 def build():

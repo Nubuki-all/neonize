@@ -4,10 +4,9 @@ import logging
 import os
 from dataclasses import dataclass
 from pathlib import Path
-from platform import system
 from typing import Any
 
-from .download import __GONEONIZE_VERSION__, download
+from .download import __GONEONIZE_VERSION__, download, library_path
 from .utils.platform import generated_name
 
 _log = logging.getLogger(__name__)
@@ -22,46 +21,68 @@ func_callback_bytes = ctypes.CFUNCTYPE(
 func_callback_bytes2 = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_int)  # callback_bytes
 
 
-def load_goneonize():
-    last_error: Exception | None = None
-    binary_name = generated_name()
-    binary_path = Path(__file__).parent / binary_name
-    for attempt in range(1, 4):
+def _bundled_library() -> Path | None:
+    """The library shipped in the wheel (or built locally), if its version matches."""
+    path = library_path(versioned=False)
+    try:
+        marker = path.with_name(path.name + ".version").read_text().strip()
+    except OSError:
+        return None
+    return path if path.exists() and marker == __GONEONIZE_VERSION__ else None
+
+
+def _remove_stale_libraries(loaded: Path) -> None:
+    """Best-effort cleanup of libraries from other versions."""
+    bundled = library_path(versioned=False)
+    stale = [
+        path for path in bundled.parent.glob(f"{bundled.stem}-*{bundled.suffix}") if path != loaded
+    ]
+    # a library downloaded by an older neonize under the unversioned name
+    if loaded != bundled and not bundled.with_name(bundled.name + ".version").exists():
+        stale.append(bundled)
+    for path in stale:
         try:
-            gocode = ctypes.CDLL(str(binary_path))
-            gocode.GetVersion.restype = ctypes.c_char_p
-            loaded_version = gocode.GetVersion().decode()
-            if loaded_version != __GONEONIZE_VERSION__:
-                raise RuntimeError(
-                    f"goneonize version mismatch: found {loaded_version}, "
-                    f"expected {__GONEONIZE_VERSION__}. "
-                    f"Delete {binary_path} and re-run to re-download."
-                )
-            _log.debug("loaded goneonize %s (attempt %d)", loaded_version, attempt)
-            return gocode
-        except OSError as exc:
-            _log.warning(
-                "attempt %d/3: failed to load %s: %s",
-                attempt,
-                binary_name,
-                exc,
-            )
-            raise
-        except Exception as exc:
-            last_error = exc
-            _log.info(
-                "attempt %d/3: version mismatch or missing binary, downloading...",
-                attempt,
-            )
+            path.unlink(missing_ok=True)
+        except OSError:
+            pass
+
+
+def load_goneonize():
+    """Load the goneonize library matching this neonize version.
+
+    The version is checked before anything is loaded: a process can't unload a
+    Go shared library or load a second one, so a stale library must never be
+    opened in the first place.
+    """
+    path = _bundled_library()
+    if path is None:
+        path = library_path()
+    if not path.exists():
+        last_error: Exception | None = None
+        for attempt in range(1, 4):
             try:
-                download()
-            except Exception as dl_exc:
-                _log.warning("download attempt %d failed: %s", attempt, dl_exc)
-    raise RuntimeError(
-        f"failed to load goneonize after 3 attempts; last error: {last_error}. "
-        f"Ensure that the platform '{binary_name}' is supported and that "
-        f"no firewall is blocking downloads from GitHub."
-    )
+                path = download()
+                break
+            except Exception as exc:
+                last_error = exc
+                _log.warning("download attempt %d/3 failed: %s", attempt, exc)
+        else:
+            raise RuntimeError(
+                f"failed to download goneonize {__GONEONIZE_VERSION__}: {last_error}. "
+                f"Ensure that the platform '{generated_name()}' is supported and that "
+                f"no firewall is blocking downloads from GitHub."
+            )
+    gocode = ctypes.CDLL(str(path))
+    gocode.GetVersion.restype = ctypes.c_char_p
+    loaded_version = gocode.GetVersion().decode()
+    if loaded_version != __GONEONIZE_VERSION__:
+        raise RuntimeError(
+            f"{path} is goneonize {loaded_version}, expected {__GONEONIZE_VERSION__}. "
+            f"Delete it and run again to download the right version."
+        )
+    _log.debug("loaded goneonize %s from %s", loaded_version, path)
+    _remove_stale_libraries(path)
+    return gocode
 
 
 class Bytes(ctypes.Structure):
@@ -129,10 +150,6 @@ class ProxySettings:
 
 
 if not os.environ.get("SPHINX"):
-    if not (Path(__file__).parent / generated_name()).exists():
-        download()
-    file_ext = "dll" if system() == "Windows" else "so"
-    root_dir = os.path.abspath(os.path.dirname(__file__))
     gocode = load_goneonize()
 
     gocode.Neonize.argtypes = [
