@@ -24,7 +24,7 @@ from uuid import uuid4
 import magic
 from google.protobuf.internal.containers import RepeatedCompositeFieldContainer
 from linkpreview import link_preview
-from PIL import Image, ImageSequence
+from PIL import Image, ImageFilter, ImageSequence
 
 from ._binder import (
     ProxySettings,
@@ -1451,6 +1451,7 @@ class NewClient:
         viewonce: bool = False,
         gifplayback: bool = False,
         is_gif: bool = False,
+        spoiler: bool = False,
         ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
     ) -> Message:
@@ -1470,6 +1471,8 @@ class NewClient:
         :type gifplayback: bool, optional
         :param is_gif: Optional. Whether the video to be sent is a gif. Defaults to False.
         :type is_gif: bool, optional
+        :param spoiler: Optional. Whether the image's thumbnail should be blurred. Defaults to False.
+        :type spoiler: bool, optional
         :return: A video message with the given parameters.
         :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
         :type ghost_mentions: str, optional
@@ -1486,6 +1489,14 @@ class NewClient:
         with FFmpeg(file) as ffmpeg:
             duration = int(ffmpeg.extract_info().format.duration)
             thumbnail = ffmpeg.extract_thumbnail()
+        if spoiler:
+            img = Image.open(BytesIO(thumbnail))
+            if img.mode != "RGB":
+                img = img.convert("RGB")
+            img = img.filter(ImageFilter.GaussianBlur(radius=12))
+            thumbnail = BytesIO()
+            img.save(thumbnail, format="jpeg")
+            thumbnail = thumbnail.getvalue()
         upload = self.upload(buff)
         message = Message(
             videoMessage=VideoMessage(
@@ -1525,6 +1536,7 @@ class NewClient:
         viewonce: bool = False,
         gifplayback: bool = False,
         is_gif: bool = False,
+        spoiler: bool = False,
         ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
@@ -1545,6 +1557,8 @@ class NewClient:
         :type gifplayback: bool, optional
         :param is_gif: Optional. Whether the video to be sent is a gif. Defaults to False.
         :type is_gif: bool, optional
+        :param spoiler: Optional. Whether the image's thumbnail should be blurred. Defaults to False.
+        :type spoiler: bool, optional
         :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
         :type ghost_mentions: str, optional
         :param mentions_are_lids: whether mentions contained in message or ghost_mentions are lids, defaults to False.
@@ -1563,6 +1577,7 @@ class NewClient:
                 viewonce,
                 gifplayback,
                 is_gif,
+                spoiler,
                 ghost_mentions,
                 mentions_are_lids,
             ),
@@ -1575,6 +1590,7 @@ class NewClient:
         caption: str | None = None,
         quoted: neonize_proto.Message | None = None,
         viewonce: bool = False,
+        spoiler: bool = False,
         ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
     ) -> Message:
@@ -1593,6 +1609,8 @@ class NewClient:
         :type quoted: Optional[neonize_proto.Message], optional
         :param viewonce: Whether the image message should be viewable only once, defaults to False.
         :type viewonce: bool, optional
+        :param spoiler: Optional. Whether the image's thumbnail should be blurred. Defaults to False.
+        :type spoiler: bool, optional
         :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
         :type ghost_mentions: str, optional
         :param mentions_are_lids: whether mentions contained in message or ghost_mentions are lids, defaults to False.
@@ -1603,6 +1621,10 @@ class NewClient:
         n_file = get_bytes_from_name_or_url(file)
         img = Image.open(BytesIO(n_file))
         img.thumbnail(AspectRatioMethod(*img.size, res=200))
+        if spoiler:
+            if img.mode != "RGB":
+                img = img.convert("RGB")
+            img = img.filter(ImageFilter.GaussianBlur(radius=12))
         thumbnail = BytesIO()
         img_saveable = img if img.mode == "RGB" else img.convert("RGB")
         img_saveable.save(thumbnail, format="jpeg")
@@ -1641,6 +1663,7 @@ class NewClient:
         caption: str | None = None,
         quoted: neonize_proto.Message | None = None,
         viewonce: bool = False,
+        spoiler: bool = False,
         ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
@@ -1657,6 +1680,8 @@ class NewClient:
         :type quoted: Optional[Message], optional
         :param viewonce: Optional. Whether the image should be viewonce. Defaults to False.
         :type viewonce: bool, optional
+        :param spoiler: Optional. Whether the image's thumbnail should be blurred. Defaults to False.
+        :type spoiler: bool, optional
         :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
         :type ghost_mentions: str, optional
         :param mentions_are_lids: whether mentions contained in message or ghost_mentions are lids, defaults to False.
@@ -1674,6 +1699,7 @@ class NewClient:
                 quoted,
                 viewonce=viewonce,
                 ghost_mentions=ghost_mentions,
+                spoiler=spoiler,
                 mentions_are_lids=mentions_are_lids,
             ),
             add_msg_secret=add_msg_secret,
@@ -1717,6 +1743,7 @@ class NewClient:
         files: list,
         caption: str | None = None,
         quoted: neonize_proto.Message | None = None,
+        spoiler: bool = False,
         ghost_mentions: str | None = None,
         mentions_are_lids: bool = False,
         add_msg_secret: bool = False,
@@ -1731,6 +1758,8 @@ class NewClient:
         :type caption: Optional[str], optional
         :param quoted: Optional. The message to which the album is a reply. Defaults to None.
         :type quoted: Optional[Message], optional
+        :param spoiler: Optional. Whether the image's thumbnail should be blurred. Defaults to False.
+        :type spoiler: bool, optional
         :param ghost_mentions: List of users to tag silently (Takes precedence over auto detected mentions)
         :type ghost_mentions: str, optional
         :param add_msg_secret: Optional. Whether to generate 32 random bytes for messageSecret inside MessageContextInfo before sending, defaults to False
@@ -1790,6 +1819,7 @@ class NewClient:
                     msg_association,
                     caption=caption,
                     quoted=quoted,
+                    spoiler=spoiler,
                     ghost_mentions=ghost_mentions,
                     mentions_are_lids=mentions_are_lids,
                 )
@@ -1803,6 +1833,7 @@ class NewClient:
                         media_type,
                         msg_association,
                         quoted=quoted,
+                        spoiler=spoiler,
                     )
                     for file, media_type in medias[1:]
                 ]
