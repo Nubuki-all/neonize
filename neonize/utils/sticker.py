@@ -39,9 +39,7 @@ def add_exif(name: str = "", packname: str = "") -> bytes:
         "ios-app-store-link": "https://itunes.apple.com/app/sticker-maker-studio/id1443326857",
     }
 
-    exif_attr = bytes.fromhex(
-        "49 49 2A 00 08 00 00 00 01 00 41 57 07 00 00 00 00 00 16 00 00 00"
-    )
+    exif_attr = bytes.fromhex("49 49 2A 00 08 00 00 00 01 00 41 57 07 00 00 00 00 00 16 00 00 00")
     json_buffer = json.dumps(json_data).encode("utf-8")
     exif = exif_attr + json_buffer
     exif_length = len(json_buffer)
@@ -173,7 +171,14 @@ astick_sem = asyncio.Semaphore(20)
 
 
 async def aio_convert_to_webp(
-    sticker, name, packname, crop=False, passthrough=True, transparent=False, quality=75, compression_level=4,
+    sticker,
+    name,
+    packname,
+    crop=False,
+    passthrough=True,
+    transparent=False,
+    quality=75,
+    compression_level=4,
 ):
     sticker = await get_bytes_from_name_or_url_async(sticker)
     animated = is_webm = is_image = saved_exif = stk = False
@@ -184,9 +189,7 @@ async def aio_convert_to_webp(
         if len(ImageSequence.all_frames(img)) < 2:
             is_image = True
     elif passthrough:
-        raise ConvertStickerError(
-            "File is not a webp, which is required for passthrough."
-        )
+        raise ConvertStickerError("File is not a webp, which is required for passthrough.")
     elif mime == "video/webm":
         is_webm = True
     elif (mime := mime.split("/"))[0] == "image":
@@ -231,9 +234,7 @@ async def aio_convert_to_webp(
 stick_sem = threading.Semaphore(20)
 
 
-def convert_to_webp(
-    sticker, name, packname, crop=False, passthrough=True, transparent=False
-):
+def convert_to_webp(sticker, name, packname, crop=False, passthrough=True, transparent=False):
     sticker = get_bytes_from_name_or_url(sticker)
     animated = is_webm = is_image = saved_exif = stk = False
     mime = magic.from_buffer(sticker, mime=True)
@@ -243,9 +244,7 @@ def convert_to_webp(
         if len(ImageSequence.all_frames(img)) < 2:
             is_image = True
     elif passthrough:
-        raise ConvertStickerError(
-            "File is not a webp, which is required for passthrough."
-        )
+        raise ConvertStickerError("File is not a webp, which is required for passthrough.")
     elif mime == "video/webm":
         is_webm = True
     elif (mime := mime.split("/"))[0] == "image":

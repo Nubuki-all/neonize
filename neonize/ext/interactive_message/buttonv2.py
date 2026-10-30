@@ -150,11 +150,7 @@ class ButtonV2Message(CustomInteractiveMessage, InteractiveMessageBuilder):
         :param thumbnail: URL string or raw image bytes.
         :returns: ``self`` for chaining.
         """
-        raw = (
-            get_bytes_from_name_or_url(thumbnail)
-            if isinstance(thumbnail, str)
-            else thumbnail
-        )
+        raw = get_bytes_from_name_or_url(thumbnail) if isinstance(thumbnail, str) else thumbnail
         self._thumbnail = _resize_thumbnail(raw)
         return self
 
