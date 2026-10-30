@@ -1333,16 +1333,28 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, newDevice 
 			if err != nil {
 				return C.CString(err.Error())
 			}
-			for evt := range qrChan {
-				if evt.Event == "code" {
-					// Render the QR code here
-					// e.g. qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
-					// or just manually `echo 2@... | qrencode -t ansiutf8` in a terminal
-					qrFuncCb(evt.Code)
-					// C.free(unsafe.Pointer(cstr))
-				} else {
-					fmt.Println("Login event:", evt.Event)
-					logStatusCb(evt.Event)
+			// whatsmeow leaves the QR channel open when the client is
+			// disconnected on purpose, so also stop waiting once Stop
+			// cancels the client context.
+		waitForQR:
+			for {
+				select {
+				case evt, ok := <-qrChan:
+					if !ok {
+						break waitForQR
+					}
+					if evt.Event == "code" {
+						// Render the QR code here
+						// e.g. qrterminal.GenerateHalfBlock(evt.Code, qrterminal.L, os.Stdout)
+						// or just manually `echo 2@... | qrencode -t ansiutf8` in a terminal
+						qrFuncCb(evt.Code)
+						// C.free(unsafe.Pointer(cstr))
+					} else {
+						fmt.Println("Login event:", evt.Event)
+						logStatusCb(evt.Event)
+					}
+				case <-ctx.Done():
+					return C.CString("")
 				}
 			}
 		}
