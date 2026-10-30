@@ -4,5 +4,5 @@ from .utils.ffmpeg import FFmpeg
 from .utils.iofile import TemporaryFile
 from .utils.message import extract_text
 
-__version__ = "0.3.13.post1"
+__version__ = "0.3.13.post2"
 __all__ = ("Event", "FFmpeg", "NewClient", "TemporaryFile", "extract_text")
