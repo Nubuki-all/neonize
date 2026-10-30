@@ -14,9 +14,24 @@ import (
 	"sync"
 	"time"
 
+	"github.com/krypton-byte/neonize/defproto"
+	"github.com/krypton-byte/neonize/utils"
 	"github.com/purpshell/meowcaller"
 	"go.mau.fi/whatsmeow"
+	"go.mau.fi/whatsmeow/types"
+	"google.golang.org/protobuf/proto"
 )
+
+// Event type codes, matching EVENT_TO_INT in neonize/events.py.
+const (
+	eventCallIncoming         = 46
+	eventCallStateChanged     = 47
+	eventCallEnded            = 48
+	eventCallPlaybackFinished = 49
+	eventCallGroupState       = 50
+)
+
+type callEmitter func(eventType int, message proto.Message)
 
 // Voice calls through meowcaller. Calls are opt-in per client: EnableCalls must
 // run before Neonize connects the client, because meowcaller has to hook the
@@ -26,6 +41,7 @@ var (
 	callsMu      sync.Mutex
 	callsEnabled = map[string]bool{}
 	callClients  = map[string]*meowcaller.Client{}
+	callEmitters = map[string]callEmitter{}
 	activeCalls  = map[string]*callEntry{}
 )
 
@@ -37,7 +53,7 @@ type callEntry struct {
 
 // installCalls wraps a freshly created whatsmeow client when calls were enabled
 // for its uuid. Called from Neonize before the client connects.
-func installCalls(uuid string, client *whatsmeow.Client) {
+func installCalls(uuid string, client *whatsmeow.Client, emit callEmitter) {
 	callsMu.Lock()
 	defer callsMu.Unlock()
 	if !callsEnabled[uuid] {
@@ -45,11 +61,60 @@ func installCalls(uuid string, client *whatsmeow.Client) {
 	}
 	mc := meowcaller.NewClient(client)
 	mc.OnIncomingCall(func(call *meowcaller.Call) {
-		callsMu.Lock()
-		activeCalls[call.ID()] = &callEntry{owner: uuid, call: call}
-		callsMu.Unlock()
+		trackCall(uuid, call)
+		emit(eventCallIncoming, &defproto.CallIncoming{
+			CallID:  proto.String(call.ID()),
+			Peer:    utils.EncodeJidProto(call.Peer()),
+			IsVideo: proto.Bool(call.IsVideo()),
+		})
 	})
 	callClients[uuid] = mc
+	callEmitters[uuid] = emit
+}
+
+// trackCall registers a call and forwards its lifecycle to the event channel.
+func trackCall(owner string, call *meowcaller.Call) {
+	callID := call.ID()
+	callsMu.Lock()
+	activeCalls[callID] = &callEntry{owner: owner, call: call}
+	emit := callEmitters[owner]
+	callsMu.Unlock()
+	if emit == nil {
+		return
+	}
+	call.OnStateChange(func(phase meowcaller.CallPhase) {
+		emit(eventCallStateChanged, &defproto.CallStateChanged{
+			CallID: proto.String(callID),
+			State:  proto.String(callPhaseNames[phase]),
+		})
+	})
+	call.OnEnd(func(reason string) {
+		callsMu.Lock()
+		delete(activeCalls, callID)
+		callsMu.Unlock()
+		emit(eventCallEnded, &defproto.CallEnded{
+			CallID: proto.String(callID),
+			Reason: proto.String(reason),
+		})
+	})
+	call.OnGroupState(func(state meowcaller.GroupCallState) {
+		participants := make([]*defproto.CallGroupParticipant, 0, len(state.Participants))
+		for _, p := range state.Participants {
+			participant := &defproto.CallGroupParticipant{
+				JID:        utils.EncodeJidProto(p.JID),
+				State:      proto.String(p.State),
+				HandRaised: proto.Bool(p.HandRaised),
+			}
+			if p.PN != (types.JID{}) {
+				participant.PN = utils.EncodeJidProto(p.PN)
+			}
+			participants = append(participants, participant)
+		}
+		emit(eventCallGroupState, &defproto.CallGroupState{
+			CallID:       proto.String(callID),
+			Participants: participants,
+		})
+	})
 }
 
 // removeCalls hangs up a stopped client's calls and forgets its call client.
@@ -63,6 +128,7 @@ func removeCalls(uuid string) {
 		}
 	}
 	delete(callClients, uuid)
+	delete(callEmitters, uuid)
 	delete(callsEnabled, uuid)
 	callsMu.Unlock()
 	for _, entry := range owned {
@@ -117,9 +183,7 @@ func registerCall(owner string, call *meowcaller.Call, err error) *C.char {
 	if err != nil {
 		return callJSON(callResult{Error: err.Error()})
 	}
-	callsMu.Lock()
-	activeCalls[call.ID()] = &callEntry{owner: owner, call: call}
-	callsMu.Unlock()
+	trackCall(owner, call)
 	return callJSON(callResult{CallID: call.ID()})
 }
 
@@ -239,6 +303,14 @@ func CallPlay(callID *C.char, source *C.char) *C.char {
 	if entry.player == nil {
 		entry.player = meowcaller.NewPlayer()
 		entry.call.Subscribe(entry.player)
+		callID := entry.call.ID()
+		if emit := callEmitters[entry.owner]; emit != nil {
+			entry.player.OnFinish(func() {
+				emit(eventCallPlaybackFinished, &defproto.CallPlaybackFinished{
+					CallID: proto.String(callID),
+				})
+			})
+		}
 	}
 	player := entry.player
 	callsMu.Unlock()

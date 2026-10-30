@@ -811,7 +811,15 @@ func Neonize(db *C.char, id *C.char, JIDByte *C.uchar, JIDSize C.int, newDevice 
 	clientLog := utils.NewLogger("Client", C.GoString(logLevel), utils.Callback(logCb))
 	client := whatsmeow.NewClient(deviceStore, clientLog)
 	clients[uuid] = client
-	installCalls(uuid, client)
+	installCalls(uuid, client, func(eventType int, message proto.Message) {
+		if _, ok := subscribers[eventType]; !ok {
+			return
+		}
+		select {
+		case eventChan <- &MessageEvent{eventType: eventType, message: message}:
+		case <-ctx.Done():
+		}
+	})
 	sprStore := newSPRRetryStore(C.GoString(db))
 	sprRetryStores.Store(uuid, sprStore)
 	installSPRRetryHooks(client, sprStore)
