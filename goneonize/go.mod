@@ -6,6 +6,7 @@ require (
 	github.com/lib/pq v1.12.3
 	github.com/mattn/go-sqlite3 v1.14.52
 	github.com/purpshell/meowcaller v0.0.0-20260726180203-6d9b7b2c1807
+	github.com/rs/zerolog v1.35.1
 	go.mau.fi/util v0.11.0
 	go.mau.fi/whatsmeow v0.0.0-20261029193418-2fc844fe1693
 	google.golang.org/protobuf v1.36.12
@@ -28,7 +29,6 @@ require (
 	github.com/pion/randutil v0.1.0 // indirect
 	github.com/pion/sctp v1.9.4 // indirect
 	github.com/pion/transport/v4 v4.0.1 // indirect
-	github.com/rs/zerolog v1.35.1 // indirect
 	github.com/vektah/gqlparser/v2 v2.5.64 // indirect
 	go.mau.fi/libsignal v0.2.2 // indirect
 	golang.org/x/crypto v0.58.0 // indirect

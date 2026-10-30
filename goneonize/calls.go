@@ -10,6 +10,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"os"
 	"os/exec"
 	"sync"
 	"time"
@@ -17,6 +18,7 @@ import (
 	"github.com/krypton-byte/neonize/defproto"
 	"github.com/krypton-byte/neonize/utils"
 	"github.com/purpshell/meowcaller"
+	"github.com/rs/zerolog"
 	"go.mau.fi/whatsmeow"
 	"go.mau.fi/whatsmeow/types"
 	"google.golang.org/protobuf/proto"
@@ -59,7 +61,7 @@ func installCalls(uuid string, client *whatsmeow.Client, emit callEmitter) {
 	if !callsEnabled[uuid] {
 		return
 	}
-	mc := meowcaller.NewClient(client)
+	mc := meowcaller.NewClient(client, meowcaller.WithLogger(callLogger(uuid)))
 	mc.OnIncomingCall(func(call *meowcaller.Call) {
 		trackCall(uuid, call)
 		emit(eventCallIncoming, &defproto.CallIncoming{
@@ -70,6 +72,18 @@ func installCalls(uuid string, client *whatsmeow.Client, emit callEmitter) {
 	})
 	callClients[uuid] = mc
 	callEmitters[uuid] = emit
+}
+
+// callLogger returns meowcaller's logger: silent unless NEONIZE_CALL_DEBUG is
+// set, then debug-level output to stderr (signaling, key exchange, relay and
+// media), which is what's needed to see why a call fails.
+func callLogger(uuid string) zerolog.Logger {
+	if os.Getenv("NEONIZE_CALL_DEBUG") == "" {
+		return zerolog.Nop()
+	}
+	return zerolog.New(zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: "15:04:05.000"}).
+		Level(zerolog.DebugLevel).
+		With().Timestamp().Str("module", "meowcaller").Str("client", uuid).Logger()
 }
 
 // trackCall registers a call and forwards its lifecycle to the event channel.
