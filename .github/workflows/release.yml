@@ -430,6 +430,15 @@ jobs:
           sharedlib/*.whl
         generate_release_notes: true
         tag_name: ${{ env.TAG_NAME }}
+    - name: Commit the release version
+      run: |
+        git config user.name "github-actions[bot]"
+        git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git add neonize/__init__.py neonize/download.py goneonize/version.go
+        if git diff --cached --quiet; then exit 0; fi
+        git commit -m "release: ${TAG_NAME}"
+        git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+        git push origin "HEAD:${GITHUB_REF_NAME}"
     - name: Publish
       run: |
         if [[ $UV_PUBLISH_TOKEN ]];then

@@ -13,6 +13,7 @@ if __name__ == "__main__":
     cmd = args.add_subparsers(title="cmd", dest="cmd", required=True)
     args.add_argument("--set-url", type=str, help="change github release url")
     cmd.add_parser("info")
+    cmd.add_parser("sync", help="set the goneonize version from the neonize version")
     update = cmd.add_parser("update")
     update_type = update.add_subparsers(title="type", dest="update_type", required=True)
     update_type.add_parser("major")
@@ -36,6 +37,10 @@ if __name__ == "__main__":
     match parse.cmd:
         case "info":
             print(Version())
+        case "sync":
+            version = Version()
+            version.sync_goneonize()
+            print(version.goneonize)
         case "neonize":
             version = Version()
             github = Github()

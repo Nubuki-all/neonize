@@ -8,6 +8,17 @@ from .value_changer import ValueChanger
 init()
 
 
+def set_assignment(path: Path, name: str, value: str) -> None:
+    """Rewrite ``name = "..."`` in place, leaving the rest of the file untouched."""
+    text = path.read_text()
+    new, count = re.subn(
+        rf"^({re.escape(name)} = )([\"']).*?\2", rf'\g<1>"{value}"', text, count=1, flags=re.M
+    )
+    if not count:
+        raise ValueError(f"{name} not found in {path}")
+    path.write_text(new)
+
+
 class Version:
     PY_PATH = Path(__file__).parent.parent / "neonize/__init__.py"
     PY_RE = r"__version__ = \"([\w\d\.]+)\""
@@ -49,32 +60,30 @@ class Version:
         version_semantic[2] = 0
         return ".".join(map(str, version_semantic))
 
+    def sync_goneonize(self):
+        """Set the goneonize version (version.go and __GONEONIZE_VERSION__, which is
+        also the release tag) from __version__, so the two can't drift apart."""
+        self.goneonize = self.neonize
+
     def update_post(self):
         neonize = self.update_post_semantic(self.neonize)
         parts = neonize.split(".")
         if len(parts) > 3:
             parts[-1] = f"post{parts[-1]}"
         self.neonize = ".".join(parts)
-        goneonize = self.update_post_semantic(self.goneonize)
-        self.goneonize = goneonize
+        self.sync_goneonize()
 
     def update_patch(self):
-        neonize = self.update_patch_semantic(self.neonize)
-        self.neonize = neonize
-        goneonize = self.update_patch_semantic(self.goneonize)
-        self.goneonize = goneonize
+        self.neonize = self.update_patch_semantic(self.neonize)
+        self.sync_goneonize()
 
     def update_minor(self):
-        neonize = self.update_minor_semantic(self.neonize)
-        self.neonize = neonize
-        goneonize = self.update_minor_semantic(self.goneonize)
-        self.goneonize = goneonize
+        self.neonize = self.update_minor_semantic(self.neonize)
+        self.sync_goneonize()
 
     def update_major(self):
-        neonize = self.update_major_semantic(self.neonize)
-        self.neonize = neonize
-        goneonize = self.update_major_semantic(self.goneonize)
-        self.goneonize = goneonize
+        self.neonize = self.update_major_semantic(self.neonize)
+        self.sync_goneonize()
 
     @property
     def github_url(self) -> str:
@@ -82,10 +91,7 @@ class Version:
 
     @github_url.setter
     def github_url(self, url: str) -> None:
-        changer = ValueChanger(open(self.GO_PY_PATH).read())
-        modified = changer.set_value("__GIT_RELEASE_URL__", url).text
-        with open(self.GO_PY_PATH, "w") as file:
-            file.write(modified)
+        set_assignment(self.GO_PY_PATH, "__GIT_RELEASE_URL__", url)
 
     @property
     def neonize(self):
@@ -97,12 +103,8 @@ class Version:
 
     @neonize.setter
     def neonize(self, new_version: str):
-        modified = (
-            ValueChanger(open(self.PY_PATH, "r").read()).set_value("__version__", new_version).text
-        )
-        with open(self.PY_PATH, "w") as file:
-            file.write(modified)
-            self.__neonize = new_version
+        set_assignment(self.PY_PATH, "__version__", new_version)
+        self.__neonize = new_version
 
     @property
     def goneonize(self):
@@ -128,13 +130,7 @@ class Version:
         with open(self.GO_PATH, "w") as file:
             file.write(modified)
             self.__goneonize = new_version
-        modified = (
-            ValueChanger(open(self.GO_PY_PATH, "r").read())
-            .set_value("__GONEONIZE_VERSION__", new_version)
-            .text
-        )
-        with open(self.GO_PY_PATH, "w") as gopy_path:
-            gopy_path.write(modified)
+        set_assignment(self.GO_PY_PATH, "__GONEONIZE_VERSION__", new_version)
 
     def __repr__(self):
         neonize = [int(i) for i in self.neonize.split(".")]
