@@ -448,7 +448,12 @@ func EncodeNewsLetterMessageMetadata(metadata types.NewsletterMetadata) *defprot
 
 func EncodeBlocklist(blocklist *types.Blocklist) *defproto.Blocklist {
 	JIDs := []*defproto.JID{}
-	for _, jid := range blocklist.JIDs {
+	for _, item := range blocklist.Items {
+		// prefer the phone number JID, as Blocklist.JIDs used to hold
+		jid := item.PN
+		if jid.IsEmpty() {
+			jid = item.LID
+		}
 		JIDs = append(JIDs, EncodeJidProto(jid))
 	}
 	return &defproto.Blocklist{
