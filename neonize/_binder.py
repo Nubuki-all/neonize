@@ -76,9 +76,22 @@ def load_goneonize():
     gocode.GetVersion.restype = ctypes.c_char_p
     loaded_version = gocode.GetVersion().decode()
     if loaded_version != __GONEONIZE_VERSION__:
+        # it can't be swapped for the right one in this process; remove it so
+        # the next run downloads the right version
+        removed = False
+        if path != library_path(versioned=False):
+            try:
+                path.unlink()
+                removed = True
+            except OSError:
+                pass
         raise RuntimeError(
             f"{path} is goneonize {loaded_version}, expected {__GONEONIZE_VERSION__}. "
-            f"Delete it and run again to download the right version."
+            + (
+                "Removed it; run again to download the right version."
+                if removed
+                else "Delete it and run again to download the right version."
+            )
         )
     _log.debug("loaded goneonize %s from %s", loaded_version, path)
     _remove_stale_libraries(path)
