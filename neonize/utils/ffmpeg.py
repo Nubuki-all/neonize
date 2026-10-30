@@ -611,6 +611,8 @@ class FFmpeg:
         animated_gif: bool = False,
         max_sticker_size: int = 0,
         is_webm=False,
+        quality=75,
+        compression_level=4,
     ) -> bytes:
         """
         This function converts a given file to webp format using ffmpeg.
@@ -676,8 +678,12 @@ class FFmpeg:
                     "picture",
                     "-fs",
                     f"{MAX_STICKER_FILESIZE}",
-                    "-q:v",
+                    "-b:v",
                     bitrate,
+                    "-q:v",
+                    str(quality),
+                    "-compression_level",
+                    str(compression_level),
                 ]
             )
         ffmpeg_command.append(temp)
@@ -727,6 +733,78 @@ class FFmpeg:
         with open(temp, "rb") as file:
             buf = file.read()
         os.remove(temp)
+        return buf
+
+    def to_mp4_copy(self) -> bytes:
+        """Remuxes video to MP4 container using stream copy and faststart (no re-encoding)."""
+        temp = os.path.join(tempfile.gettempdir(), f"{uuid.uuid4()}.mp4")
+        self.call(
+            [
+                "ffmpeg",
+                "-fflags",
+                "+genpts+igndts",
+                "-err_detect",
+                "ignore_err",
+                "-max_error_rate",
+                "1.0",
+                "-i",
+                self.filepath,
+                "-map",
+                "0:v",
+                "-map",
+                "0:a?",
+                "-c:v",
+                "copy",
+                "-c:a",
+                "copy",
+                "-movflags",
+                "+faststart",
+                temp,
+                "-y",
+            ]
+        )
+        try:
+            with open(temp, "rb") as file:
+                buf = file.read()
+        finally:
+            if os.path.exists(temp):
+                os.remove(temp)
+        return buf
+
+    def to_mp4_reencode(self) -> bytes:
+        """Converts/re-encodes video to H.264 with AAC copy and faststart."""
+        temp = os.path.join(tempfile.gettempdir(), f"{uuid.uuid4()}.mp4")
+        self.call(
+            [
+                "ffmpeg",
+                "-fflags",
+                "+genpts+igndts",
+                "-err_detect",
+                "ignore_err",
+                "-max_error_rate",
+                "1.0",
+                "-i",
+                self.filepath,
+                "-map",
+                "0:v",
+                "-map",
+                "0:a?",
+                "-c:v",
+                "libx264",
+                "-c:a",
+                "copy",
+                "-movflags",
+                "+faststart",
+                temp,
+                "-y",
+            ]
+        )
+        try:
+            with open(temp, "rb") as file:
+                buf = file.read()
+        finally:
+            if os.path.exists(temp):
+                os.remove(temp)
         return buf
 
     def to_mp3(self) -> bytes:

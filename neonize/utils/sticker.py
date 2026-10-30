@@ -134,6 +134,8 @@ def convert_to_sticker(
     enforce_not_broken=False,
     animated_gif=False,
     is_webm=False,
+    quality=75,
+    compression_level=4,
 ):
     with FFmpeg(file) as ffmpeg:
         sticker = ffmpeg.cv_to_webp(
@@ -141,6 +143,8 @@ def convert_to_sticker(
             animated_gif=animated_gif,
             max_sticker_size=MAX_STICKER_SIZE,
             is_webm=is_webm,
+            quality=quality,
+            compression_level=compression_level,
         )
     if not WEBPMUX_IS_AVAILABLE:
         return sticker, False
@@ -165,6 +169,31 @@ def convert_to_sticker(
         buf = file.read()
     os.remove(temp)
     return buf, True
+
+
+def add_exif_to_sticker(sticker, name, packname):
+    if not WEBPMUX_IS_AVAILABLE:
+        return None
+    exif_filename = TemporaryFile(prefix=None, touch=False).__enter__()
+    with open(exif_filename.path, "wb") as file:
+        file.write(add_exif(name=name, packname=packname))
+    temp = tempfile.gettempdir() + "/" + f"{uuid.uuid4()}" + ".webp"
+    with FFmpeg(sticker) as ffmpeg:
+        cmd = [
+            "webpmux",
+            "-set",
+            "exif",
+            f"{exif_filename.path}",
+            ffmpeg.filepath,
+            "-o",
+            temp,
+        ]
+        ffmpeg.call(cmd)
+    exif_filename.__exit__(None, None, None)
+    with open(temp, "rb") as file:
+        buf = file.read()
+    os.remove(temp)
+    return buf
 
 
 astick_sem = asyncio.Semaphore(20)
@@ -234,7 +263,16 @@ async def aio_convert_to_webp(
 stick_sem = threading.Semaphore(20)
 
 
-def convert_to_webp(sticker, name, packname, crop=False, passthrough=True, transparent=False):
+def convert_to_webp(
+    sticker,
+    name,
+    packname,
+    crop=False,
+    passthrough=True,
+    transparent=False,
+    quality=75,
+    compression_level=4,
+):
     sticker = get_bytes_from_name_or_url(sticker)
     animated = is_webm = is_image = saved_exif = stk = False
     mime = magic.from_buffer(sticker, mime=True)
@@ -267,6 +305,8 @@ def convert_to_webp(sticker, name, packname, crop=False, passthrough=True, trans
                 enforce_not_broken=True,
                 animated_gif=transparent,
                 is_webm=is_webm,
+                quality=quality,
+                compression_level=compression_level,
             )
         if saved_exif:
             io_save = BytesIO(sticker)
