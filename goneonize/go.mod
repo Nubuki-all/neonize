@@ -38,3 +38,8 @@ require (
 	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/text v0.43.0 // indirect
 )
+
+// meowcaller after 6d9b7b2c builds on the hypermeow fork of whatsmeow, whose
+// types don't match go.mau.fi/whatsmeow. Pin it so `go get -u` (autobump)
+// can't move it.
+replace github.com/purpshell/meowcaller => github.com/purpshell/meowcaller v0.0.0-20260726180203-6d9b7b2c1807
