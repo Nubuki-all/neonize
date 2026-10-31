@@ -468,6 +468,8 @@ class ClientPayload(_message.Message):
             DESKTOP: ClientPayload.UserAgent._DeviceType.ValueType  # 2
             WEARABLE: ClientPayload.UserAgent._DeviceType.ValueType  # 3
             VR: ClientPayload.UserAgent._DeviceType.ValueType  # 4
+            SMART_DISPLAY: ClientPayload.UserAgent._DeviceType.ValueType  # 5
+            SMART_SPEAKER: ClientPayload.UserAgent._DeviceType.ValueType  # 6
 
         class DeviceType(_DeviceType, metaclass=_DeviceTypeEnumTypeWrapper): ...
         PHONE: ClientPayload.UserAgent.DeviceType.ValueType  # 0
@@ -475,6 +477,8 @@ class ClientPayload(_message.Message):
         DESKTOP: ClientPayload.UserAgent.DeviceType.ValueType  # 2
         WEARABLE: ClientPayload.UserAgent.DeviceType.ValueType  # 3
         VR: ClientPayload.UserAgent.DeviceType.ValueType  # 4
+        SMART_DISPLAY: ClientPayload.UserAgent.DeviceType.ValueType  # 5
+        SMART_SPEAKER: ClientPayload.UserAgent.DeviceType.ValueType  # 6
 
         class _DistributionChannel:
             ValueType = _typing.NewType("ValueType", _builtins.int)

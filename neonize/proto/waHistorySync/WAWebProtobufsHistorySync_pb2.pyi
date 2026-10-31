@@ -88,6 +88,7 @@ class HistorySync(_message.Message):
         PUSH_NAME: HistorySync._HistorySyncType.ValueType  # 4
         NON_BLOCKING_DATA: HistorySync._HistorySyncType.ValueType  # 5
         ON_DEMAND: HistorySync._HistorySyncType.ValueType  # 6
+        RECENT_CONVERSATIONS_ON_DEMAND: HistorySync._HistorySyncType.ValueType  # 9
 
     class HistorySyncType(_HistorySyncType, metaclass=_HistorySyncTypeEnumTypeWrapper): ...
     INITIAL_BOOTSTRAP: HistorySync.HistorySyncType.ValueType  # 0
@@ -97,6 +98,7 @@ class HistorySync(_message.Message):
     PUSH_NAME: HistorySync.HistorySyncType.ValueType  # 4
     NON_BLOCKING_DATA: HistorySync.HistorySyncType.ValueType  # 5
     ON_DEMAND: HistorySync.HistorySyncType.ValueType  # 6
+    RECENT_CONVERSATIONS_ON_DEMAND: HistorySync.HistorySyncType.ValueType  # 9
 
     SYNCTYPE_FIELD_NUMBER: _builtins.int
     CONVERSATIONS_FIELD_NUMBER: _builtins.int
@@ -119,8 +121,8 @@ class HistorySync(_message.Message):
     INLINECONTACTS_FIELD_NUMBER: _builtins.int
     INLINECONTACTSPROVIDED_FIELD_NUMBER: _builtins.int
     FAVORITESTICKERS_FIELD_NUMBER: _builtins.int
-    OMITTEDCONVERSATIONS_FIELD_NUMBER: _builtins.int
-    OMITTEDCONVERSATIONSPROVIDED_FIELD_NUMBER: _builtins.int
+    OMITTEDCONVERSATIONMETADATA_FIELD_NUMBER: _builtins.int
+    OMITTEDCONVERSATIONMETADATASNAPSHOTID_FIELD_NUMBER: _builtins.int
     syncType: Global___HistorySync.HistorySyncType.ValueType
     chunkOrder: _builtins.int
     progress: _builtins.int
@@ -131,7 +133,7 @@ class HistorySync(_message.Message):
     shareableChatIdentifierEncryptionKey: _builtins.bytes
     nctSalt: _builtins.bytes
     inlineContactsProvided: _builtins.bool
-    omittedConversationsProvided: _builtins.bool
+    omittedConversationMetadataSnapshotID: _builtins.str
     @_builtins.property
     def conversations(self) -> _containers.RepeatedCompositeFieldContainer[Global___Conversation]: ...
     @_builtins.property
@@ -155,7 +157,7 @@ class HistorySync(_message.Message):
     @_builtins.property
     def favoriteStickers(self) -> _containers.RepeatedCompositeFieldContainer[Global___StickerMetadata]: ...
     @_builtins.property
-    def omittedConversations(self) -> _containers.RepeatedCompositeFieldContainer[Global___RecoverableHistoryConversation]: ...
+    def omittedConversationMetadata(self) -> Global___OmittedConversationMetadata: ...
     def __init__(
         self,
         *,
@@ -180,12 +182,12 @@ class HistorySync(_message.Message):
         inlineContacts: _abc.Iterable[Global___InlineContact] | None = ...,
         inlineContactsProvided: _builtins.bool | None = ...,
         favoriteStickers: _abc.Iterable[Global___StickerMetadata] | None = ...,
-        omittedConversations: _abc.Iterable[Global___RecoverableHistoryConversation] | None = ...,
-        omittedConversationsProvided: _builtins.bool | None = ...,
+        omittedConversationMetadata: Global___OmittedConversationMetadata | None = ...,
+        omittedConversationMetadataSnapshotID: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["aiWaitListState", b"aiWaitListState", "chunkOrder", b"chunkOrder", "companionMetaNonce", b"companionMetaNonce", "globalSettings", b"globalSettings", "inlineContactsProvided", b"inlineContactsProvided", "nctSalt", b"nctSalt", "omittedConversationsProvided", b"omittedConversationsProvided", "progress", b"progress", "shareableChatIdentifierEncryptionKey", b"shareableChatIdentifierEncryptionKey", "syncType", b"syncType", "threadDsTimeframeOffset", b"threadDsTimeframeOffset", "threadIDUserSecret", b"threadIDUserSecret"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["aiWaitListState", b"aiWaitListState", "chunkOrder", b"chunkOrder", "companionMetaNonce", b"companionMetaNonce", "globalSettings", b"globalSettings", "inlineContactsProvided", b"inlineContactsProvided", "nctSalt", b"nctSalt", "omittedConversationMetadata", b"omittedConversationMetadata", "omittedConversationMetadataSnapshotID", b"omittedConversationMetadataSnapshotID", "progress", b"progress", "shareableChatIdentifierEncryptionKey", b"shareableChatIdentifierEncryptionKey", "syncType", b"syncType", "threadDsTimeframeOffset", b"threadDsTimeframeOffset", "threadIDUserSecret", b"threadIDUserSecret"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["accounts", b"accounts", "aiWaitListState", b"aiWaitListState", "callLogRecords", b"callLogRecords", "chunkOrder", b"chunkOrder", "companionMetaNonce", b"companionMetaNonce", "conversations", b"conversations", "favoriteStickers", b"favoriteStickers", "globalSettings", b"globalSettings", "inlineContacts", b"inlineContacts", "inlineContactsProvided", b"inlineContactsProvided", "nctSalt", b"nctSalt", "omittedConversations", b"omittedConversations", "omittedConversationsProvided", b"omittedConversationsProvided", "pastParticipants", b"pastParticipants", "phoneNumberToLidMappings", b"phoneNumberToLidMappings", "progress", b"progress", "pushnames", b"pushnames", "recentStickers", b"recentStickers", "shareableChatIdentifierEncryptionKey", b"shareableChatIdentifierEncryptionKey", "statusV3Messages", b"statusV3Messages", "syncType", b"syncType", "threadDsTimeframeOffset", b"threadDsTimeframeOffset", "threadIDUserSecret", b"threadIDUserSecret"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["accounts", b"accounts", "aiWaitListState", b"aiWaitListState", "callLogRecords", b"callLogRecords", "chunkOrder", b"chunkOrder", "companionMetaNonce", b"companionMetaNonce", "conversations", b"conversations", "favoriteStickers", b"favoriteStickers", "globalSettings", b"globalSettings", "inlineContacts", b"inlineContacts", "inlineContactsProvided", b"inlineContactsProvided", "nctSalt", b"nctSalt", "omittedConversationMetadata", b"omittedConversationMetadata", "omittedConversationMetadataSnapshotID", b"omittedConversationMetadataSnapshotID", "pastParticipants", b"pastParticipants", "phoneNumberToLidMappings", b"phoneNumberToLidMappings", "progress", b"progress", "pushnames", b"pushnames", "recentStickers", b"recentStickers", "shareableChatIdentifierEncryptionKey", b"shareableChatIdentifierEncryptionKey", "statusV3Messages", b"statusV3Messages", "syncType", b"syncType", "threadDsTimeframeOffset", b"threadDsTimeframeOffset", "threadIDUserSecret", b"threadIDUserSecret"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
@@ -522,26 +524,39 @@ class PastParticipant(_message.Message):
 Global___PastParticipant: _TypeAlias = PastParticipant  # noqa: Y015
 
 @_typing.final
-class RecoverableHistoryConversation(_message.Message):
+class OmittedConversationMetadata(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
-    HISTORYCHATID_FIELD_NUMBER: _builtins.int
-    ACCOUNTLID_FIELD_NUMBER: _builtins.int
-    historyChatID: _builtins.str
-    accountLid: _builtins.str
+    SNAPSHOTID_FIELD_NUMBER: _builtins.int
+    SNAPSHOTTIMESTAMPMS_FIELD_NUMBER: _builtins.int
+    BATCHINDEX_FIELD_NUMBER: _builtins.int
+    BATCHCOUNT_FIELD_NUMBER: _builtins.int
+    COMPLETE_FIELD_NUMBER: _builtins.int
+    CONVERSATIONS_FIELD_NUMBER: _builtins.int
+    snapshotID: _builtins.str
+    snapshotTimestampMS: _builtins.int
+    batchIndex: _builtins.int
+    batchCount: _builtins.int
+    complete: _builtins.bool
+    @_builtins.property
+    def conversations(self) -> _containers.RepeatedCompositeFieldContainer[Global___Conversation]: ...
     def __init__(
         self,
         *,
-        historyChatID: _builtins.str | None = ...,
-        accountLid: _builtins.str | None = ...,
+        snapshotID: _builtins.str | None = ...,
+        snapshotTimestampMS: _builtins.int | None = ...,
+        batchIndex: _builtins.int | None = ...,
+        batchCount: _builtins.int | None = ...,
+        complete: _builtins.bool | None = ...,
+        conversations: _abc.Iterable[Global___Conversation] | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["accountLid", b"accountLid", "historyChatID", b"historyChatID"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["batchCount", b"batchCount", "batchIndex", b"batchIndex", "complete", b"complete", "snapshotID", b"snapshotID", "snapshotTimestampMS", b"snapshotTimestampMS"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["accountLid", b"accountLid", "historyChatID", b"historyChatID"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["batchCount", b"batchCount", "batchIndex", b"batchIndex", "complete", b"complete", "conversations", b"conversations", "snapshotID", b"snapshotID", "snapshotTimestampMS", b"snapshotTimestampMS"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___RecoverableHistoryConversation: _TypeAlias = RecoverableHistoryConversation  # noqa: Y015
+Global___OmittedConversationMetadata: _TypeAlias = OmittedConversationMetadata  # noqa: Y015
 
 @_typing.final
 class IdentityVerificationState(_message.Message):
