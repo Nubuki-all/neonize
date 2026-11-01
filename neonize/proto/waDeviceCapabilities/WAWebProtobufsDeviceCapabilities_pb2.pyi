@@ -117,6 +117,23 @@ class DeviceCapabilities(_message.Message):
         def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
+    class BizAiWebOnboarding(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
+
+        VERSION_FIELD_NUMBER: _builtins.int
+        version: _builtins.int
+        def __init__(
+            self,
+            *,
+            version: _builtins.int | None = ...,
+        ) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["version", b"version"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["version", b"version"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+    @_typing.final
     class HostWriteMutationSupport(_message.Message):
         DESCRIPTOR: _descriptor.Descriptor
 
@@ -289,6 +306,7 @@ class DeviceCapabilities(_message.Message):
     REVERSEHISTORYSYNC_FIELD_NUMBER: _builtins.int
     NEWSLETTERCHATSMIGRATION_FIELD_NUMBER: _builtins.int
     HOSTWRITEMUTATIONSUPPORT_FIELD_NUMBER: _builtins.int
+    BIZAIWEBONBOARDING_FIELD_NUMBER: _builtins.int
     chatLockSupportLevel: Global___DeviceCapabilities.ChatLockSupportLevel.ValueType
     memberNameTagPrimarySupport: Global___DeviceCapabilities.MemberNameTagPrimarySupport.ValueType
     @_builtins.property
@@ -311,6 +329,8 @@ class DeviceCapabilities(_message.Message):
     def newsletterChatsMigration(self) -> Global___DeviceCapabilities.NewsletterChatsMigration: ...
     @_builtins.property
     def hostWriteMutationSupport(self) -> Global___DeviceCapabilities.HostWriteMutationSupport: ...
+    @_builtins.property
+    def bizAiWebOnboarding(self) -> Global___DeviceCapabilities.BizAiWebOnboarding: ...
     def __init__(
         self,
         *,
@@ -326,10 +346,11 @@ class DeviceCapabilities(_message.Message):
         reverseHistorySync: Global___DeviceCapabilities.ReverseHistorySync | None = ...,
         newsletterChatsMigration: Global___DeviceCapabilities.NewsletterChatsMigration | None = ...,
         hostWriteMutationSupport: Global___DeviceCapabilities.HostWriteMutationSupport | None = ...,
+        bizAiWebOnboarding: Global___DeviceCapabilities.BizAiWebOnboarding | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["aiFbidMigration", b"aiFbidMigration", "aiThread", b"aiThread", "bizAiSettingsSync", b"bizAiSettingsSync", "businessBroadcast", b"businessBroadcast", "chatLockSupportLevel", b"chatLockSupportLevel", "contactRefresh", b"contactRefresh", "hostWriteMutationSupport", b"hostWriteMutationSupport", "lidMigration", b"lidMigration", "memberNameTagPrimarySupport", b"memberNameTagPrimarySupport", "newsletterChatsMigration", b"newsletterChatsMigration", "reverseHistorySync", b"reverseHistorySync", "userHasAvatar", b"userHasAvatar"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["aiFbidMigration", b"aiFbidMigration", "aiThread", b"aiThread", "bizAiSettingsSync", b"bizAiSettingsSync", "bizAiWebOnboarding", b"bizAiWebOnboarding", "businessBroadcast", b"businessBroadcast", "chatLockSupportLevel", b"chatLockSupportLevel", "contactRefresh", b"contactRefresh", "hostWriteMutationSupport", b"hostWriteMutationSupport", "lidMigration", b"lidMigration", "memberNameTagPrimarySupport", b"memberNameTagPrimarySupport", "newsletterChatsMigration", b"newsletterChatsMigration", "reverseHistorySync", b"reverseHistorySync", "userHasAvatar", b"userHasAvatar"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["aiFbidMigration", b"aiFbidMigration", "aiThread", b"aiThread", "bizAiSettingsSync", b"bizAiSettingsSync", "businessBroadcast", b"businessBroadcast", "chatLockSupportLevel", b"chatLockSupportLevel", "contactRefresh", b"contactRefresh", "hostWriteMutationSupport", b"hostWriteMutationSupport", "lidMigration", b"lidMigration", "memberNameTagPrimarySupport", b"memberNameTagPrimarySupport", "newsletterChatsMigration", b"newsletterChatsMigration", "reverseHistorySync", b"reverseHistorySync", "userHasAvatar", b"userHasAvatar"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["aiFbidMigration", b"aiFbidMigration", "aiThread", b"aiThread", "bizAiSettingsSync", b"bizAiSettingsSync", "bizAiWebOnboarding", b"bizAiWebOnboarding", "businessBroadcast", b"businessBroadcast", "chatLockSupportLevel", b"chatLockSupportLevel", "contactRefresh", b"contactRefresh", "hostWriteMutationSupport", b"hostWriteMutationSupport", "lidMigration", b"lidMigration", "memberNameTagPrimarySupport", b"memberNameTagPrimarySupport", "newsletterChatsMigration", b"newsletterChatsMigration", "reverseHistorySync", b"reverseHistorySync", "userHasAvatar", b"userHasAvatar"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 

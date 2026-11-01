@@ -316,7 +316,6 @@ class EncryptedSecretValuesOutput(_message.Message):
     ENCRYPTEDOBLIVIOUSVALIDATIONTOKENBLOB_FIELD_NUMBER: _builtins.int
     ENCRYPTEDEPOCHSTORAGEPRIVATEKEY_FIELD_NUMBER: _builtins.int
     ENCRYPTEDOCMFCLIENTSTATE_FIELD_NUMBER: _builtins.int
-    ENCRYPTEDORFCLIENTSTATEV2_FIELD_NUMBER: _builtins.int
     ENCRYPTEDMAILBOXROOTKEYBLOB_FIELD_NUMBER: _builtins.int
     ENCRYPTEDEPOCHANONID_FIELD_NUMBER: _builtins.int
     ENCRYPTEDEPOCHROOTKEY_FIELD_NUMBER: _builtins.int
@@ -324,7 +323,6 @@ class EncryptedSecretValuesOutput(_message.Message):
     encryptedObliviousValidationTokenBlob: _builtins.bytes
     encryptedEpochStoragePrivateKey: _builtins.bytes
     encryptedOcmfClientState: _builtins.bytes
-    encryptedOrfClientStateV2: _builtins.bytes
     encryptedMailboxRootKeyBlob: _builtins.bytes
     encryptedEpochAnonID: _builtins.bytes
     encryptedEpochRootKey: _builtins.bytes
@@ -335,14 +333,13 @@ class EncryptedSecretValuesOutput(_message.Message):
         encryptedObliviousValidationTokenBlob: _builtins.bytes | None = ...,
         encryptedEpochStoragePrivateKey: _builtins.bytes | None = ...,
         encryptedOcmfClientState: _builtins.bytes | None = ...,
-        encryptedOrfClientStateV2: _builtins.bytes | None = ...,
         encryptedMailboxRootKeyBlob: _builtins.bytes | None = ...,
         encryptedEpochAnonID: _builtins.bytes | None = ...,
         encryptedEpochRootKey: _builtins.bytes | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["encryptedDevicePrivateKey", b"encryptedDevicePrivateKey", "encryptedEpochAnonID", b"encryptedEpochAnonID", "encryptedEpochRootKey", b"encryptedEpochRootKey", "encryptedEpochStoragePrivateKey", b"encryptedEpochStoragePrivateKey", "encryptedMailboxRootKeyBlob", b"encryptedMailboxRootKeyBlob", "encryptedObliviousValidationTokenBlob", b"encryptedObliviousValidationTokenBlob", "encryptedOcmfClientState", b"encryptedOcmfClientState", "encryptedOrfClientStateV2", b"encryptedOrfClientStateV2"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["encryptedDevicePrivateKey", b"encryptedDevicePrivateKey", "encryptedEpochAnonID", b"encryptedEpochAnonID", "encryptedEpochRootKey", b"encryptedEpochRootKey", "encryptedEpochStoragePrivateKey", b"encryptedEpochStoragePrivateKey", "encryptedMailboxRootKeyBlob", b"encryptedMailboxRootKeyBlob", "encryptedObliviousValidationTokenBlob", b"encryptedObliviousValidationTokenBlob", "encryptedOcmfClientState", b"encryptedOcmfClientState"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["encryptedDevicePrivateKey", b"encryptedDevicePrivateKey", "encryptedEpochAnonID", b"encryptedEpochAnonID", "encryptedEpochRootKey", b"encryptedEpochRootKey", "encryptedEpochStoragePrivateKey", b"encryptedEpochStoragePrivateKey", "encryptedMailboxRootKeyBlob", b"encryptedMailboxRootKeyBlob", "encryptedObliviousValidationTokenBlob", b"encryptedObliviousValidationTokenBlob", "encryptedOcmfClientState", b"encryptedOcmfClientState", "encryptedOrfClientStateV2", b"encryptedOrfClientStateV2"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["encryptedDevicePrivateKey", b"encryptedDevicePrivateKey", "encryptedEpochAnonID", b"encryptedEpochAnonID", "encryptedEpochRootKey", b"encryptedEpochRootKey", "encryptedEpochStoragePrivateKey", b"encryptedEpochStoragePrivateKey", "encryptedMailboxRootKeyBlob", b"encryptedMailboxRootKeyBlob", "encryptedObliviousValidationTokenBlob", b"encryptedObliviousValidationTokenBlob", "encryptedOcmfClientState", b"encryptedOcmfClientState"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
@@ -418,13 +415,36 @@ Global___Epoch0Output: _TypeAlias = Epoch0Output  # noqa: Y015
 class CreateBackupOutput(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
+    SUCCESS_FIELD_NUMBER: _builtins.int
+    ERROR_FIELD_NUMBER: _builtins.int
+    error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___CreateBackupSuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___CreateBackupSuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___CreateBackupOutput: _TypeAlias = CreateBackupOutput  # noqa: Y015
+
+@_typing.final
+class CreateBackupSuccess(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
     DEVICE_FIELD_NUMBER: _builtins.int
     VIRTUALDEVICE_FIELD_NUMBER: _builtins.int
     EPOCH0_FIELD_NUMBER: _builtins.int
     MAILBOXROOTKEY_FIELD_NUMBER: _builtins.int
-    ERROR_FIELD_NUMBER: _builtins.int
     mailboxRootKey: _builtins.bytes
-    error: _builtins.str
     @_builtins.property
     def device(self) -> Global___DeviceOutput: ...
     @_builtins.property
@@ -438,18 +458,42 @@ class CreateBackupOutput(_message.Message):
         virtualDevice: Global___VirtualDeviceOutput | None = ...,
         epoch0: Global___Epoch0Output | None = ...,
         mailboxRootKey: _builtins.bytes | None = ...,
-        error: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["device", b"device", "epoch0", b"epoch0", "error", b"error", "mailboxRootKey", b"mailboxRootKey", "virtualDevice", b"virtualDevice"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["device", b"device", "epoch0", b"epoch0", "mailboxRootKey", b"mailboxRootKey", "virtualDevice", b"virtualDevice"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["device", b"device", "epoch0", b"epoch0", "error", b"error", "mailboxRootKey", b"mailboxRootKey", "virtualDevice", b"virtualDevice"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["device", b"device", "epoch0", b"epoch0", "mailboxRootKey", b"mailboxRootKey", "virtualDevice", b"virtualDevice"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___CreateBackupOutput: _TypeAlias = CreateBackupOutput  # noqa: Y015
+Global___CreateBackupSuccess: _TypeAlias = CreateBackupSuccess  # noqa: Y015
 
 @_typing.final
 class EncryptMessageOutput(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    SUCCESS_FIELD_NUMBER: _builtins.int
+    ERROR_FIELD_NUMBER: _builtins.int
+    error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___EncryptMessageSuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___EncryptMessageSuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___EncryptMessageOutput: _TypeAlias = EncryptMessageOutput  # noqa: Y015
+
+@_typing.final
+class EncryptMessageSuccess(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
     ENCRYPTEDPROTOBUF_FIELD_NUMBER: _builtins.int
@@ -457,13 +501,11 @@ class EncryptMessageOutput(_message.Message):
     VALUESECRETREF_FIELD_NUMBER: _builtins.int
     OFFLINETHREADINGID_FIELD_NUMBER: _builtins.int
     TIMESTAMPMS_FIELD_NUMBER: _builtins.int
-    ERROR_FIELD_NUMBER: _builtins.int
     encryptedProtobuf: _builtins.bytes
     orfThreadID: _builtins.bytes
     valueSecretRef: _builtins.str
     offlineThreadingID: _builtins.int
     timestampMS: _builtins.int
-    error: _builtins.str
     def __init__(
         self,
         *,
@@ -472,103 +514,190 @@ class EncryptMessageOutput(_message.Message):
         valueSecretRef: _builtins.str | None = ...,
         offlineThreadingID: _builtins.int | None = ...,
         timestampMS: _builtins.int | None = ...,
-        error: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["encryptedProtobuf", b"encryptedProtobuf", "error", b"error", "offlineThreadingID", b"offlineThreadingID", "orfThreadID", b"orfThreadID", "timestampMS", b"timestampMS", "valueSecretRef", b"valueSecretRef"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["encryptedProtobuf", b"encryptedProtobuf", "offlineThreadingID", b"offlineThreadingID", "orfThreadID", b"orfThreadID", "timestampMS", b"timestampMS", "valueSecretRef", b"valueSecretRef"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["encryptedProtobuf", b"encryptedProtobuf", "error", b"error", "offlineThreadingID", b"offlineThreadingID", "orfThreadID", b"orfThreadID", "timestampMS", b"timestampMS", "valueSecretRef", b"valueSecretRef"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["encryptedProtobuf", b"encryptedProtobuf", "offlineThreadingID", b"offlineThreadingID", "orfThreadID", b"orfThreadID", "timestampMS", b"timestampMS", "valueSecretRef", b"valueSecretRef"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___EncryptMessageOutput: _TypeAlias = EncryptMessageOutput  # noqa: Y015
+Global___EncryptMessageSuccess: _TypeAlias = EncryptMessageSuccess  # noqa: Y015
 
 @_typing.final
 class DecryptMessageOutput(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
-    PLAINTEXTPAYLOAD_FIELD_NUMBER: _builtins.int
+    SUCCESS_FIELD_NUMBER: _builtins.int
     ERROR_FIELD_NUMBER: _builtins.int
-    plaintextPayload: _builtins.bytes
     error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___DecryptMessageSuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___DecryptMessageSuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___DecryptMessageOutput: _TypeAlias = DecryptMessageOutput  # noqa: Y015
+
+@_typing.final
+class DecryptMessageSuccess(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    PLAINTEXTPAYLOAD_FIELD_NUMBER: _builtins.int
+    plaintextPayload: _builtins.bytes
     def __init__(
         self,
         *,
         plaintextPayload: _builtins.bytes | None = ...,
-        error: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "plaintextPayload", b"plaintextPayload"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["plaintextPayload", b"plaintextPayload"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "plaintextPayload", b"plaintextPayload"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["plaintextPayload", b"plaintextPayload"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___DecryptMessageOutput: _TypeAlias = DecryptMessageOutput  # noqa: Y015
+Global___DecryptMessageSuccess: _TypeAlias = DecryptMessageSuccess  # noqa: Y015
 
 @_typing.final
 class OrfThreadIdOutput(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
-    ORFTHREADID_FIELD_NUMBER: _builtins.int
+    SUCCESS_FIELD_NUMBER: _builtins.int
     ERROR_FIELD_NUMBER: _builtins.int
-    orfThreadID: _builtins.bytes
     error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___OrfThreadIdSuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___OrfThreadIdSuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___OrfThreadIdOutput: _TypeAlias = OrfThreadIdOutput  # noqa: Y015
+
+@_typing.final
+class OrfThreadIdSuccess(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    ORFTHREADID_FIELD_NUMBER: _builtins.int
+    orfThreadID: _builtins.bytes
     def __init__(
         self,
         *,
         orfThreadID: _builtins.bytes | None = ...,
-        error: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "orfThreadID", b"orfThreadID"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["orfThreadID", b"orfThreadID"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "orfThreadID", b"orfThreadID"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["orfThreadID", b"orfThreadID"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___OrfThreadIdOutput: _TypeAlias = OrfThreadIdOutput  # noqa: Y015
+Global___OrfThreadIdSuccess: _TypeAlias = OrfThreadIdSuccess  # noqa: Y015
 
 @_typing.final
 class DeriveMessageKeyOutput(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
-    MESSAGEKEY_FIELD_NUMBER: _builtins.int
+    SUCCESS_FIELD_NUMBER: _builtins.int
     ERROR_FIELD_NUMBER: _builtins.int
-    messageKey: _builtins.bytes
     error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___DeriveMessageKeySuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___DeriveMessageKeySuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___DeriveMessageKeyOutput: _TypeAlias = DeriveMessageKeyOutput  # noqa: Y015
+
+@_typing.final
+class DeriveMessageKeySuccess(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    MESSAGEKEY_FIELD_NUMBER: _builtins.int
+    messageKey: _builtins.bytes
     def __init__(
         self,
         *,
         messageKey: _builtins.bytes | None = ...,
-        error: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "messageKey", b"messageKey"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["messageKey", b"messageKey"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "messageKey", b"messageKey"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["messageKey", b"messageKey"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___DeriveMessageKeyOutput: _TypeAlias = DeriveMessageKeyOutput  # noqa: Y015
+Global___DeriveMessageKeySuccess: _TypeAlias = DeriveMessageKeySuccess  # noqa: Y015
 
 @_typing.final
 class DeriveVirtualDeviceIdOutput(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
-    VIRTUALDEVICEID_FIELD_NUMBER: _builtins.int
+    SUCCESS_FIELD_NUMBER: _builtins.int
     ERROR_FIELD_NUMBER: _builtins.int
-    virtualDeviceID: _builtins.bytes
     error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___DeriveVirtualDeviceIdSuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___DeriveVirtualDeviceIdSuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___DeriveVirtualDeviceIdOutput: _TypeAlias = DeriveVirtualDeviceIdOutput  # noqa: Y015
+
+@_typing.final
+class DeriveVirtualDeviceIdSuccess(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    VIRTUALDEVICEID_FIELD_NUMBER: _builtins.int
+    virtualDeviceID: _builtins.bytes
     def __init__(
         self,
         *,
         virtualDeviceID: _builtins.bytes | None = ...,
-        error: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "virtualDeviceID", b"virtualDeviceID"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["virtualDeviceID", b"virtualDeviceID"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "virtualDeviceID", b"virtualDeviceID"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["virtualDeviceID", b"virtualDeviceID"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___DeriveVirtualDeviceIdOutput: _TypeAlias = DeriveVirtualDeviceIdOutput  # noqa: Y015
+Global___DeriveVirtualDeviceIdSuccess: _TypeAlias = DeriveVirtualDeviceIdSuccess  # noqa: Y015
 
 @_typing.final
 class AddDeviceKeysOutput(_message.Message):
@@ -636,6 +765,31 @@ Global___EpochKey: _TypeAlias = EpochKey  # noqa: Y015
 class PrepareAddDeviceOutput(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
+    SUCCESS_FIELD_NUMBER: _builtins.int
+    ERROR_FIELD_NUMBER: _builtins.int
+    error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___PrepareAddDeviceSuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___PrepareAddDeviceSuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___PrepareAddDeviceOutput: _TypeAlias = PrepareAddDeviceOutput  # noqa: Y015
+
+@_typing.final
+class PrepareAddDeviceSuccess(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
     DEVICEKEYS_FIELD_NUMBER: _builtins.int
     CURRENTEPOCH_FIELD_NUMBER: _builtins.int
     MAILBOXROOTSALT_FIELD_NUMBER: _builtins.int
@@ -645,14 +799,12 @@ class PrepareAddDeviceOutput(_message.Message):
     SUPPORTEDENCRYPTIONVERSIONS_FIELD_NUMBER: _builtins.int
     ENCRYPTIONVERSIONSIGNATURE_FIELD_NUMBER: _builtins.int
     CLIENTVERSION_FIELD_NUMBER: _builtins.int
-    ERROR_FIELD_NUMBER: _builtins.int
     mailboxRootSalt: _builtins.bytes
     orfRotationToken: _builtins.bytes
     deviceEpochHmac: _builtins.bytes
     epochRootKeyFingerprint: _builtins.bytes
     encryptionVersionSignature: _builtins.bytes
     clientVersion: _builtins.int
-    error: _builtins.str
     @_builtins.property
     def deviceKeys(self) -> Global___AddDeviceKeysOutput: ...
     @_builtins.property
@@ -671,15 +823,14 @@ class PrepareAddDeviceOutput(_message.Message):
         supportedEncryptionVersions: _abc.Iterable[_builtins.int] | None = ...,
         encryptionVersionSignature: _builtins.bytes | None = ...,
         clientVersion: _builtins.int | None = ...,
-        error: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["clientVersion", b"clientVersion", "currentEpoch", b"currentEpoch", "deviceEpochHmac", b"deviceEpochHmac", "deviceKeys", b"deviceKeys", "encryptionVersionSignature", b"encryptionVersionSignature", "epochRootKeyFingerprint", b"epochRootKeyFingerprint", "error", b"error", "mailboxRootSalt", b"mailboxRootSalt", "orfRotationToken", b"orfRotationToken"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["clientVersion", b"clientVersion", "currentEpoch", b"currentEpoch", "deviceEpochHmac", b"deviceEpochHmac", "deviceKeys", b"deviceKeys", "encryptionVersionSignature", b"encryptionVersionSignature", "epochRootKeyFingerprint", b"epochRootKeyFingerprint", "mailboxRootSalt", b"mailboxRootSalt", "orfRotationToken", b"orfRotationToken"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["clientVersion", b"clientVersion", "currentEpoch", b"currentEpoch", "deviceEpochHmac", b"deviceEpochHmac", "deviceKeys", b"deviceKeys", "encryptionVersionSignature", b"encryptionVersionSignature", "epochRootKeyFingerprint", b"epochRootKeyFingerprint", "error", b"error", "mailboxRootSalt", b"mailboxRootSalt", "orfRotationToken", b"orfRotationToken", "supportedEncryptionVersions", b"supportedEncryptionVersions"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["clientVersion", b"clientVersion", "currentEpoch", b"currentEpoch", "deviceEpochHmac", b"deviceEpochHmac", "deviceKeys", b"deviceKeys", "encryptionVersionSignature", b"encryptionVersionSignature", "epochRootKeyFingerprint", b"epochRootKeyFingerprint", "mailboxRootSalt", b"mailboxRootSalt", "orfRotationToken", b"orfRotationToken", "supportedEncryptionVersions", b"supportedEncryptionVersions"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___PrepareAddDeviceOutput: _TypeAlias = PrepareAddDeviceOutput  # noqa: Y015
+Global___PrepareAddDeviceSuccess: _TypeAlias = PrepareAddDeviceSuccess  # noqa: Y015
 
 @_typing.final
 class RotateEpochMemberInput(_message.Message):
@@ -798,18 +949,41 @@ Global___BackwardEdge: _TypeAlias = BackwardEdge  # noqa: Y015
 class RotateEpochOutput(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
+    SUCCESS_FIELD_NUMBER: _builtins.int
+    ERROR_FIELD_NUMBER: _builtins.int
+    error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___RotateEpochSuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___RotateEpochSuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___RotateEpochOutput: _TypeAlias = RotateEpochOutput  # noqa: Y015
+
+@_typing.final
+class RotateEpochSuccess(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
     NEWEPOCHROOTKEY_FIELD_NUMBER: _builtins.int
     NEWEPOCHANONID_FIELD_NUMBER: _builtins.int
     EPOCHANONID_FIELD_NUMBER: _builtins.int
     BACKWARDEDGE_FIELD_NUMBER: _builtins.int
     MEMBEREDGES_FIELD_NUMBER: _builtins.int
     EPOCHROOTKEYFINGERPRINT_FIELD_NUMBER: _builtins.int
-    ERROR_FIELD_NUMBER: _builtins.int
     newEpochRootKey: _builtins.bytes
     newEpochAnonID: _builtins.int
     epochAnonID: _builtins.bytes
     epochRootKeyFingerprint: _builtins.bytes
-    error: _builtins.str
     @_builtins.property
     def backwardEdge(self) -> Global___BackwardEdge: ...
     @_builtins.property
@@ -823,15 +997,14 @@ class RotateEpochOutput(_message.Message):
         backwardEdge: Global___BackwardEdge | None = ...,
         memberEdges: _abc.Iterable[Global___RotateEpochMemberEdge] | None = ...,
         epochRootKeyFingerprint: _builtins.bytes | None = ...,
-        error: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["backwardEdge", b"backwardEdge", "epochAnonID", b"epochAnonID", "epochRootKeyFingerprint", b"epochRootKeyFingerprint", "error", b"error", "newEpochAnonID", b"newEpochAnonID", "newEpochRootKey", b"newEpochRootKey"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["backwardEdge", b"backwardEdge", "epochAnonID", b"epochAnonID", "epochRootKeyFingerprint", b"epochRootKeyFingerprint", "newEpochAnonID", b"newEpochAnonID", "newEpochRootKey", b"newEpochRootKey"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["backwardEdge", b"backwardEdge", "epochAnonID", b"epochAnonID", "epochRootKeyFingerprint", b"epochRootKeyFingerprint", "error", b"error", "memberEdges", b"memberEdges", "newEpochAnonID", b"newEpochAnonID", "newEpochRootKey", b"newEpochRootKey"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["backwardEdge", b"backwardEdge", "epochAnonID", b"epochAnonID", "epochRootKeyFingerprint", b"epochRootKeyFingerprint", "memberEdges", b"memberEdges", "newEpochAnonID", b"newEpochAnonID", "newEpochRootKey", b"newEpochRootKey"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___RotateEpochOutput: _TypeAlias = RotateEpochOutput  # noqa: Y015
+Global___RotateEpochSuccess: _TypeAlias = RotateEpochSuccess  # noqa: Y015
 
 @_typing.final
 class ComputeClientSealTokenInput(_message.Message):
@@ -859,23 +1032,45 @@ Global___ComputeClientSealTokenInput: _TypeAlias = ComputeClientSealTokenInput  
 class ComputeClientSealTokenOutput(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
-    CLIENTSEALTOKEN_FIELD_NUMBER: _builtins.int
+    SUCCESS_FIELD_NUMBER: _builtins.int
     ERROR_FIELD_NUMBER: _builtins.int
-    clientSealToken: _builtins.bytes
     error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___ComputeClientSealTokenSuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___ComputeClientSealTokenSuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___ComputeClientSealTokenOutput: _TypeAlias = ComputeClientSealTokenOutput  # noqa: Y015
+
+@_typing.final
+class ComputeClientSealTokenSuccess(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    CLIENTSEALTOKEN_FIELD_NUMBER: _builtins.int
+    clientSealToken: _builtins.bytes
     def __init__(
         self,
         *,
         clientSealToken: _builtins.bytes | None = ...,
-        error: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["clientSealToken", b"clientSealToken", "error", b"error"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["clientSealToken", b"clientSealToken"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["clientSealToken", b"clientSealToken", "error", b"error"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["clientSealToken", b"clientSealToken"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___ComputeClientSealTokenOutput: _TypeAlias = ComputeClientSealTokenOutput  # noqa: Y015
+Global___ComputeClientSealTokenSuccess: _TypeAlias = ComputeClientSealTokenSuccess  # noqa: Y015
 
 @_typing.final
 class SealThreadIdInput(_message.Message):
@@ -909,23 +1104,45 @@ Global___SealThreadIdInput: _TypeAlias = SealThreadIdInput  # noqa: Y015
 class SealThreadIdOutput(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
-    SEALEDTHREADID_FIELD_NUMBER: _builtins.int
+    SUCCESS_FIELD_NUMBER: _builtins.int
     ERROR_FIELD_NUMBER: _builtins.int
-    sealedThreadID: _builtins.bytes
     error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___SealThreadIdSuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___SealThreadIdSuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___SealThreadIdOutput: _TypeAlias = SealThreadIdOutput  # noqa: Y015
+
+@_typing.final
+class SealThreadIdSuccess(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    SEALEDTHREADID_FIELD_NUMBER: _builtins.int
+    sealedThreadID: _builtins.bytes
     def __init__(
         self,
         *,
         sealedThreadID: _builtins.bytes | None = ...,
-        error: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "sealedThreadID", b"sealedThreadID"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["sealedThreadID", b"sealedThreadID"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "sealedThreadID", b"sealedThreadID"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["sealedThreadID", b"sealedThreadID"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___SealThreadIdOutput: _TypeAlias = SealThreadIdOutput  # noqa: Y015
+Global___SealThreadIdSuccess: _TypeAlias = SealThreadIdSuccess  # noqa: Y015
 
 @_typing.final
 class OpenSealedThreadIdInput(_message.Message):
@@ -957,26 +1174,48 @@ Global___OpenSealedThreadIdInput: _TypeAlias = OpenSealedThreadIdInput  # noqa: 
 class OpenSealedThreadIdOutput(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
+    SUCCESS_FIELD_NUMBER: _builtins.int
+    ERROR_FIELD_NUMBER: _builtins.int
+    error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___OpenSealedThreadIdSuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___OpenSealedThreadIdSuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___OpenSealedThreadIdOutput: _TypeAlias = OpenSealedThreadIdOutput  # noqa: Y015
+
+@_typing.final
+class OpenSealedThreadIdSuccess(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
     THREADID_FIELD_NUMBER: _builtins.int
     SEALEPOCHANONID_FIELD_NUMBER: _builtins.int
-    ERROR_FIELD_NUMBER: _builtins.int
     threadID: _builtins.str
     sealEpochAnonID: _builtins.int
-    error: _builtins.str
     def __init__(
         self,
         *,
         threadID: _builtins.str | None = ...,
         sealEpochAnonID: _builtins.int | None = ...,
-        error: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "sealEpochAnonID", b"sealEpochAnonID", "threadID", b"threadID"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["sealEpochAnonID", b"sealEpochAnonID", "threadID", b"threadID"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "sealEpochAnonID", b"sealEpochAnonID", "threadID", b"threadID"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["sealEpochAnonID", b"sealEpochAnonID", "threadID", b"threadID"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___OpenSealedThreadIdOutput: _TypeAlias = OpenSealedThreadIdOutput  # noqa: Y015
+Global___OpenSealedThreadIdSuccess: _TypeAlias = OpenSealedThreadIdSuccess  # noqa: Y015
 
 @_typing.final
 class EpochIds(_message.Message):
@@ -1084,24 +1323,131 @@ Global___DeriveEpochsInput: _TypeAlias = DeriveEpochsInput  # noqa: Y015
 class DeriveEpochsOutput(_message.Message):
     DESCRIPTOR: _descriptor.Descriptor
 
-    EPOCHS_FIELD_NUMBER: _builtins.int
+    SUCCESS_FIELD_NUMBER: _builtins.int
     ERROR_FIELD_NUMBER: _builtins.int
     error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___DeriveEpochsSuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___DeriveEpochsSuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___DeriveEpochsOutput: _TypeAlias = DeriveEpochsOutput  # noqa: Y015
+
+@_typing.final
+class DeriveEpochsSuccess(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    EPOCHS_FIELD_NUMBER: _builtins.int
     @_builtins.property
     def epochs(self) -> _containers.RepeatedCompositeFieldContainer[Global___EpochKey]: ...
     def __init__(
         self,
         *,
         epochs: _abc.Iterable[Global___EpochKey] | None = ...,
-        error: _builtins.str | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _Never  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["epochs", b"epochs", "error", b"error"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["epochs", b"epochs"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
-Global___DeriveEpochsOutput: _TypeAlias = DeriveEpochsOutput  # noqa: Y015
+Global___DeriveEpochsSuccess: _TypeAlias = DeriveEpochsSuccess  # noqa: Y015
+
+@_typing.final
+class PrepareAddPeerDeviceInput(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    ADVSECRET_FIELD_NUMBER: _builtins.int
+    SEALEDPAYLOAD_FIELD_NUMBER: _builtins.int
+    BACKUPID_FIELD_NUMBER: _builtins.int
+    USERID_FIELD_NUMBER: _builtins.int
+    COMPANIONIDENTITYPUB_FIELD_NUMBER: _builtins.int
+    ACTIVEEPOCHID_FIELD_NUMBER: _builtins.int
+    advSecret: _builtins.bytes
+    sealedPayload: _builtins.bytes
+    backupID: _builtins.int
+    userID: _builtins.int
+    companionIdentityPub: _builtins.bytes
+    activeEpochID: _builtins.int
+    def __init__(
+        self,
+        *,
+        advSecret: _builtins.bytes | None = ...,
+        sealedPayload: _builtins.bytes | None = ...,
+        backupID: _builtins.int | None = ...,
+        userID: _builtins.int | None = ...,
+        companionIdentityPub: _builtins.bytes | None = ...,
+        activeEpochID: _builtins.int | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["activeEpochID", b"activeEpochID", "advSecret", b"advSecret", "backupID", b"backupID", "companionIdentityPub", b"companionIdentityPub", "sealedPayload", b"sealedPayload", "userID", b"userID"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["activeEpochID", b"activeEpochID", "advSecret", b"advSecret", "backupID", b"backupID", "companionIdentityPub", b"companionIdentityPub", "sealedPayload", b"sealedPayload", "userID", b"userID"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___PrepareAddPeerDeviceInput: _TypeAlias = PrepareAddPeerDeviceInput  # noqa: Y015
+
+@_typing.final
+class PrepareAddPeerDeviceOutput(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    SUCCESS_FIELD_NUMBER: _builtins.int
+    ERROR_FIELD_NUMBER: _builtins.int
+    error: _builtins.str
+    @_builtins.property
+    def success(self) -> Global___PrepareAddPeerDeviceSuccess: ...
+    def __init__(
+        self,
+        *,
+        success: Global___PrepareAddPeerDeviceSuccess | None = ...,
+        error: _builtins.str | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["error", b"error", "result", b"result", "success", b"success"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    _WhichOneofReturnType_result: _TypeAlias = _typing.Literal["success", "error"]  # noqa: Y015
+    _WhichOneofArgType_result: _TypeAlias = _typing.Literal["result", b"result"]  # noqa: Y015
+    def WhichOneof(self, oneof_group: _WhichOneofArgType_result) -> _WhichOneofReturnType_result | None: ...
+
+Global___PrepareAddPeerDeviceOutput: _TypeAlias = PrepareAddPeerDeviceOutput  # noqa: Y015
+
+@_typing.final
+class PrepareAddPeerDeviceSuccess(_message.Message):
+    DESCRIPTOR: _descriptor.Descriptor
+
+    ENROLMENT_FIELD_NUMBER: _builtins.int
+    SERVERDATAID_FIELD_NUMBER: _builtins.int
+    COMPANIONDEVICEBINDING_FIELD_NUMBER: _builtins.int
+    serverDataID: _builtins.int
+    companionDeviceBinding: _builtins.bytes
+    @_builtins.property
+    def enrolment(self) -> Global___PrepareAddDeviceSuccess: ...
+    def __init__(
+        self,
+        *,
+        enrolment: Global___PrepareAddDeviceSuccess | None = ...,
+        serverDataID: _builtins.int | None = ...,
+        companionDeviceBinding: _builtins.bytes | None = ...,
+    ) -> None: ...
+    _HasFieldArgType: _TypeAlias = _typing.Literal["companionDeviceBinding", b"companionDeviceBinding", "enrolment", b"enrolment", "serverDataID", b"serverDataID"]  # noqa: Y015
+    def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["companionDeviceBinding", b"companionDeviceBinding", "enrolment", b"enrolment", "serverDataID", b"serverDataID"]  # noqa: Y015
+    def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+    def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+Global___PrepareAddPeerDeviceSuccess: _TypeAlias = PrepareAddPeerDeviceSuccess  # noqa: Y015
 
 @_typing.final
 class LabyrinthWaCommand(_message.Message):
@@ -1119,6 +1465,7 @@ class LabyrinthWaCommand(_message.Message):
     OPENSEALEDTHREADIDINPUT_FIELD_NUMBER: _builtins.int
     DERIVEEPOCHSINPUT_FIELD_NUMBER: _builtins.int
     SEALTHREADIDINPUT_FIELD_NUMBER: _builtins.int
+    PREPAREADDPEERDEVICEINPUT_FIELD_NUMBER: _builtins.int
     @_builtins.property
     def createBackupInput(self) -> Global___CreateBackupInput: ...
     @_builtins.property
@@ -1143,6 +1490,8 @@ class LabyrinthWaCommand(_message.Message):
     def deriveEpochsInput(self) -> Global___DeriveEpochsInput: ...
     @_builtins.property
     def sealThreadIDInput(self) -> Global___SealThreadIdInput: ...
+    @_builtins.property
+    def prepareAddPeerDeviceInput(self) -> Global___PrepareAddPeerDeviceInput: ...
     def __init__(
         self,
         *,
@@ -1158,12 +1507,13 @@ class LabyrinthWaCommand(_message.Message):
         openSealedThreadIDInput: Global___OpenSealedThreadIdInput | None = ...,
         deriveEpochsInput: Global___DeriveEpochsInput | None = ...,
         sealThreadIDInput: Global___SealThreadIdInput | None = ...,
+        prepareAddPeerDeviceInput: Global___PrepareAddPeerDeviceInput | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["commandInput", b"commandInput", "computeClientSealTokenInput", b"computeClientSealTokenInput", "createBackupInput", b"createBackupInput", "decryptMessageInput", b"decryptMessageInput", "deriveEpochsInput", b"deriveEpochsInput", "deriveMessageKeyInput", b"deriveMessageKeyInput", "deriveVirtualDeviceIDInput", b"deriveVirtualDeviceIDInput", "encryptMessageInput", b"encryptMessageInput", "openSealedThreadIDInput", b"openSealedThreadIDInput", "orfThreadIDInput", b"orfThreadIDInput", "prepareAddDeviceInput", b"prepareAddDeviceInput", "rotateEpochInput", b"rotateEpochInput", "sealThreadIDInput", b"sealThreadIDInput"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["commandInput", b"commandInput", "computeClientSealTokenInput", b"computeClientSealTokenInput", "createBackupInput", b"createBackupInput", "decryptMessageInput", b"decryptMessageInput", "deriveEpochsInput", b"deriveEpochsInput", "deriveMessageKeyInput", b"deriveMessageKeyInput", "deriveVirtualDeviceIDInput", b"deriveVirtualDeviceIDInput", "encryptMessageInput", b"encryptMessageInput", "openSealedThreadIDInput", b"openSealedThreadIDInput", "orfThreadIDInput", b"orfThreadIDInput", "prepareAddDeviceInput", b"prepareAddDeviceInput", "prepareAddPeerDeviceInput", b"prepareAddPeerDeviceInput", "rotateEpochInput", b"rotateEpochInput", "sealThreadIDInput", b"sealThreadIDInput"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["commandInput", b"commandInput", "computeClientSealTokenInput", b"computeClientSealTokenInput", "createBackupInput", b"createBackupInput", "decryptMessageInput", b"decryptMessageInput", "deriveEpochsInput", b"deriveEpochsInput", "deriveMessageKeyInput", b"deriveMessageKeyInput", "deriveVirtualDeviceIDInput", b"deriveVirtualDeviceIDInput", "encryptMessageInput", b"encryptMessageInput", "openSealedThreadIDInput", b"openSealedThreadIDInput", "orfThreadIDInput", b"orfThreadIDInput", "prepareAddDeviceInput", b"prepareAddDeviceInput", "rotateEpochInput", b"rotateEpochInput", "sealThreadIDInput", b"sealThreadIDInput"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["commandInput", b"commandInput", "computeClientSealTokenInput", b"computeClientSealTokenInput", "createBackupInput", b"createBackupInput", "decryptMessageInput", b"decryptMessageInput", "deriveEpochsInput", b"deriveEpochsInput", "deriveMessageKeyInput", b"deriveMessageKeyInput", "deriveVirtualDeviceIDInput", b"deriveVirtualDeviceIDInput", "encryptMessageInput", b"encryptMessageInput", "openSealedThreadIDInput", b"openSealedThreadIDInput", "orfThreadIDInput", b"orfThreadIDInput", "prepareAddDeviceInput", b"prepareAddDeviceInput", "prepareAddPeerDeviceInput", b"prepareAddPeerDeviceInput", "rotateEpochInput", b"rotateEpochInput", "sealThreadIDInput", b"sealThreadIDInput"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
-    _WhichOneofReturnType_commandInput: _TypeAlias = _typing.Literal["createBackupInput", "encryptMessageInput", "decryptMessageInput", "orfThreadIDInput", "deriveMessageKeyInput", "rotateEpochInput", "deriveVirtualDeviceIDInput", "prepareAddDeviceInput", "computeClientSealTokenInput", "openSealedThreadIDInput", "deriveEpochsInput", "sealThreadIDInput"]  # noqa: Y015
+    _WhichOneofReturnType_commandInput: _TypeAlias = _typing.Literal["createBackupInput", "encryptMessageInput", "decryptMessageInput", "orfThreadIDInput", "deriveMessageKeyInput", "rotateEpochInput", "deriveVirtualDeviceIDInput", "prepareAddDeviceInput", "computeClientSealTokenInput", "openSealedThreadIDInput", "deriveEpochsInput", "sealThreadIDInput", "prepareAddPeerDeviceInput"]  # noqa: Y015
     _WhichOneofArgType_commandInput: _TypeAlias = _typing.Literal["commandInput", b"commandInput"]  # noqa: Y015
     def WhichOneof(self, oneof_group: _WhichOneofArgType_commandInput) -> _WhichOneofReturnType_commandInput | None: ...
 
