@@ -313,6 +313,8 @@ class WebMessageInfo(_message.Message):
         META_AI_THREAD_CREATED: WebMessageInfo._StubType.ValueType  # 284
         META_AI_CONNECTOR_LINKED: WebMessageInfo._StubType.ValueType  # 285
         SPLIT_PAYMENT_MARKED_AS_PAID: WebMessageInfo._StubType.ValueType  # 289
+        POLL_OPTIONS_REMOVED: WebMessageInfo._StubType.ValueType  # 290
+        POLL_ADDED_OPTION_REMOVED: WebMessageInfo._StubType.ValueType  # 291
 
     class StubType(_StubType, metaclass=_StubTypeEnumTypeWrapper): ...
     UNKNOWN: WebMessageInfo.StubType.ValueType  # 0
@@ -580,6 +582,8 @@ class WebMessageInfo(_message.Message):
     META_AI_THREAD_CREATED: WebMessageInfo.StubType.ValueType  # 284
     META_AI_CONNECTOR_LINKED: WebMessageInfo.StubType.ValueType  # 285
     SPLIT_PAYMENT_MARKED_AS_PAID: WebMessageInfo.StubType.ValueType  # 289
+    POLL_OPTIONS_REMOVED: WebMessageInfo.StubType.ValueType  # 290
+    POLL_ADDED_OPTION_REMOVED: WebMessageInfo.StubType.ValueType  # 291
 
     class _Status:
         ValueType = _typing.NewType("ValueType", _builtins.int)

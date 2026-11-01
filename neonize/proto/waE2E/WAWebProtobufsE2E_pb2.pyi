@@ -102,6 +102,7 @@ class _PeerDataOperationRequestTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeW
     BUSINESS_BROADCAST_INSIGHTS_DELIVERED_TO: _PeerDataOperationRequestType.ValueType  # 12
     BUSINESS_BROADCAST_INSIGHTS_REFRESH: _PeerDataOperationRequestType.ValueType  # 13
     CONTACT_REFRESH_REQUEST: _PeerDataOperationRequestType.ValueType  # 14
+    RECENT_CONVERSATIONS_ON_DEMAND_REQUEST: _PeerDataOperationRequestType.ValueType  # 15
 
 class PeerDataOperationRequestType(_PeerDataOperationRequestType, metaclass=_PeerDataOperationRequestTypeEnumTypeWrapper): ...
 
@@ -120,6 +121,7 @@ GALAXY_FLOW_ACTION: PeerDataOperationRequestType.ValueType  # 11
 BUSINESS_BROADCAST_INSIGHTS_DELIVERED_TO: PeerDataOperationRequestType.ValueType  # 12
 BUSINESS_BROADCAST_INSIGHTS_REFRESH: PeerDataOperationRequestType.ValueType  # 13
 CONTACT_REFRESH_REQUEST: PeerDataOperationRequestType.ValueType  # 14
+RECENT_CONVERSATIONS_ON_DEMAND_REQUEST: PeerDataOperationRequestType.ValueType  # 15
 Global___PeerDataOperationRequestType: _TypeAlias = PeerDataOperationRequestType  # noqa: Y015
 
 class _HistorySyncType:
@@ -137,6 +139,7 @@ class _HistorySyncTypeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[_Histo
     ON_DEMAND: _HistorySyncType.ValueType  # 6
     NO_HISTORY: _HistorySyncType.ValueType  # 7
     MESSAGE_ACCESS_STATUS: _HistorySyncType.ValueType  # 8
+    RECENT_CONVERSATIONS_ON_DEMAND: _HistorySyncType.ValueType  # 9
 
 class HistorySyncType(_HistorySyncType, metaclass=_HistorySyncTypeEnumTypeWrapper): ...
 
@@ -149,6 +152,7 @@ NON_BLOCKING_DATA: HistorySyncType.ValueType  # 5
 ON_DEMAND: HistorySyncType.ValueType  # 6
 NO_HISTORY: HistorySyncType.ValueType  # 7
 MESSAGE_ACCESS_STATUS: HistorySyncType.ValueType  # 8
+RECENT_CONVERSATIONS_ON_DEMAND: HistorySyncType.ValueType  # 9
 Global___HistorySyncType: _TypeAlias = HistorySyncType  # noqa: Y015
 
 class _MediaKeyDomain:
@@ -2930,6 +2934,77 @@ class PeerDataOperationRequestMessage(_message.Message):
         def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
+    class HistorySyncOnDemandRequest(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
+
+        class _Mode:
+            ValueType = _typing.NewType("ValueType", _builtins.int)
+            V: _TypeAlias = ValueType  # noqa: Y015
+
+        class _ModeEnumTypeWrapper(_enum_type_wrapper._EnumTypeWrapper[PeerDataOperationRequestMessage.HistorySyncOnDemandRequest._Mode.ValueType], _builtins.type):
+            DESCRIPTOR: _descriptor.EnumDescriptor
+            MODE_UNSPECIFIED: PeerDataOperationRequestMessage.HistorySyncOnDemandRequest._Mode.ValueType  # 0
+            INITIAL_REVERSE_HISTORY: PeerDataOperationRequestMessage.HistorySyncOnDemandRequest._Mode.ValueType  # 1
+
+        class Mode(_Mode, metaclass=_ModeEnumTypeWrapper): ...
+        MODE_UNSPECIFIED: PeerDataOperationRequestMessage.HistorySyncOnDemandRequest.Mode.ValueType  # 0
+        INITIAL_REVERSE_HISTORY: PeerDataOperationRequestMessage.HistorySyncOnDemandRequest.Mode.ValueType  # 1
+
+        CHATJID_FIELD_NUMBER: _builtins.int
+        OLDESTMSGID_FIELD_NUMBER: _builtins.int
+        OLDESTMSGFROMME_FIELD_NUMBER: _builtins.int
+        ONDEMANDMSGCOUNT_FIELD_NUMBER: _builtins.int
+        OLDESTMSGTIMESTAMPMS_FIELD_NUMBER: _builtins.int
+        ACCOUNTLID_FIELD_NUMBER: _builtins.int
+        SUPPORTINLINERESPONSE_FIELD_NUMBER: _builtins.int
+        MODE_FIELD_NUMBER: _builtins.int
+        chatJID: _builtins.str
+        oldestMsgID: _builtins.str
+        oldestMsgFromMe: _builtins.bool
+        onDemandMsgCount: _builtins.int
+        oldestMsgTimestampMS: _builtins.int
+        accountLid: _builtins.str
+        supportInlineResponse: _builtins.bool
+        mode: Global___PeerDataOperationRequestMessage.HistorySyncOnDemandRequest.Mode.ValueType
+        def __init__(
+            self,
+            *,
+            chatJID: _builtins.str | None = ...,
+            oldestMsgID: _builtins.str | None = ...,
+            oldestMsgFromMe: _builtins.bool | None = ...,
+            onDemandMsgCount: _builtins.int | None = ...,
+            oldestMsgTimestampMS: _builtins.int | None = ...,
+            accountLid: _builtins.str | None = ...,
+            supportInlineResponse: _builtins.bool | None = ...,
+            mode: Global___PeerDataOperationRequestMessage.HistorySyncOnDemandRequest.Mode.ValueType | None = ...,
+        ) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["accountLid", b"accountLid", "chatJID", b"chatJID", "mode", b"mode", "oldestMsgFromMe", b"oldestMsgFromMe", "oldestMsgID", b"oldestMsgID", "oldestMsgTimestampMS", b"oldestMsgTimestampMS", "onDemandMsgCount", b"onDemandMsgCount", "supportInlineResponse", b"supportInlineResponse"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["accountLid", b"accountLid", "chatJID", b"chatJID", "mode", b"mode", "oldestMsgFromMe", b"oldestMsgFromMe", "oldestMsgID", b"oldestMsgID", "oldestMsgTimestampMS", b"oldestMsgTimestampMS", "onDemandMsgCount", b"onDemandMsgCount", "supportInlineResponse", b"supportInlineResponse"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+    @_typing.final
+    class RecentConversationsOnDemandRequest(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
+
+        CONVERSATIONCOUNT_FIELD_NUMBER: _builtins.int
+        MESSAGESPERCONVERSATION_FIELD_NUMBER: _builtins.int
+        conversationCount: _builtins.int
+        messagesPerConversation: _builtins.int
+        def __init__(
+            self,
+            *,
+            conversationCount: _builtins.int | None = ...,
+            messagesPerConversation: _builtins.int | None = ...,
+        ) -> None: ...
+        _HasFieldArgType: _TypeAlias = _typing.Literal["conversationCount", b"conversationCount", "messagesPerConversation", b"messagesPerConversation"]  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["conversationCount", b"conversationCount", "messagesPerConversation", b"messagesPerConversation"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+    @_typing.final
     class BizBroadcastInsightsRefreshRequest(_message.Message):
         DESCRIPTOR: _descriptor.Descriptor
 
@@ -3071,41 +3146,6 @@ class PeerDataOperationRequestMessage(_message.Message):
         def WhichOneof(self, oneof_group: _Never) -> None: ...
 
     @_typing.final
-    class HistorySyncOnDemandRequest(_message.Message):
-        DESCRIPTOR: _descriptor.Descriptor
-
-        CHATJID_FIELD_NUMBER: _builtins.int
-        OLDESTMSGID_FIELD_NUMBER: _builtins.int
-        OLDESTMSGFROMME_FIELD_NUMBER: _builtins.int
-        ONDEMANDMSGCOUNT_FIELD_NUMBER: _builtins.int
-        OLDESTMSGTIMESTAMPMS_FIELD_NUMBER: _builtins.int
-        ACCOUNTLID_FIELD_NUMBER: _builtins.int
-        SUPPORTINLINERESPONSE_FIELD_NUMBER: _builtins.int
-        chatJID: _builtins.str
-        oldestMsgID: _builtins.str
-        oldestMsgFromMe: _builtins.bool
-        onDemandMsgCount: _builtins.int
-        oldestMsgTimestampMS: _builtins.int
-        accountLid: _builtins.str
-        supportInlineResponse: _builtins.bool
-        def __init__(
-            self,
-            *,
-            chatJID: _builtins.str | None = ...,
-            oldestMsgID: _builtins.str | None = ...,
-            oldestMsgFromMe: _builtins.bool | None = ...,
-            onDemandMsgCount: _builtins.int | None = ...,
-            oldestMsgTimestampMS: _builtins.int | None = ...,
-            accountLid: _builtins.str | None = ...,
-            supportInlineResponse: _builtins.bool | None = ...,
-        ) -> None: ...
-        _HasFieldArgType: _TypeAlias = _typing.Literal["accountLid", b"accountLid", "chatJID", b"chatJID", "oldestMsgFromMe", b"oldestMsgFromMe", "oldestMsgID", b"oldestMsgID", "oldestMsgTimestampMS", b"oldestMsgTimestampMS", "onDemandMsgCount", b"onDemandMsgCount", "supportInlineResponse", b"supportInlineResponse"]  # noqa: Y015
-        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-        _ClearFieldArgType: _TypeAlias = _typing.Literal["accountLid", b"accountLid", "chatJID", b"chatJID", "oldestMsgFromMe", b"oldestMsgFromMe", "oldestMsgID", b"oldestMsgID", "oldestMsgTimestampMS", b"oldestMsgTimestampMS", "onDemandMsgCount", b"onDemandMsgCount", "supportInlineResponse", b"supportInlineResponse"]  # noqa: Y015
-        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
-        def WhichOneof(self, oneof_group: _Never) -> None: ...
-
-    @_typing.final
     class RequestUrlPreview(_message.Message):
         DESCRIPTOR: _descriptor.Descriptor
 
@@ -3154,6 +3194,7 @@ class PeerDataOperationRequestMessage(_message.Message):
     COMPANIONCANONICALUSERNONCEFETCHREQUEST_FIELD_NUMBER: _builtins.int
     BIZBROADCASTINSIGHTSCONTACTLISTREQUEST_FIELD_NUMBER: _builtins.int
     BIZBROADCASTINSIGHTSREFRESHREQUEST_FIELD_NUMBER: _builtins.int
+    RECENTCONVERSATIONSONDEMANDREQUEST_FIELD_NUMBER: _builtins.int
     peerDataOperationRequestType: Global___PeerDataOperationRequestType.ValueType
     @_builtins.property
     def requestStickerReupload(self) -> _containers.RepeatedCompositeFieldContainer[Global___PeerDataOperationRequestMessage.RequestStickerReupload]: ...
@@ -3177,6 +3218,8 @@ class PeerDataOperationRequestMessage(_message.Message):
     def bizBroadcastInsightsContactListRequest(self) -> Global___PeerDataOperationRequestMessage.BizBroadcastInsightsContactListRequest: ...
     @_builtins.property
     def bizBroadcastInsightsRefreshRequest(self) -> Global___PeerDataOperationRequestMessage.BizBroadcastInsightsRefreshRequest: ...
+    @_builtins.property
+    def recentConversationsOnDemandRequest(self) -> Global___PeerDataOperationRequestMessage.RecentConversationsOnDemandRequest: ...
     def __init__(
         self,
         *,
@@ -3192,10 +3235,11 @@ class PeerDataOperationRequestMessage(_message.Message):
         companionCanonicalUserNonceFetchRequest: Global___PeerDataOperationRequestMessage.CompanionCanonicalUserNonceFetchRequest | None = ...,
         bizBroadcastInsightsContactListRequest: Global___PeerDataOperationRequestMessage.BizBroadcastInsightsContactListRequest | None = ...,
         bizBroadcastInsightsRefreshRequest: Global___PeerDataOperationRequestMessage.BizBroadcastInsightsRefreshRequest | None = ...,
+        recentConversationsOnDemandRequest: Global___PeerDataOperationRequestMessage.RecentConversationsOnDemandRequest | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["bizBroadcastInsightsContactListRequest", b"bizBroadcastInsightsContactListRequest", "bizBroadcastInsightsRefreshRequest", b"bizBroadcastInsightsRefreshRequest", "companionCanonicalUserNonceFetchRequest", b"companionCanonicalUserNonceFetchRequest", "fullHistorySyncOnDemandRequest", b"fullHistorySyncOnDemandRequest", "galaxyFlowAction", b"galaxyFlowAction", "historySyncChunkRetryRequest", b"historySyncChunkRetryRequest", "historySyncOnDemandRequest", b"historySyncOnDemandRequest", "peerDataOperationRequestType", b"peerDataOperationRequestType", "syncdCollectionFatalRecoveryRequest", b"syncdCollectionFatalRecoveryRequest"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["bizBroadcastInsightsContactListRequest", b"bizBroadcastInsightsContactListRequest", "bizBroadcastInsightsRefreshRequest", b"bizBroadcastInsightsRefreshRequest", "companionCanonicalUserNonceFetchRequest", b"companionCanonicalUserNonceFetchRequest", "fullHistorySyncOnDemandRequest", b"fullHistorySyncOnDemandRequest", "galaxyFlowAction", b"galaxyFlowAction", "historySyncChunkRetryRequest", b"historySyncChunkRetryRequest", "historySyncOnDemandRequest", b"historySyncOnDemandRequest", "peerDataOperationRequestType", b"peerDataOperationRequestType", "recentConversationsOnDemandRequest", b"recentConversationsOnDemandRequest", "syncdCollectionFatalRecoveryRequest", b"syncdCollectionFatalRecoveryRequest"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["bizBroadcastInsightsContactListRequest", b"bizBroadcastInsightsContactListRequest", "bizBroadcastInsightsRefreshRequest", b"bizBroadcastInsightsRefreshRequest", "companionCanonicalUserNonceFetchRequest", b"companionCanonicalUserNonceFetchRequest", "fullHistorySyncOnDemandRequest", b"fullHistorySyncOnDemandRequest", "galaxyFlowAction", b"galaxyFlowAction", "historySyncChunkRetryRequest", b"historySyncChunkRetryRequest", "historySyncOnDemandRequest", b"historySyncOnDemandRequest", "peerDataOperationRequestType", b"peerDataOperationRequestType", "placeholderMessageResendRequest", b"placeholderMessageResendRequest", "requestStickerReupload", b"requestStickerReupload", "requestURLPreview", b"requestURLPreview", "syncdCollectionFatalRecoveryRequest", b"syncdCollectionFatalRecoveryRequest"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["bizBroadcastInsightsContactListRequest", b"bizBroadcastInsightsContactListRequest", "bizBroadcastInsightsRefreshRequest", b"bizBroadcastInsightsRefreshRequest", "companionCanonicalUserNonceFetchRequest", b"companionCanonicalUserNonceFetchRequest", "fullHistorySyncOnDemandRequest", b"fullHistorySyncOnDemandRequest", "galaxyFlowAction", b"galaxyFlowAction", "historySyncChunkRetryRequest", b"historySyncChunkRetryRequest", "historySyncOnDemandRequest", b"historySyncOnDemandRequest", "peerDataOperationRequestType", b"peerDataOperationRequestType", "placeholderMessageResendRequest", b"placeholderMessageResendRequest", "recentConversationsOnDemandRequest", b"recentConversationsOnDemandRequest", "requestStickerReupload", b"requestStickerReupload", "requestURLPreview", b"requestURLPreview", "syncdCollectionFatalRecoveryRequest", b"syncdCollectionFatalRecoveryRequest"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
@@ -3756,11 +3800,83 @@ class MusicMessage(_message.Message):
     MESSAGE_BUBBLE: MusicMessage.MusicMessageStyle.ValueType  # 2
     LYRICS: MusicMessage.MusicMessageStyle.ValueType  # 3
 
+    @_typing.final
+    class Lyrics(_message.Message):
+        DESCRIPTOR: _descriptor.Descriptor
+
+        @_typing.final
+        class Line(_message.Message):
+            DESCRIPTOR: _descriptor.Descriptor
+
+            @_typing.final
+            class WordOffset(_message.Message):
+                DESCRIPTOR: _descriptor.Descriptor
+
+                STARTINDEX_FIELD_NUMBER: _builtins.int
+                ENDINDEX_FIELD_NUMBER: _builtins.int
+                STARTOFFSETMS_FIELD_NUMBER: _builtins.int
+                ENDOFFSETMS_FIELD_NUMBER: _builtins.int
+                startIndex: _builtins.int
+                endIndex: _builtins.int
+                startOffsetMS: _builtins.int
+                endOffsetMS: _builtins.int
+                def __init__(
+                    self,
+                    *,
+                    startIndex: _builtins.int | None = ...,
+                    endIndex: _builtins.int | None = ...,
+                    startOffsetMS: _builtins.int | None = ...,
+                    endOffsetMS: _builtins.int | None = ...,
+                ) -> None: ...
+                _HasFieldArgType: _TypeAlias = _typing.Literal["endIndex", b"endIndex", "endOffsetMS", b"endOffsetMS", "startIndex", b"startIndex", "startOffsetMS", b"startOffsetMS"]  # noqa: Y015
+                def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+                _ClearFieldArgType: _TypeAlias = _typing.Literal["endIndex", b"endIndex", "endOffsetMS", b"endOffsetMS", "startIndex", b"startIndex", "startOffsetMS", b"startOffsetMS"]  # noqa: Y015
+                def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+                def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+            STARTTIMEINMS_FIELD_NUMBER: _builtins.int
+            ENDTIMEINMS_FIELD_NUMBER: _builtins.int
+            TEXT_FIELD_NUMBER: _builtins.int
+            WORDOFFSETS_FIELD_NUMBER: _builtins.int
+            startTimeInMS: _builtins.int
+            endTimeInMS: _builtins.int
+            text: _builtins.str
+            @_builtins.property
+            def wordOffsets(self) -> _containers.RepeatedCompositeFieldContainer[Global___MusicMessage.Lyrics.Line.WordOffset]: ...
+            def __init__(
+                self,
+                *,
+                startTimeInMS: _builtins.int | None = ...,
+                endTimeInMS: _builtins.int | None = ...,
+                text: _builtins.str | None = ...,
+                wordOffsets: _abc.Iterable[Global___MusicMessage.Lyrics.Line.WordOffset] | None = ...,
+            ) -> None: ...
+            _HasFieldArgType: _TypeAlias = _typing.Literal["endTimeInMS", b"endTimeInMS", "startTimeInMS", b"startTimeInMS", "text", b"text"]  # noqa: Y015
+            def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+            _ClearFieldArgType: _TypeAlias = _typing.Literal["endTimeInMS", b"endTimeInMS", "startTimeInMS", b"startTimeInMS", "text", b"text", "wordOffsets", b"wordOffsets"]  # noqa: Y015
+            def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+            def WhichOneof(self, oneof_group: _Never) -> None: ...
+
+        LINES_FIELD_NUMBER: _builtins.int
+        @_builtins.property
+        def lines(self) -> _containers.RepeatedCompositeFieldContainer[Global___MusicMessage.Lyrics.Line]: ...
+        def __init__(
+            self,
+            *,
+            lines: _abc.Iterable[Global___MusicMessage.Lyrics.Line] | None = ...,
+        ) -> None: ...
+        _HasFieldArgType: _TypeAlias = _Never  # noqa: Y015
+        def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["lines", b"lines"]  # noqa: Y015
+        def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
+        def WhichOneof(self, oneof_group: _Never) -> None: ...
+
     EMBEDDEDMUSIC_FIELD_NUMBER: _builtins.int
     SONGURI_FIELD_NUMBER: _builtins.int
     ARTWORKURI_FIELD_NUMBER: _builtins.int
     STYLE_FIELD_NUMBER: _builtins.int
     CONTEXTINFO_FIELD_NUMBER: _builtins.int
+    LYRICS_FIELD_NUMBER: _builtins.int
     songUri: _builtins.str
     artworkUri: _builtins.str
     style: _builtins.int
@@ -3768,6 +3884,8 @@ class MusicMessage(_message.Message):
     def embeddedMusic(self) -> Global___EmbeddedMusic: ...
     @_builtins.property
     def contextInfo(self) -> Global___ContextInfo: ...
+    @_builtins.property
+    def lyrics(self) -> Global___MusicMessage.Lyrics: ...
     def __init__(
         self,
         *,
@@ -3776,10 +3894,11 @@ class MusicMessage(_message.Message):
         artworkUri: _builtins.str | None = ...,
         style: _builtins.int | None = ...,
         contextInfo: Global___ContextInfo | None = ...,
+        lyrics: Global___MusicMessage.Lyrics | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["artworkUri", b"artworkUri", "contextInfo", b"contextInfo", "embeddedMusic", b"embeddedMusic", "songUri", b"songUri", "style", b"style"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["artworkUri", b"artworkUri", "contextInfo", b"contextInfo", "embeddedMusic", b"embeddedMusic", "lyrics", b"lyrics", "songUri", b"songUri", "style", b"style"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["artworkUri", b"artworkUri", "contextInfo", b"contextInfo", "embeddedMusic", b"embeddedMusic", "songUri", b"songUri", "style", b"style"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["artworkUri", b"artworkUri", "contextInfo", b"contextInfo", "embeddedMusic", b"embeddedMusic", "lyrics", b"lyrics", "songUri", b"songUri", "style", b"style"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
@@ -4656,27 +4775,34 @@ class ContextInfo(_message.Message):
             DESCRIPTOR: _descriptor.EnumDescriptor
             UNKNOWN: ContextInfo.StatusAudienceMetadata._AudienceType.ValueType  # 0
             CLOSE_FRIENDS: ContextInfo.StatusAudienceMetadata._AudienceType.ValueType  # 1
+            CUSTOM_LIST: ContextInfo.StatusAudienceMetadata._AudienceType.ValueType  # 2
+            ORG: ContextInfo.StatusAudienceMetadata._AudienceType.ValueType  # 3
 
         class AudienceType(_AudienceType, metaclass=_AudienceTypeEnumTypeWrapper): ...
         UNKNOWN: ContextInfo.StatusAudienceMetadata.AudienceType.ValueType  # 0
         CLOSE_FRIENDS: ContextInfo.StatusAudienceMetadata.AudienceType.ValueType  # 1
+        CUSTOM_LIST: ContextInfo.StatusAudienceMetadata.AudienceType.ValueType  # 2
+        ORG: ContextInfo.StatusAudienceMetadata.AudienceType.ValueType  # 3
 
         AUDIENCETYPE_FIELD_NUMBER: _builtins.int
         LISTNAME_FIELD_NUMBER: _builtins.int
         LISTEMOJI_FIELD_NUMBER: _builtins.int
+        ORGID_FIELD_NUMBER: _builtins.int
         audienceType: Global___ContextInfo.StatusAudienceMetadata.AudienceType.ValueType
         listName: _builtins.str
         listEmoji: _builtins.str
+        orgID: _builtins.str
         def __init__(
             self,
             *,
             audienceType: Global___ContextInfo.StatusAudienceMetadata.AudienceType.ValueType | None = ...,
             listName: _builtins.str | None = ...,
             listEmoji: _builtins.str | None = ...,
+            orgID: _builtins.str | None = ...,
         ) -> None: ...
-        _HasFieldArgType: _TypeAlias = _typing.Literal["audienceType", b"audienceType", "listEmoji", b"listEmoji", "listName", b"listName"]  # noqa: Y015
+        _HasFieldArgType: _TypeAlias = _typing.Literal["audienceType", b"audienceType", "listEmoji", b"listEmoji", "listName", b"listName", "orgID", b"orgID"]  # noqa: Y015
         def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-        _ClearFieldArgType: _TypeAlias = _typing.Literal["audienceType", b"audienceType", "listEmoji", b"listEmoji", "listName", b"listName"]  # noqa: Y015
+        _ClearFieldArgType: _TypeAlias = _typing.Literal["audienceType", b"audienceType", "listEmoji", b"listEmoji", "listName", b"listName", "orgID", b"orgID"]  # noqa: Y015
         def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
         def WhichOneof(self, oneof_group: _Never) -> None: ...
 
@@ -5194,6 +5320,8 @@ class ContextInfo(_message.Message):
     AIPROVENANCE_FIELD_NUMBER: _builtins.int
     EXPERIENCEIDS_FIELD_NUMBER: _builtins.int
     PARTNERDEEPLINKTOKEN_FIELD_NUMBER: _builtins.int
+    SOURCEEXPERIENCEID_FIELD_NUMBER: _builtins.int
+    SOURCEEXPERIENCEIDS_FIELD_NUMBER: _builtins.int
     stanzaID: _builtins.str
     participant: _builtins.str
     remoteJID: _builtins.str
@@ -5234,6 +5362,7 @@ class ContextInfo(_message.Message):
     crossAppSource: Global___ContextInfo.CrossAppSource.ValueType
     posterStatusID: _builtins.str
     partnerDeepLinkToken: _builtins.str
+    sourceExperienceID: _builtins.int
     @_builtins.property
     def quotedMessage(self) -> Global___Message: ...
     @_builtins.property
@@ -5286,6 +5415,8 @@ class ContextInfo(_message.Message):
     def aiProvenance(self) -> _WAWebProtobufsAICommon_pb2.AIProvenance: ...
     @_builtins.property
     def experienceIDs(self) -> _containers.RepeatedScalarFieldContainer[_builtins.int]: ...
+    @_builtins.property
+    def sourceExperienceIDs(self) -> _containers.RepeatedScalarFieldContainer[_builtins.int]: ...
     def __init__(
         self,
         *,
@@ -5355,10 +5486,12 @@ class ContextInfo(_message.Message):
         aiProvenance: _WAWebProtobufsAICommon_pb2.AIProvenance | None = ...,
         experienceIDs: _abc.Iterable[_builtins.int] | None = ...,
         partnerDeepLinkToken: _builtins.str | None = ...,
+        sourceExperienceID: _builtins.int | None = ...,
+        sourceExperienceIDs: _abc.Iterable[_builtins.int] | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["actionLink", b"actionLink", "afterReadDuration", b"afterReadDuration", "aiProvenance", b"aiProvenance", "alwaysShowAdAttribution", b"alwaysShowAdAttribution", "botMessageSharingInfo", b"botMessageSharingInfo", "businessInteractionPills", b"businessInteractionPills", "businessMessageForwardInfo", b"businessMessageForwardInfo", "conversionData", b"conversionData", "conversionDelaySeconds", b"conversionDelaySeconds", "conversionSource", b"conversionSource", "crossAppSource", b"crossAppSource", "ctwaPayload", b"ctwaPayload", "ctwaSignals", b"ctwaSignals", "dataSharingContext", b"dataSharingContext", "disappearingMode", b"disappearingMode", "entryPointConversionApp", b"entryPointConversionApp", "entryPointConversionDelaySeconds", b"entryPointConversionDelaySeconds", "entryPointConversionExternalMedium", b"entryPointConversionExternalMedium", "entryPointConversionExternalSource", b"entryPointConversionExternalSource", "entryPointConversionSource", b"entryPointConversionSource", "ephemeralSettingTimestamp", b"ephemeralSettingTimestamp", "ephemeralSharedSecret", b"ephemeralSharedSecret", "expiration", b"expiration", "externalAdReply", b"externalAdReply", "featureEligibilities", b"featureEligibilities", "forwardOrigin", b"forwardOrigin", "forwardedAiBotMessageInfo", b"forwardedAiBotMessageInfo", "forwardedNewsletterMessageInfo", b"forwardedNewsletterMessageInfo", "forwardingScore", b"forwardingScore", "groupSubject", b"groupSubject", "instagramThreadLink", b"instagramThreadLink", "isForwarded", b"isForwarded", "isGroupStatus", b"isGroupStatus", "isQuestion", b"isQuestion", "isSampled", b"isSampled", "isSpoiler", b"isSpoiler", "mediaDomainInfo", b"mediaDomainInfo", "memberLabel", b"memberLabel", "nonJIDMentions", b"nonJIDMentions", "pairedMediaType", b"pairedMediaType", "parentGroupJID", b"parentGroupJID", "partiallySelectedContent", b"partiallySelectedContent", "participant", b"participant", "partnerDeepLinkToken", b"partnerDeepLinkToken", "placeholderKey", b"placeholderKey", "posterStatusID", b"posterStatusID", "questionReplyQuotedMessage", b"questionReplyQuotedMessage", "quotedAd", b"quotedAd", "quotedMessage", b"quotedMessage", "quotedType", b"quotedType", "rankingVersion", b"rankingVersion", "remoteJID", b"remoteJID", "smbClientCampaignID", b"smbClientCampaignID", "smbServerCampaignID", b"smbServerCampaignID", "stanzaID", b"stanzaID", "statusAttributionType", b"statusAttributionType", "statusAudienceMetadata", b"statusAudienceMetadata", "statusSourceType", b"statusSourceType", "trustBannerAction", b"trustBannerAction", "trustBannerType", b"trustBannerType", "urlTrackingMap", b"urlTrackingMap", "utm", b"utm"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["actionLink", b"actionLink", "afterReadDuration", b"afterReadDuration", "aiProvenance", b"aiProvenance", "alwaysShowAdAttribution", b"alwaysShowAdAttribution", "botMessageSharingInfo", b"botMessageSharingInfo", "businessInteractionPills", b"businessInteractionPills", "businessMessageForwardInfo", b"businessMessageForwardInfo", "conversionData", b"conversionData", "conversionDelaySeconds", b"conversionDelaySeconds", "conversionSource", b"conversionSource", "crossAppSource", b"crossAppSource", "ctwaPayload", b"ctwaPayload", "ctwaSignals", b"ctwaSignals", "dataSharingContext", b"dataSharingContext", "disappearingMode", b"disappearingMode", "entryPointConversionApp", b"entryPointConversionApp", "entryPointConversionDelaySeconds", b"entryPointConversionDelaySeconds", "entryPointConversionExternalMedium", b"entryPointConversionExternalMedium", "entryPointConversionExternalSource", b"entryPointConversionExternalSource", "entryPointConversionSource", b"entryPointConversionSource", "ephemeralSettingTimestamp", b"ephemeralSettingTimestamp", "ephemeralSharedSecret", b"ephemeralSharedSecret", "expiration", b"expiration", "externalAdReply", b"externalAdReply", "featureEligibilities", b"featureEligibilities", "forwardOrigin", b"forwardOrigin", "forwardedAiBotMessageInfo", b"forwardedAiBotMessageInfo", "forwardedNewsletterMessageInfo", b"forwardedNewsletterMessageInfo", "forwardingScore", b"forwardingScore", "groupSubject", b"groupSubject", "instagramThreadLink", b"instagramThreadLink", "isForwarded", b"isForwarded", "isGroupStatus", b"isGroupStatus", "isQuestion", b"isQuestion", "isSampled", b"isSampled", "isSpoiler", b"isSpoiler", "mediaDomainInfo", b"mediaDomainInfo", "memberLabel", b"memberLabel", "nonJIDMentions", b"nonJIDMentions", "pairedMediaType", b"pairedMediaType", "parentGroupJID", b"parentGroupJID", "partiallySelectedContent", b"partiallySelectedContent", "participant", b"participant", "partnerDeepLinkToken", b"partnerDeepLinkToken", "placeholderKey", b"placeholderKey", "posterStatusID", b"posterStatusID", "questionReplyQuotedMessage", b"questionReplyQuotedMessage", "quotedAd", b"quotedAd", "quotedMessage", b"quotedMessage", "quotedType", b"quotedType", "rankingVersion", b"rankingVersion", "remoteJID", b"remoteJID", "smbClientCampaignID", b"smbClientCampaignID", "smbServerCampaignID", b"smbServerCampaignID", "sourceExperienceID", b"sourceExperienceID", "stanzaID", b"stanzaID", "statusAttributionType", b"statusAttributionType", "statusAudienceMetadata", b"statusAudienceMetadata", "statusSourceType", b"statusSourceType", "trustBannerAction", b"trustBannerAction", "trustBannerType", b"trustBannerType", "urlTrackingMap", b"urlTrackingMap", "utm", b"utm"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["actionLink", b"actionLink", "afterReadDuration", b"afterReadDuration", "aiProvenance", b"aiProvenance", "alwaysShowAdAttribution", b"alwaysShowAdAttribution", "botMessageSharingInfo", b"botMessageSharingInfo", "businessInteractionPills", b"businessInteractionPills", "businessMessageForwardInfo", b"businessMessageForwardInfo", "conversionData", b"conversionData", "conversionDelaySeconds", b"conversionDelaySeconds", "conversionSource", b"conversionSource", "crossAppSource", b"crossAppSource", "ctwaPayload", b"ctwaPayload", "ctwaSignals", b"ctwaSignals", "dataSharingContext", b"dataSharingContext", "disappearingMode", b"disappearingMode", "entryPointConversionApp", b"entryPointConversionApp", "entryPointConversionDelaySeconds", b"entryPointConversionDelaySeconds", "entryPointConversionExternalMedium", b"entryPointConversionExternalMedium", "entryPointConversionExternalSource", b"entryPointConversionExternalSource", "entryPointConversionSource", b"entryPointConversionSource", "ephemeralSettingTimestamp", b"ephemeralSettingTimestamp", "ephemeralSharedSecret", b"ephemeralSharedSecret", "experienceIDs", b"experienceIDs", "expiration", b"expiration", "externalAdReply", b"externalAdReply", "featureEligibilities", b"featureEligibilities", "forwardOrigin", b"forwardOrigin", "forwardedAiBotMessageInfo", b"forwardedAiBotMessageInfo", "forwardedNewsletterMessageInfo", b"forwardedNewsletterMessageInfo", "forwardingScore", b"forwardingScore", "groupMentions", b"groupMentions", "groupSubject", b"groupSubject", "instagramThreadLink", b"instagramThreadLink", "isForwarded", b"isForwarded", "isGroupStatus", b"isGroupStatus", "isQuestion", b"isQuestion", "isSampled", b"isSampled", "isSpoiler", b"isSpoiler", "mediaDomainInfo", b"mediaDomainInfo", "memberLabel", b"memberLabel", "mentionedJID", b"mentionedJID", "nonJIDMentions", b"nonJIDMentions", "pairedMediaType", b"pairedMediaType", "parentGroupJID", b"parentGroupJID", "partiallySelectedContent", b"partiallySelectedContent", "participant", b"participant", "partnerDeepLinkToken", b"partnerDeepLinkToken", "placeholderKey", b"placeholderKey", "posterStatusID", b"posterStatusID", "questionReplyQuotedMessage", b"questionReplyQuotedMessage", "quotedAd", b"quotedAd", "quotedMessage", b"quotedMessage", "quotedType", b"quotedType", "rankingVersion", b"rankingVersion", "remoteJID", b"remoteJID", "smbClientCampaignID", b"smbClientCampaignID", "smbServerCampaignID", b"smbServerCampaignID", "stanzaID", b"stanzaID", "statusAttributionType", b"statusAttributionType", "statusAttributions", b"statusAttributions", "statusAudienceMetadata", b"statusAudienceMetadata", "statusSourceType", b"statusSourceType", "trustBannerAction", b"trustBannerAction", "trustBannerType", b"trustBannerType", "urlTrackingMap", b"urlTrackingMap", "utm", b"utm"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["actionLink", b"actionLink", "afterReadDuration", b"afterReadDuration", "aiProvenance", b"aiProvenance", "alwaysShowAdAttribution", b"alwaysShowAdAttribution", "botMessageSharingInfo", b"botMessageSharingInfo", "businessInteractionPills", b"businessInteractionPills", "businessMessageForwardInfo", b"businessMessageForwardInfo", "conversionData", b"conversionData", "conversionDelaySeconds", b"conversionDelaySeconds", "conversionSource", b"conversionSource", "crossAppSource", b"crossAppSource", "ctwaPayload", b"ctwaPayload", "ctwaSignals", b"ctwaSignals", "dataSharingContext", b"dataSharingContext", "disappearingMode", b"disappearingMode", "entryPointConversionApp", b"entryPointConversionApp", "entryPointConversionDelaySeconds", b"entryPointConversionDelaySeconds", "entryPointConversionExternalMedium", b"entryPointConversionExternalMedium", "entryPointConversionExternalSource", b"entryPointConversionExternalSource", "entryPointConversionSource", b"entryPointConversionSource", "ephemeralSettingTimestamp", b"ephemeralSettingTimestamp", "ephemeralSharedSecret", b"ephemeralSharedSecret", "experienceIDs", b"experienceIDs", "expiration", b"expiration", "externalAdReply", b"externalAdReply", "featureEligibilities", b"featureEligibilities", "forwardOrigin", b"forwardOrigin", "forwardedAiBotMessageInfo", b"forwardedAiBotMessageInfo", "forwardedNewsletterMessageInfo", b"forwardedNewsletterMessageInfo", "forwardingScore", b"forwardingScore", "groupMentions", b"groupMentions", "groupSubject", b"groupSubject", "instagramThreadLink", b"instagramThreadLink", "isForwarded", b"isForwarded", "isGroupStatus", b"isGroupStatus", "isQuestion", b"isQuestion", "isSampled", b"isSampled", "isSpoiler", b"isSpoiler", "mediaDomainInfo", b"mediaDomainInfo", "memberLabel", b"memberLabel", "mentionedJID", b"mentionedJID", "nonJIDMentions", b"nonJIDMentions", "pairedMediaType", b"pairedMediaType", "parentGroupJID", b"parentGroupJID", "partiallySelectedContent", b"partiallySelectedContent", "participant", b"participant", "partnerDeepLinkToken", b"partnerDeepLinkToken", "placeholderKey", b"placeholderKey", "posterStatusID", b"posterStatusID", "questionReplyQuotedMessage", b"questionReplyQuotedMessage", "quotedAd", b"quotedAd", "quotedMessage", b"quotedMessage", "quotedType", b"quotedType", "rankingVersion", b"rankingVersion", "remoteJID", b"remoteJID", "smbClientCampaignID", b"smbClientCampaignID", "smbServerCampaignID", b"smbServerCampaignID", "sourceExperienceID", b"sourceExperienceID", "sourceExperienceIDs", b"sourceExperienceIDs", "stanzaID", b"stanzaID", "statusAttributionType", b"statusAttributionType", "statusAttributions", b"statusAttributions", "statusAudienceMetadata", b"statusAudienceMetadata", "statusSourceType", b"statusSourceType", "trustBannerAction", b"trustBannerAction", "trustBannerType", b"trustBannerType", "urlTrackingMap", b"urlTrackingMap", "utm", b"utm"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
@@ -5521,6 +5654,7 @@ class MessageContextInfo(_message.Message):
     ASSOCIATEDPRIMARYIDENTITYKEY_FIELD_NUMBER: _builtins.int
     TEECONTEXTANCHORMESSAGEID_FIELD_NUMBER: _builtins.int
     ACP2SETTING_FIELD_NUMBER: _builtins.int
+    LIGHTE2EE_FIELD_NUMBER: _builtins.int
     deviceListMetadataVersion: _builtins.int
     messageSecret: _builtins.bytes
     paddingBytes: _builtins.bytes
@@ -5534,6 +5668,7 @@ class MessageContextInfo(_message.Message):
     teeBotMetadata: _builtins.bytes
     associatedPrimaryIdentityKey: _builtins.bytes
     teeContextAnchorMessageID: _builtins.str
+    lightE2Ee: _builtins.bool
     @_builtins.property
     def deviceListMetadata(self) -> Global___DeviceListMetadata: ...
     @_builtins.property
@@ -5574,10 +5709,11 @@ class MessageContextInfo(_message.Message):
         associatedPrimaryIdentityKey: _builtins.bytes | None = ...,
         teeContextAnchorMessageID: _builtins.str | None = ...,
         acp2Setting: _WACommon_pb2.ACP2Setting | None = ...,
+        lightE2Ee: _builtins.bool | None = ...,
     ) -> None: ...
-    _HasFieldArgType: _TypeAlias = _typing.Literal["accountEncryptionAttestation", b"accountEncryptionAttestation", "acp2Setting", b"acp2Setting", "associatedPrimaryIdentityKey", b"associatedPrimaryIdentityKey", "botMessageSecret", b"botMessageSecret", "botMetadata", b"botMetadata", "capiCreatedGroup", b"capiCreatedGroup", "deviceListMetadata", b"deviceListMetadata", "deviceListMetadataVersion", b"deviceListMetadataVersion", "limitSharing", b"limitSharing", "limitSharingV2", b"limitSharingV2", "messageAddOnDurationInSecs", b"messageAddOnDurationInSecs", "messageAddOnExpiryType", b"messageAddOnExpiryType", "messageAssociation", b"messageAssociation", "messageSecret", b"messageSecret", "paddingBytes", b"paddingBytes", "reportingTokenVersion", b"reportingTokenVersion", "supportPayload", b"supportPayload", "teeBotMetadata", b"teeBotMetadata", "teeContextAnchorMessageID", b"teeContextAnchorMessageID", "weblinkRenderConfig", b"weblinkRenderConfig"]  # noqa: Y015
+    _HasFieldArgType: _TypeAlias = _typing.Literal["accountEncryptionAttestation", b"accountEncryptionAttestation", "acp2Setting", b"acp2Setting", "associatedPrimaryIdentityKey", b"associatedPrimaryIdentityKey", "botMessageSecret", b"botMessageSecret", "botMetadata", b"botMetadata", "capiCreatedGroup", b"capiCreatedGroup", "deviceListMetadata", b"deviceListMetadata", "deviceListMetadataVersion", b"deviceListMetadataVersion", "lightE2Ee", b"lightE2Ee", "limitSharing", b"limitSharing", "limitSharingV2", b"limitSharingV2", "messageAddOnDurationInSecs", b"messageAddOnDurationInSecs", "messageAddOnExpiryType", b"messageAddOnExpiryType", "messageAssociation", b"messageAssociation", "messageSecret", b"messageSecret", "paddingBytes", b"paddingBytes", "reportingTokenVersion", b"reportingTokenVersion", "supportPayload", b"supportPayload", "teeBotMetadata", b"teeBotMetadata", "teeContextAnchorMessageID", b"teeContextAnchorMessageID", "weblinkRenderConfig", b"weblinkRenderConfig"]  # noqa: Y015
     def HasField(self, field_name: _HasFieldArgType) -> _builtins.bool: ...
-    _ClearFieldArgType: _TypeAlias = _typing.Literal["accountEncryptionAttestation", b"accountEncryptionAttestation", "acp2Setting", b"acp2Setting", "associatedPrimaryIdentityKey", b"associatedPrimaryIdentityKey", "botMessageSecret", b"botMessageSecret", "botMetadata", b"botMetadata", "capiCreatedGroup", b"capiCreatedGroup", "deviceListMetadata", b"deviceListMetadata", "deviceListMetadataVersion", b"deviceListMetadataVersion", "limitSharing", b"limitSharing", "limitSharingV2", b"limitSharingV2", "messageAddOnDurationInSecs", b"messageAddOnDurationInSecs", "messageAddOnExpiryType", b"messageAddOnExpiryType", "messageAssociation", b"messageAssociation", "messageSecret", b"messageSecret", "paddingBytes", b"paddingBytes", "reportingTokenVersion", b"reportingTokenVersion", "supportPayload", b"supportPayload", "teeBotMetadata", b"teeBotMetadata", "teeContextAnchorMessageID", b"teeContextAnchorMessageID", "threadID", b"threadID", "weblinkRenderConfig", b"weblinkRenderConfig"]  # noqa: Y015
+    _ClearFieldArgType: _TypeAlias = _typing.Literal["accountEncryptionAttestation", b"accountEncryptionAttestation", "acp2Setting", b"acp2Setting", "associatedPrimaryIdentityKey", b"associatedPrimaryIdentityKey", "botMessageSecret", b"botMessageSecret", "botMetadata", b"botMetadata", "capiCreatedGroup", b"capiCreatedGroup", "deviceListMetadata", b"deviceListMetadata", "deviceListMetadataVersion", b"deviceListMetadataVersion", "lightE2Ee", b"lightE2Ee", "limitSharing", b"limitSharing", "limitSharingV2", b"limitSharingV2", "messageAddOnDurationInSecs", b"messageAddOnDurationInSecs", "messageAddOnExpiryType", b"messageAddOnExpiryType", "messageAssociation", b"messageAssociation", "messageSecret", b"messageSecret", "paddingBytes", b"paddingBytes", "reportingTokenVersion", b"reportingTokenVersion", "supportPayload", b"supportPayload", "teeBotMetadata", b"teeBotMetadata", "teeContextAnchorMessageID", b"teeContextAnchorMessageID", "threadID", b"threadID", "weblinkRenderConfig", b"weblinkRenderConfig"]  # noqa: Y015
     def ClearField(self, field_name: _ClearFieldArgType) -> None: ...
     def WhichOneof(self, oneof_group: _Never) -> None: ...
 
